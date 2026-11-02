@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Изображение отсутствует">
+  <rect width="400" height="400" fill="#f5f5f5"/>
+  <path
+    d="M116 120h168a20 20 0 0 1 20 20v120a20 20 0 0 1-20 20H116a20 20 0 0 1-20-20V140a20 20 0 0 1 20-20Z"
+    fill="none"
+    stroke="#a3a3a3"
+    stroke-width="12"
+  />
+  <circle cx="154" cy="166" r="18" fill="#a3a3a3"/>
+  <path
+    d="m112 256 58-58 39 39 25-25 54 44"
+    fill="none"
+    stroke="#a3a3a3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="12"
+  />
+</svg>
