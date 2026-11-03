@@ -8,8 +8,6 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
-      - ./infra/postgres/seed.sql:/docker-entrypoint-initdb.d/002-seed.sql:ro
     ports:
       - "127.0.0.1:${DB_PORT}:5432"
     healthcheck:

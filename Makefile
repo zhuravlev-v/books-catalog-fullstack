@@ -5,7 +5,7 @@ PNPM := pnpm
 
 .DEFAULT_GOAL := help
 
-.PHONY: help env check-env install generate build dev db-up db-stop db-reset db-shell \
+.PHONY: help env check-env setup-local install generate build dev db-up db-migrate db-seed db-stop db-reset db-shell \
 	docker-build up deploy stop down restart logs logs-api logs-web logs-db ps config
 
 help: ## Показать доступные команды
@@ -16,6 +16,14 @@ env: ## Создать .env из .env.example, если файл отсутст�
 
 check-env:
 	@test -f .env || { echo '.env не найден. Выполните: make env'; exit 1; }
+
+setup-local: ## Подготовить проект для локальной разработки
+	$(MAKE) env
+	$(MAKE) install
+	$(MAKE) db-up
+	$(MAKE) db-migrate
+	$(MAKE) db-seed
+	$(MAKE) build
 
 install: ## Установить зависимости проекта
 	$(PNPM) install --frozen-lockfile
@@ -32,12 +40,20 @@ dev: check-env db-up ## Запустить БД в Docker и приложени�
 db-up: check-env ## Запустить PostgreSQL для локальной разработки
 	$(COMPOSE) up -d --wait db
 
+db-migrate: check-env ## Применить миграции Prisma
+	$(PNPM) db:migrate
+
+db-seed: check-env ## Заполнить БД начальными данными
+	$(PNPM) db:seed
+
 db-stop: ## Остановить PostgreSQL
 	$(COMPOSE) stop db
 
-db-reset: check-env ## Удалить данные PostgreSQL и заново применить init.sql и seed.sql
+db-reset: check-env ## Пересоздать PostgreSQL, применить миграции и начальные данные
 	$(COMPOSE) down --volumes
-	$(COMPOSE) up -d --wait db
+	$(MAKE) db-up
+	$(MAKE) db-migrate
+	$(MAKE) db-seed
 
 db-shell: ## Открыть psql внутри контейнера PostgreSQL
 	$(COMPOSE) exec db sh -lc 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"'
