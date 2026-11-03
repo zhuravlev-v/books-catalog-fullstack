@@ -1,6 +1,6 @@
 import { HttpResponse } from 'msw';
 
-import type { AuthorResponse } from '@/api/generated/models';
+import type { AuthorResponse } from '@books/api-contract/models';
 import {
   parsePutAuthorsIdParams,
   parsePutAuthorsIdRequest,

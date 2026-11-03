@@ -8,31 +8,24 @@
  *
  * OpenAPI spec version: 1.0.0
  */
-import { faker } from '@faker-js/faker/locale/ru';
+import type { TopAuthorsResponse } from '@books/api-contract/models';
 
-import type { TopAuthorsResponse } from '../../models';
+import { faker } from '@faker-js/faker/locale/ru';
 
 export const getGetReportsTopAuthorsResponseMock = (
   overrideResponse: Partial<Extract<TopAuthorsResponse, object>> = {}
 ): TopAuthorsResponse => ({
-  success: faker.helpers.arrayElement([faker.datatype.boolean(), undefined]),
-  data: faker.helpers.arrayElement([
-    {
-      year: faker.helpers.arrayElement([faker.number.int(), undefined]),
-      items: faker.helpers.arrayElement([
-        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
-          rank: faker.helpers.arrayElement([faker.number.int(), undefined]),
-          author_id: faker.helpers.arrayElement([faker.number.int(), undefined]),
-          full_name: faker.helpers.arrayElement([
-            faker.string.alpha({ length: { min: 10, max: 20 } }),
-            undefined,
-          ]),
-          books_count: faker.helpers.arrayElement([faker.number.int(), undefined]),
-        })),
-        undefined,
-      ]),
-    },
-    undefined,
-  ]),
+  success: faker.helpers.arrayElement([true] as const),
+  data: {
+    year: faker.number.int({ min: 1 }),
+    items: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+      () => ({
+        rank: faker.number.int({ min: 1 }),
+        author_id: faker.number.int({ min: 1 }),
+        full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+        books_count: faker.number.int({ min: 0 }),
+      })
+    ),
+  },
   ...overrideResponse,
 });

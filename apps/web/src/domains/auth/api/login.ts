@@ -1,6 +1,6 @@
 import { postAuthLogin } from '@/api/generated/endpoints';
-import type { LoginRequest } from '@/api/generated/models';
-import { PostAuthLoginResponse } from '@/api/generated/schemas';
+import type { LoginRequest } from '@books/api-contract/models';
+import { PostAuthLoginResponse } from '@books/api-contract/schemas';
 import { normalizeAuthUser } from '@/domains/auth/lib/normalize-auth-user';
 import type { AuthSession } from '@/domains/auth/model/auth.types';
 

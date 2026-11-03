@@ -1,4 +1,4 @@
-import type { ErrorItem } from '@/api/generated/models';
+import type { ErrorItem } from '@books/api-contract/models';
 
 const USERNAME_MIN_LENGTH = 3;
 const USERNAME_MAX_LENGTH = 30;

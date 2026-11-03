@@ -1,5 +1,5 @@
 import { useRouter } from 'vue-router';
-import type { LoginRequest, RegisterRequest } from '@/api/generated/models';
+import type { LoginRequest, RegisterRequest } from '@books/api-contract/models';
 import { login as loginRequest } from '@/domains/auth/api/login';
 import { register as registerRequest } from '@/domains/auth/api/register';
 import { useAuthStore } from '@/domains/auth/model/auth-store';

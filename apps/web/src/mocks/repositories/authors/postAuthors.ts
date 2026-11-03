@@ -1,4 +1,4 @@
-import type { Author } from '@/api/generated/models';
+import type { Author } from '@books/api-contract/models';
 import { mockDatabase, type MockDatabase } from '@/mocks/db/database';
 import type { AuthorRecord } from '@/mocks/db/types';
 import type { CreateAuthorInput } from '@/mocks/http/authors/postAuthors';

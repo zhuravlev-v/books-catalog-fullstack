@@ -8,10 +8,15 @@
  *
  * OpenAPI spec version: 1.0.0
  */
+import type {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+} from '@books/api-contract/models';
+
 import { HttpResponse, delay, http } from 'msw';
 import type { HttpResponseResolver, PathParams, RequestHandlerOptions } from 'msw';
-
-import type { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '../../models';
 
 import {
   getPostAuthLoginResponseMock,

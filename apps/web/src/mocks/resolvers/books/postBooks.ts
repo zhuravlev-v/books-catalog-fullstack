@@ -1,4 +1,4 @@
-import type { BookResponse } from '@/api/generated/models';
+import type { BookResponse } from '@books/api-contract/models';
 import { parsePostBooksRequest } from '@/mocks/http/books/postBooks';
 import { requireUser } from '@/mocks/middleware/authorization';
 import { postBooksRepository } from '@/mocks/repositories/books/postBooks';

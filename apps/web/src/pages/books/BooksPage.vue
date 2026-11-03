@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import type { Book } from '@/api/generated/models';
+import type { Book } from '@books/api-contract/models';
 import { useAuthStore } from '@/domains/auth';
 import { BookDeleteDialog, BookFormDrawer, useBooksList } from '@/domains/books';
 import { AppImage, AppPagination, PageHeader, PageState } from '@/shared/components';

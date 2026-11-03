@@ -1,6 +1,10 @@
 import { HttpResponse } from 'msw';
 
-import type { Error as ApiError, ErrorItem, RegisterResponse } from '@/api/generated/models';
+import type {
+  ApiErrorResponse as ApiError,
+  ErrorItem,
+  RegisterResponse,
+} from '@books/api-contract/models';
 import { parseRegisterRequest } from '@/mocks/http/authentication/register';
 import {
   registerUsersRepository,

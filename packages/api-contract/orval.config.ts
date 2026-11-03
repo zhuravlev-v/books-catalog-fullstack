@@ -9,10 +9,10 @@ export default defineConfig({
     },
     output: {
       schemas: {
-        path: './src/generated/models/index.ts',
-        mode: 'single',
+        path: './src/generated/models',
         type: 'typescript',
       },
+      operationSchemas: './src/generated/operations',
       clean: true,
       formatter: 'prettier',
     },

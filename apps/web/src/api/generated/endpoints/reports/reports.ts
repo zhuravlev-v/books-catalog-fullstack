@@ -8,6 +8,12 @@
  *
  * OpenAPI spec version: 1.0.0
  */
+import type {
+  ApiErrorResponse,
+  GetReportsTopAuthorsParams,
+  TopAuthorsResponse,
+} from '@books/api-contract/models';
+
 import { useQuery } from '@tanstack/vue-query';
 import type {
   DataTag,
@@ -21,8 +27,6 @@ import type {
 import { toValue, unref } from 'vue';
 import type { MaybeRefOrGetter } from 'vue';
 
-import type { Error, GetReportsTopAuthorsParams, TopAuthorsResponse } from '../../models';
-
 import { apiRequest } from '../../../client/request';
 import type { ErrorType } from '../../../client/request';
 
@@ -34,7 +38,7 @@ export type getReportsTopAuthorsResponse200 = {
 };
 
 export type getReportsTopAuthorsResponse400 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 400;
 };
 
@@ -83,7 +87,7 @@ export const getGetReportsTopAuthorsQueryKey = (
 
 export const getGetReportsTopAuthorsQueryOptions = <
   TData = Awaited<ReturnType<typeof getReportsTopAuthors>>,
-  TError = ErrorType<Error>,
+  TError = ErrorType<ApiErrorResponse>,
 >(
   params: MaybeRefOrGetter<GetReportsTopAuthorsParams>,
   options?: {
@@ -110,7 +114,7 @@ export const getGetReportsTopAuthorsQueryOptions = <
 export type GetReportsTopAuthorsQueryResult = NonNullable<
   Awaited<ReturnType<typeof getReportsTopAuthors>>
 >;
-export type GetReportsTopAuthorsQueryError = ErrorType<Error>;
+export type GetReportsTopAuthorsQueryError = ErrorType<ApiErrorResponse>;
 
 /**
  * @summary ТОП-10 авторов по количеству книг за год
@@ -118,7 +122,7 @@ export type GetReportsTopAuthorsQueryError = ErrorType<Error>;
 
 export function useGetReportsTopAuthors<
   TData = Awaited<ReturnType<typeof getReportsTopAuthors>>,
-  TError = ErrorType<Error>,
+  TError = ErrorType<ApiErrorResponse>,
 >(
   params: MaybeRefOrGetter<GetReportsTopAuthorsParams>,
   options?: {

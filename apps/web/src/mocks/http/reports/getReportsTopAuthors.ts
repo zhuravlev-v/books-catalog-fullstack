@@ -1,4 +1,4 @@
-import type { Error } from '@/api/generated/models';
+import type { ApiErrorResponse } from '@books/api-contract/models';
 
 export interface GetReportsTopAuthorsQuery {
   year: number;
@@ -11,10 +11,10 @@ export type GetReportsTopAuthorsQueryResult =
     }
   | {
       success: false;
-      error: Error;
+      error: ApiErrorResponse;
     };
 
-const INVALID_YEAR_ERROR: Error = {
+const INVALID_YEAR_ERROR: ApiErrorResponse = {
   success: false,
   errors: [
     {

@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import { useGetAuthors } from '@/api/generated/endpoints';
-import type { Book } from '@/api/generated/models';
+import type { Book } from '@books/api-contract/models';
 import { AppImage, FormError } from '@/shared/components';
 import { Button } from '@/shared/ui/button';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
@@ -32,7 +32,7 @@ const emit = defineEmits<{
 
 const formError = ref<string | null>(null);
 const previewUrl = ref<string | null>(null);
-const authorsQuery = useGetAuthors({ page: 1, 'per-page': 100 });
+const authorsQuery = useGetAuthors({ page: 1, per_page: 100 });
 const authors = computed(() => authorsQuery.data.value?.data.data?.items ?? []);
 
 function getInitialValues(): BookFormValues {

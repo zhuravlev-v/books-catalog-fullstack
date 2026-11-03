@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { usePatchBooksId, usePostBooks, usePutBooksId } from '@/api/generated/endpoints';
-import type { Book, BookForm as BookFormPayload, BookInput } from '@/api/generated/models';
+import type { Book, BookForm as BookFormPayload, BookInput } from '@books/api-contract/models';
 import { FormDrawer } from '@/shared/components';
 import { notify } from '@/shared/lib/notifications';
 import BookForm from './BookForm.vue';

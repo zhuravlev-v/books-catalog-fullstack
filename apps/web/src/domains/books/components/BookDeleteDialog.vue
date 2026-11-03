@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useDeleteBooksId } from '@/api/generated/endpoints';
-import type { Book } from '@/api/generated/models';
+import type { Book } from '@books/api-contract/models';
 import { notify } from '@/shared/lib/notifications';
 import {
   AlertDialog,

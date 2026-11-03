@@ -1,4 +1,4 @@
-import type { ErrorItem } from '@/api/generated/models';
+import type { ErrorItem } from '@books/api-contract/models';
 
 export interface BookFormInput {
   title: string;

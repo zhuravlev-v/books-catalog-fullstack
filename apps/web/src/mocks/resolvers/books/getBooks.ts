@@ -1,4 +1,4 @@
-import type { BookListResponse } from '@/api/generated/models';
+import type { BookListResponse } from '@books/api-contract/models';
 import { parseGetBooksQuery } from '@/mocks/http/books/getBooks';
 import { booksRepository } from '@/mocks/repositories/books/getBooks';
 import { getBooksPage } from '@/mocks/services/books/getBooks';

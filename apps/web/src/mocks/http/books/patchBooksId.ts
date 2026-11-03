@@ -1,4 +1,4 @@
-import type { BookInput, ErrorItem } from '@/api/generated/models';
+import type { BookInput, ErrorItem } from '@books/api-contract/models';
 import { parsePositiveIntegerPathParam } from '@/mocks/shared/http/pathParams';
 
 export interface PatchBooksIdPathParams {

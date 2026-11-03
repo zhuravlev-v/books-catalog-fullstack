@@ -1,4 +1,4 @@
-import type { AuthorResponse } from '@/api/generated/models';
+import type { AuthorResponse } from '@books/api-contract/models';
 import { parsePostAuthorsRequest } from '@/mocks/http/authors/postAuthors';
 import { requireUser } from '@/mocks/middleware/authorization';
 import { postAuthorsRepository } from '@/mocks/repositories/authors/postAuthors';

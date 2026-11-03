@@ -1,4 +1,4 @@
-import type { Book } from '@/api/generated/models';
+import type { Book } from '@books/api-contract/models';
 import { mockDatabase, type MockDatabase } from '@/mocks/db/database';
 import type { BookRecord } from '@/mocks/db/types';
 import type { CreateBookInput } from '@/mocks/http/books/postBooks';

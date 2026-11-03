@@ -1,4 +1,4 @@
-import type { Book } from '@/api/generated/models';
+import type { Book } from '@books/api-contract/models';
 import type { GetBooksQuery } from '@/mocks/http/books/getBooks';
 
 export interface BooksPage {

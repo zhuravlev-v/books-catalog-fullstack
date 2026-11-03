@@ -1,4 +1,4 @@
-import type { AuthorShort, Book } from '@/api/generated/models';
+import type { AuthorShort, Book } from '@books/api-contract/models';
 import { getBookCoverUrl } from '@/mocks/db/covers';
 import { mockDatabase, type MockDatabase } from '@/mocks/db/database';
 

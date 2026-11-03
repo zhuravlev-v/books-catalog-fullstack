@@ -8,6 +8,14 @@
  *
  * OpenAPI spec version: 1.0.0
  */
+import type {
+  ApiErrorResponse,
+  AuthorInput,
+  AuthorListResponse,
+  AuthorResponse,
+  GetAuthorsParams,
+} from '@books/api-contract/models';
+
 import { useMutation, useQuery } from '@tanstack/vue-query';
 import type {
   DataTag,
@@ -23,14 +31,6 @@ import type {
 
 import { computed, toValue, unref } from 'vue';
 import type { MaybeRefOrGetter } from 'vue';
-
-import type {
-  AuthorInput,
-  AuthorListResponse,
-  AuthorResponse,
-  Error,
-  GetAuthorsParams,
-} from '../../models';
 
 import { apiRequest } from '../../../client/request';
 import type { ErrorType, BodyType } from '../../../client/request';
@@ -136,17 +136,17 @@ export type postAuthorsResponse201 = {
 };
 
 export type postAuthorsResponse401 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 401;
 };
 
 export type postAuthorsResponse403 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 403;
 };
 
 export type postAuthorsResponse422 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 422;
 };
 
@@ -200,7 +200,7 @@ export const postAuthors = async (
 export const getPostAuthorsMutationKey = () => ['postAuthors'] as const;
 
 export const getPostAuthorsMutationOptions = <
-  TError = ErrorType<void | Error>,
+  TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -237,13 +237,13 @@ export const getPostAuthorsMutationOptions = <
 
 export type PostAuthorsMutationResult = NonNullable<Awaited<ReturnType<typeof postAuthors>>>;
 export type PostAuthorsMutationBody = BodyType<AuthorInput>;
-export type PostAuthorsMutationError = ErrorType<void | Error>;
+export type PostAuthorsMutationError = ErrorType<ApiErrorResponse>;
 export type PostAuthorsMutationVariables = { data: BodyType<AuthorInput> };
 
 /**
  * @summary Создание автора
  */
-export const usePostAuthors = <TError = ErrorType<void | Error>, TContext = unknown>(
+export const usePostAuthors = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof postAuthors>>,
@@ -268,7 +268,7 @@ export type getAuthorsIdResponse200 = {
 };
 
 export type getAuthorsIdResponse404 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 404;
 };
 
@@ -302,7 +302,7 @@ export const getGetAuthorsIdQueryKey = (id: MaybeRefOrGetter<number>) => {
 
 export const getGetAuthorsIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getAuthorsId>>,
-  TError = ErrorType<Error>,
+  TError = ErrorType<ApiErrorResponse>,
 >(
   id: MaybeRefOrGetter<number>,
   options?: {
@@ -326,7 +326,7 @@ export const getGetAuthorsIdQueryOptions = <
 };
 
 export type GetAuthorsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthorsId>>>;
-export type GetAuthorsIdQueryError = ErrorType<Error>;
+export type GetAuthorsIdQueryError = ErrorType<ApiErrorResponse>;
 
 /**
  * @summary Информация об авторе и его книгах
@@ -334,7 +334,7 @@ export type GetAuthorsIdQueryError = ErrorType<Error>;
 
 export function useGetAuthorsId<
   TData = Awaited<ReturnType<typeof getAuthorsId>>,
-  TError = ErrorType<Error>,
+  TError = ErrorType<ApiErrorResponse>,
 >(
   id: MaybeRefOrGetter<number>,
   options?: {
@@ -360,22 +360,22 @@ export type putAuthorsIdResponse200 = {
 };
 
 export type putAuthorsIdResponse401 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 401;
 };
 
 export type putAuthorsIdResponse403 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 403;
 };
 
 export type putAuthorsIdResponse404 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 404;
 };
 
 export type putAuthorsIdResponse422 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 422;
 };
 
@@ -433,7 +433,7 @@ export const putAuthorsId = async (
 export const getPutAuthorsIdMutationKey = () => ['putAuthorsId'] as const;
 
 export const getPutAuthorsIdMutationOptions = <
-  TError = ErrorType<void | Error>,
+  TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -470,13 +470,13 @@ export const getPutAuthorsIdMutationOptions = <
 
 export type PutAuthorsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putAuthorsId>>>;
 export type PutAuthorsIdMutationBody = BodyType<AuthorInput>;
-export type PutAuthorsIdMutationError = ErrorType<void | Error>;
+export type PutAuthorsIdMutationError = ErrorType<ApiErrorResponse>;
 export type PutAuthorsIdMutationVariables = { id: number; data: BodyType<AuthorInput> };
 
 /**
  * @summary Обновление автора
  */
-export const usePutAuthorsId = <TError = ErrorType<void | Error>, TContext = unknown>(
+export const usePutAuthorsId = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof putAuthorsId>>,
@@ -501,17 +501,17 @@ export type deleteAuthorsIdResponse204 = {
 };
 
 export type deleteAuthorsIdResponse401 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 401;
 };
 
 export type deleteAuthorsIdResponse403 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 403;
 };
 
 export type deleteAuthorsIdResponse404 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 404;
 };
 
@@ -544,7 +544,7 @@ export const deleteAuthorsId = async (
 export const getDeleteAuthorsIdMutationKey = () => ['deleteAuthorsId'] as const;
 
 export const getDeleteAuthorsIdMutationOptions = <
-  TError = ErrorType<void>,
+  TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -583,13 +583,13 @@ export type DeleteAuthorsIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteAuthorsId>>
 >;
 
-export type DeleteAuthorsIdMutationError = ErrorType<void>;
+export type DeleteAuthorsIdMutationError = ErrorType<ApiErrorResponse>;
 export type DeleteAuthorsIdMutationVariables = { id: number };
 
 /**
  * @summary Удаление автора
  */
-export const useDeleteAuthorsId = <TError = ErrorType<void>, TContext = unknown>(
+export const useDeleteAuthorsId = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof deleteAuthorsId>>,

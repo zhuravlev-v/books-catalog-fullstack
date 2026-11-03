@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import type { AuthorShort } from '@/api/generated/models';
+import type { AuthorShort } from '@books/api-contract/models';
 import { useAuthStore } from '@/domains/auth';
 import { AuthorDeleteDialog, AuthorFormDrawer, useAuthorsList } from '@/domains/authors';
 import { AppPagination, PageHeader, PageState } from '@/shared/components';

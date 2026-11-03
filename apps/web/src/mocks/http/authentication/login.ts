@@ -1,4 +1,4 @@
-import type { LoginRequest } from '@/api/generated/models';
+import type { LoginRequest } from '@books/api-contract/models';
 
 export async function parseLoginRequest(request: Request): Promise<LoginRequest | undefined> {
   try {

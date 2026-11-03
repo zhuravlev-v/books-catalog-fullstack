@@ -1,4 +1,4 @@
-import type { AuthorShort } from '@/api/generated/models';
+import type { AuthorShort } from '@books/api-contract/models';
 import type { GetAuthorsQuery } from '@/mocks/http/authors/getAuthors';
 
 export interface AuthorsPage {

@@ -50,13 +50,13 @@ export function useBooksList() {
 
   const params = computed(() => ({
     page: page.value,
-    'per-page': BOOKS_PER_PAGE,
+    per_page: BOOKS_PER_PAGE,
     ...(routeSearch.value ? { search: routeSearch.value } : {}),
     ...(year.value ? { year: year.value } : {}),
     ...(authorId.value ? { author_id: authorId.value } : {}),
   }));
   const query = useGetBooks(params);
-  const authorsQuery = useGetAuthors({ page: 1, 'per-page': AUTHORS_PER_PAGE });
+  const authorsQuery = useGetAuthors({ page: 1, per_page: AUTHORS_PER_PAGE });
 
   function replaceQuery(changes: Record<string, string | undefined>) {
     void router.replace({

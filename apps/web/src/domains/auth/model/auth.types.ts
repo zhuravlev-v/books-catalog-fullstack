@@ -1,4 +1,4 @@
-import type { LoginResponseData, LoginResponseDataUser } from '@/api/generated/models';
+import type { LoginResponseData, LoginResponseDataUser } from '@books/api-contract/models';
 
 type LoginUser = NonNullable<LoginResponseDataUser>;
 

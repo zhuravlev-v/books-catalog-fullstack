@@ -1,4 +1,4 @@
-import type { AuthorListResponse } from '@/api/generated/models';
+import type { AuthorListResponse } from '@books/api-contract/models';
 import { parseGetAuthorsQuery } from '@/mocks/http/authors/getAuthors';
 import { authorsRepository } from '@/mocks/repositories/authors/getAuthors';
 import { getAuthorsPage } from '@/mocks/services/authors/getAuthors';

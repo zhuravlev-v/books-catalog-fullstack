@@ -8,121 +8,81 @@
  *
  * OpenAPI spec version: 1.0.0
  */
-import { faker } from '@faker-js/faker/locale/ru';
+import type { AuthorListResponse, AuthorResponse } from '@books/api-contract/models';
 
-import type { AuthorListResponse, AuthorResponse } from '../../models';
+import { faker } from '@faker-js/faker/locale/ru';
 
 export const getGetAuthorsResponseMock = (
   overrideResponse: Partial<Extract<AuthorListResponse, object>> = {}
 ): AuthorListResponse => ({
-  success: faker.helpers.arrayElement([faker.datatype.boolean(), undefined]),
-  data: faker.helpers.arrayElement([
-    {
-      items: faker.helpers.arrayElement([
-        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
-          id: faker.helpers.arrayElement([faker.number.int(), undefined]),
-          full_name: faker.helpers.arrayElement([
-            faker.string.alpha({ length: { min: 10, max: 20 } }),
-            undefined,
-          ]),
-        })),
-        undefined,
-      ]),
-      pagination: faker.helpers.arrayElement([
-        {
-          total: faker.helpers.arrayElement([faker.number.int(), undefined]),
-          page: faker.helpers.arrayElement([faker.number.int(), undefined]),
-          per_page: faker.helpers.arrayElement([faker.number.int(), undefined]),
-          total_pages: faker.helpers.arrayElement([faker.number.int(), undefined]),
-        },
-        undefined,
-      ]),
+  success: faker.helpers.arrayElement([true] as const),
+  data: {
+    items: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+      () => ({
+        id: faker.number.int({ min: 1 }),
+        full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+      })
+    ),
+    pagination: {
+      total: faker.number.int({ min: 0 }),
+      page: faker.number.int({ min: 1 }),
+      per_page: faker.number.int({ min: 1 }),
+      total_pages: faker.number.int({ min: 0 }),
     },
-    undefined,
-  ]),
+  },
   ...overrideResponse,
 });
 
 export const getPostAuthorsResponseMock = (
   overrideResponse: Partial<Extract<AuthorResponse, object>> = {}
 ): AuthorResponse => ({
-  success: faker.helpers.arrayElement([faker.datatype.boolean(), undefined]),
-  data: faker.helpers.arrayElement([
-    {
-      id: faker.helpers.arrayElement([faker.number.int(), undefined]),
-      full_name: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      books: faker.helpers.arrayElement([
-        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
-          id: faker.helpers.arrayElement([faker.number.int(), undefined]),
-          title: faker.helpers.arrayElement([
-            faker.string.alpha({ length: { min: 10, max: 20 } }),
-            undefined,
-          ]),
-          year: faker.helpers.arrayElement([faker.number.int(), undefined]),
-        })),
-        undefined,
-      ]),
-    },
-    undefined,
-  ]),
+  success: faker.helpers.arrayElement([true] as const),
+  data: {
+    id: faker.number.int({ min: 1 }),
+    full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+    books: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+      () => ({
+        id: faker.number.int({ min: 1 }),
+        title: faker.string.alpha({ length: { min: 1, max: 20 } }),
+        year: faker.number.int({ min: 1 }),
+      })
+    ),
+  },
   ...overrideResponse,
 });
 
 export const getGetAuthorsIdResponseMock = (
   overrideResponse: Partial<Extract<AuthorResponse, object>> = {}
 ): AuthorResponse => ({
-  success: faker.helpers.arrayElement([faker.datatype.boolean(), undefined]),
-  data: faker.helpers.arrayElement([
-    {
-      id: faker.helpers.arrayElement([faker.number.int(), undefined]),
-      full_name: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      books: faker.helpers.arrayElement([
-        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
-          id: faker.helpers.arrayElement([faker.number.int(), undefined]),
-          title: faker.helpers.arrayElement([
-            faker.string.alpha({ length: { min: 10, max: 20 } }),
-            undefined,
-          ]),
-          year: faker.helpers.arrayElement([faker.number.int(), undefined]),
-        })),
-        undefined,
-      ]),
-    },
-    undefined,
-  ]),
+  success: faker.helpers.arrayElement([true] as const),
+  data: {
+    id: faker.number.int({ min: 1 }),
+    full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+    books: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+      () => ({
+        id: faker.number.int({ min: 1 }),
+        title: faker.string.alpha({ length: { min: 1, max: 20 } }),
+        year: faker.number.int({ min: 1 }),
+      })
+    ),
+  },
   ...overrideResponse,
 });
 
 export const getPutAuthorsIdResponseMock = (
   overrideResponse: Partial<Extract<AuthorResponse, object>> = {}
 ): AuthorResponse => ({
-  success: faker.helpers.arrayElement([faker.datatype.boolean(), undefined]),
-  data: faker.helpers.arrayElement([
-    {
-      id: faker.helpers.arrayElement([faker.number.int(), undefined]),
-      full_name: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      books: faker.helpers.arrayElement([
-        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
-          id: faker.helpers.arrayElement([faker.number.int(), undefined]),
-          title: faker.helpers.arrayElement([
-            faker.string.alpha({ length: { min: 10, max: 20 } }),
-            undefined,
-          ]),
-          year: faker.helpers.arrayElement([faker.number.int(), undefined]),
-        })),
-        undefined,
-      ]),
-    },
-    undefined,
-  ]),
+  success: faker.helpers.arrayElement([true] as const),
+  data: {
+    id: faker.number.int({ min: 1 }),
+    full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+    books: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+      () => ({
+        id: faker.number.int({ min: 1 }),
+        title: faker.string.alpha({ length: { min: 1, max: 20 } }),
+        year: faker.number.int({ min: 1 }),
+      })
+    ),
+  },
   ...overrideResponse,
 });

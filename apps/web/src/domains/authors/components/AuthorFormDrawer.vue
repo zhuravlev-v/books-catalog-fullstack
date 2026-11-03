@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { Author } from '@/api/generated/models';
+import type { Author } from '@books/api-contract/models';
 import { usePostAuthors, usePutAuthorsId } from '@/api/generated/endpoints';
 import { FormDrawer } from '@/shared/components';
 import { notify } from '@/shared/lib/notifications';

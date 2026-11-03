@@ -1,7 +1,11 @@
 import type { Table } from 'dexie';
 import { HttpResponse } from 'msw';
 
-import type { Book, Error as ApiError, ErrorItem } from '@/api/generated/models';
+import type {
+  ApiErrorResponse as ApiError,
+  Book,
+  ErrorItem,
+} from '@books/api-contract/models';
 import { getBookCoverUrl } from '@/mocks/db/covers';
 import type { AuthorRecord, BookRecord } from '@/mocks/db/types';
 

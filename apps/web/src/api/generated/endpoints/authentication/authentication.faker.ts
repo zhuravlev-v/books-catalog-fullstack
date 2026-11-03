@@ -8,69 +8,39 @@
  *
  * OpenAPI spec version: 1.0.0
  */
-import { faker } from '@faker-js/faker/locale/ru';
+import type { LoginResponse, RegisterResponse } from '@books/api-contract/models';
 
-import type { LoginResponse, RegisterResponse } from '../../models';
+import { faker } from '@faker-js/faker/locale/ru';
 
 export const getPostAuthRegisterResponseMock = (
   overrideResponse: Partial<Extract<RegisterResponse, object>> = {}
 ): RegisterResponse => ({
-  success: faker.helpers.arrayElement([faker.datatype.boolean(), undefined]),
-  data: faker.helpers.arrayElement([
-    {
-      token: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      user: faker.helpers.arrayElement([
-        {
-          id: faker.helpers.arrayElement([faker.string.uuid(), undefined]),
-          username: faker.helpers.arrayElement([
-            faker.string.alpha({ length: { min: 10, max: 20 } }),
-            undefined,
-          ]),
-          email: faker.helpers.arrayElement([faker.internet.email(), undefined]),
-          created_at: faker.helpers.arrayElement([
-            faker.date.past().toISOString().slice(0, 19) + 'Z',
-            undefined,
-          ]),
-        },
-        undefined,
-      ]),
+  success: faker.helpers.arrayElement([true] as const),
+  data: {
+    token: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    user: {
+      id: faker.string.uuid(),
+      username: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      email: faker.internet.email(),
+      created_at: faker.date.past().toISOString().slice(0, 19) + 'Z',
     },
-    undefined,
-  ]),
+  },
   ...overrideResponse,
 });
 
 export const getPostAuthLoginResponseMock = (
   overrideResponse: Partial<Extract<LoginResponse, object>> = {}
 ): LoginResponse => ({
-  success: faker.helpers.arrayElement([faker.datatype.boolean(), undefined]),
-  data: faker.helpers.arrayElement([
-    {
-      token: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      expires_at: faker.date.past().toISOString().slice(0, 19) + 'Z',
-      user: faker.helpers.arrayElement([
-        {
-          id: faker.helpers.arrayElement([faker.string.uuid(), undefined]),
-          username: faker.helpers.arrayElement([
-            faker.string.alpha({ length: { min: 10, max: 20 } }),
-            undefined,
-          ]),
-          email: faker.helpers.arrayElement([faker.internet.email(), undefined]),
-          role: faker.helpers.arrayElement([
-            faker.string.alpha({ length: { min: 10, max: 20 } }),
-            undefined,
-          ]),
-        },
-        undefined,
-      ]),
+  success: faker.helpers.arrayElement([true] as const),
+  data: {
+    token: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    expires_at: faker.date.past().toISOString().slice(0, 19) + 'Z',
+    user: {
+      id: faker.string.uuid(),
+      username: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      email: faker.internet.email(),
+      role: faker.helpers.arrayElement(['user'] as const),
     },
-    undefined,
-  ]),
+  },
   ...overrideResponse,
 });

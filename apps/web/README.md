@@ -6,17 +6,17 @@ Frontend для каталога книг. HTTP API эмулируется че�
 
 ```sh
 pnpm install
-pnpm api:generate
+pnpm --dir ../.. api:generate
 pnpm dev
 ```
 
 ## Генерация API
 
 ```sh
-pnpm api:generate
+pnpm --dir ../.. api:generate
 ```
 
-Orval читает `../../packages/api-contract/openapi/book.yaml` и создаёт Fetch-клиент, модели, Faker factories и MSW handler factories в `src/api/generated`.
+Orval читает `../../packages/api-contract/openapi/book.yaml`, создаёт общий контракт в `../../packages/api-contract/src/generated` и Vue Query client, Faker factories и MSW handler factories в `src/api/generated/endpoints`.
 
 ## Mock API
 

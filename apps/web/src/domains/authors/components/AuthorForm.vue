@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useForm } from 'vee-validate';
-import type { Author } from '@/api/generated/models';
+import type { Author } from '@books/api-contract/models';
 import { FormError } from '@/shared/components';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';

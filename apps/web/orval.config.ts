@@ -17,7 +17,12 @@ export default defineConfig({
     output: {
       mode: 'tags-split',
       target: './src/api/generated/endpoints',
-      schemas: './src/api/generated/models',
+      schemas: {
+        path: '../../packages/api-contract/src/generated/models',
+        type: 'typescript',
+        importPath: '@books/api-contract/models',
+      },
+      operationSchemas: '../../packages/api-contract/src/generated/operations',
       baseUrl: API_BASE_PATH,
       client: 'vue-query',
       httpClient: 'fetch',
@@ -46,24 +51,6 @@ export default defineConfig({
             locale: 'ru',
           },
         ],
-      },
-    },
-  },
-  bookCatalogZod: {
-    input: {
-      target: '../../packages/api-contract/openapi/book.yaml',
-    },
-    output: {
-      mode: 'tags-split',
-      client: 'zod',
-      target: './src/api/generated/schemas',
-      clean: true,
-      formatter: 'prettier',
-      override: {
-        zod: {
-          version: 4,
-          variant: 'classic',
-        },
       },
     },
   },

@@ -1,6 +1,6 @@
 import { postAuthRegister } from '@/api/generated/endpoints';
-import type { RegisterRequest } from '@/api/generated/models';
-import { PostAuthRegisterResponse } from '@/api/generated/schemas';
+import type { RegisterRequest } from '@books/api-contract/models';
+import { PostAuthRegisterResponse } from '@books/api-contract/schemas';
 import { getJwtExpiresAt } from '@/domains/auth/lib/jwt';
 import { normalizeAuthUser } from '@/domains/auth/lib/normalize-auth-user';
 import type { AuthSession, AuthUser } from '@/domains/auth/model/auth.types';

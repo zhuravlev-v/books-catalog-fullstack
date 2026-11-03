@@ -8,6 +8,14 @@
  *
  * OpenAPI spec version: 1.0.0
  */
+import type {
+  ApiErrorResponse,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+} from '@books/api-contract/models';
+
 import { useMutation } from '@tanstack/vue-query';
 import type {
   MutationFunction,
@@ -15,14 +23,6 @@ import type {
   UseMutationOptions,
   UseMutationReturnType,
 } from '@tanstack/vue-query';
-
-import type {
-  Error,
-  LoginRequest,
-  LoginResponse,
-  RegisterRequest,
-  RegisterResponse,
-} from '../../models';
 
 import { apiRequest } from '../../../client/request';
 import type { ErrorType, BodyType } from '../../../client/request';
@@ -35,12 +35,12 @@ export type postAuthRegisterResponse201 = {
 };
 
 export type postAuthRegisterResponse409 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 409;
 };
 
 export type postAuthRegisterResponse422 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 422;
 };
 
@@ -95,7 +95,7 @@ export const postAuthRegister = async (
 export const getPostAuthRegisterMutationKey = () => ['postAuthRegister'] as const;
 
 export const getPostAuthRegisterMutationOptions = <
-  TError = ErrorType<Error>,
+  TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -134,13 +134,13 @@ export type PostAuthRegisterMutationResult = NonNullable<
   Awaited<ReturnType<typeof postAuthRegister>>
 >;
 export type PostAuthRegisterMutationBody = BodyType<RegisterRequest>;
-export type PostAuthRegisterMutationError = ErrorType<Error>;
+export type PostAuthRegisterMutationError = ErrorType<ApiErrorResponse>;
 export type PostAuthRegisterMutationVariables = { data: BodyType<RegisterRequest> };
 
 /**
  * @summary Регистрация нового пользователя
  */
-export const usePostAuthRegister = <TError = ErrorType<Error>, TContext = unknown>(
+export const usePostAuthRegister = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof postAuthRegister>>,
@@ -165,7 +165,7 @@ export type postAuthLoginResponse200 = {
 };
 
 export type postAuthLoginResponse401 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 401;
 };
 
@@ -218,7 +218,7 @@ export const postAuthLogin = async (
 export const getPostAuthLoginMutationKey = () => ['postAuthLogin'] as const;
 
 export const getPostAuthLoginMutationOptions = <
-  TError = ErrorType<Error>,
+  TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -255,13 +255,13 @@ export const getPostAuthLoginMutationOptions = <
 
 export type PostAuthLoginMutationResult = NonNullable<Awaited<ReturnType<typeof postAuthLogin>>>;
 export type PostAuthLoginMutationBody = BodyType<LoginRequest>;
-export type PostAuthLoginMutationError = ErrorType<Error>;
+export type PostAuthLoginMutationError = ErrorType<ApiErrorResponse>;
 export type PostAuthLoginMutationVariables = { data: BodyType<LoginRequest> };
 
 /**
  * @summary Авторизация пользователя
  */
-export const usePostAuthLogin = <TError = ErrorType<Error>, TContext = unknown>(
+export const usePostAuthLogin = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof postAuthLogin>>,

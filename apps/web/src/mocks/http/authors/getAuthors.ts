@@ -11,7 +11,7 @@ export interface GetAuthorsQuery {
 
 export function parseGetAuthorsQuery(searchParams: URLSearchParams): GetAuthorsQuery {
   const page = parsePositiveIntegerQueryParam(searchParams.get('page')) ?? DEFAULT_PAGE;
-  const perPage = parsePositiveIntegerQueryParam(searchParams.get('per-page')) ?? DEFAULT_PER_PAGE;
+  const perPage = parsePositiveIntegerQueryParam(searchParams.get('per_page')) ?? DEFAULT_PER_PAGE;
   const search = searchParams.get('search')?.trim();
 
   return {

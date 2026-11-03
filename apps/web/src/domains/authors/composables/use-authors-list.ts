@@ -43,7 +43,7 @@ export function useAuthorsList() {
 
   const params = computed(() => ({
     page: page.value,
-    'per-page': AUTHORS_PER_PAGE,
+    per_page: AUTHORS_PER_PAGE,
     ...(routeSearch.value ? { search: routeSearch.value } : {}),
   }));
   const query = useGetAuthors(params);

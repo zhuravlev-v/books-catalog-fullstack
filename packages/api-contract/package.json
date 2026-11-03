@@ -4,22 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "api:generate": "orval --config orval.config.ts",
-    "build": "tsc"
+    "api:generate": "orval --config orval.config.ts"
   },
   "files": [
-    "dist",
-    "openapi"
+    "openapi",
+    "src"
   ],
   "exports": {
-    "./models": {
-      "types": "./dist/generated/models/index.d.ts",
-      "default": "./dist/generated/models/index.js"
-    },
-    "./schemas": {
-      "types": "./dist/generated/schemas/index.d.ts",
-      "default": "./dist/generated/schemas/index.js"
-    },
+    "./models": "./src/models.ts",
+    "./models/*": "./src/generated/models/*.ts",
+    "./schemas": "./src/generated/schemas/index.ts",
     "./openapi": "./openapi/book.yaml"
   },
   "dependencies": {

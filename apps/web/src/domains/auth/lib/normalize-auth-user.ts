@@ -1,7 +1,7 @@
 import type {
   LoginResponseDataUser,
   RegisterResponseDataUser,
-} from '@/api/generated/models';
+} from '@books/api-contract/models';
 import type { AuthUser } from '@/domains/auth/model/auth.types';
 
 type AuthUserDto = LoginResponseDataUser | RegisterResponseDataUser;

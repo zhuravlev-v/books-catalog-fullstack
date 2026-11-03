@@ -1,4 +1,4 @@
-import type { TopAuthor } from '@/api/generated/models';
+import type { TopAuthor } from '@books/api-contract/models';
 import type { TopAuthorsReportBook } from '@/mocks/repositories/reports/getReportsTopAuthors';
 
 const TOP_AUTHORS_LIMIT = 10;

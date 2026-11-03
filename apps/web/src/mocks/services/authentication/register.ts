@@ -1,5 +1,5 @@
 import { env } from '@/shared/config/env';
-import type { RegisterResponse } from '@/api/generated/models';
+import type { RegisterResponse } from '@books/api-contract/models';
 import { createUserAccessToken } from '@/mocks/auth/jwt';
 import type { UserRecord } from '@/mocks/db/types';
 

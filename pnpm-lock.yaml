@@ -60,6 +60,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@books/api-contract':
+        specifier: workspace:*
+        version: link:../../packages/api-contract
       '@lucide/vue':
         specifier: ^1.47.0
         version: 1.66.0(vue@3.5.44(typescript@6.0.3))

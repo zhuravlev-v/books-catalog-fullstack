@@ -1,6 +1,6 @@
 import { HttpResponse } from 'msw';
 
-import type { BookResponse, Error as ApiError } from '@/api/generated/models';
+import type { ApiErrorResponse as ApiError, BookResponse } from '@books/api-contract/models';
 import { parseGetBooksIdParams, type GetBooksIdPathParams } from '@/mocks/http/books/getBooksId';
 import { getBooksIdRepository } from '@/mocks/repositories/books/getBooksId';
 

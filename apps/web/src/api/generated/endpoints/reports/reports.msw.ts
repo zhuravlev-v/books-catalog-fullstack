@@ -8,10 +8,10 @@
  *
  * OpenAPI spec version: 1.0.0
  */
+import type { TopAuthorsResponse } from '@books/api-contract/models';
+
 import { HttpResponse, delay, http } from 'msw';
 import type { HttpResponseResolver, RequestHandlerOptions } from 'msw';
-
-import type { TopAuthorsResponse } from '../../models';
 
 import { getGetReportsTopAuthorsResponseMock } from './reports.faker';
 

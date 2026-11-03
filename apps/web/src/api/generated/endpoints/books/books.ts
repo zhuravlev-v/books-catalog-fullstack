@@ -8,6 +8,15 @@
  *
  * OpenAPI spec version: 1.0.0
  */
+import type {
+  ApiErrorResponse,
+  BookForm,
+  BookInput,
+  BookListResponse,
+  BookResponse,
+  GetBooksParams,
+} from '@books/api-contract/models';
+
 import { useMutation, useQuery } from '@tanstack/vue-query';
 import type {
   DataTag,
@@ -23,15 +32,6 @@ import type {
 
 import { computed, toValue, unref } from 'vue';
 import type { MaybeRefOrGetter } from 'vue';
-
-import type {
-  BookForm,
-  BookInput,
-  BookListResponse,
-  BookResponse,
-  Error,
-  GetBooksParams,
-} from '../../models';
 
 import { apiRequest } from '../../../client/request';
 import type { ErrorType, BodyType } from '../../../client/request';
@@ -137,17 +137,17 @@ export type postBooksResponse201 = {
 };
 
 export type postBooksResponse401 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 401;
 };
 
 export type postBooksResponse403 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 403;
 };
 
 export type postBooksResponse422 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 422;
 };
 
@@ -194,7 +194,7 @@ export const postBooks = async (
 export const getPostBooksMutationKey = () => ['postBooks'] as const;
 
 export const getPostBooksMutationOptions = <
-  TError = ErrorType<void | Error>,
+  TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -231,13 +231,13 @@ export const getPostBooksMutationOptions = <
 
 export type PostBooksMutationResult = NonNullable<Awaited<ReturnType<typeof postBooks>>>;
 export type PostBooksMutationBody = BodyType<BookForm>;
-export type PostBooksMutationError = ErrorType<void | Error>;
+export type PostBooksMutationError = ErrorType<ApiErrorResponse>;
 export type PostBooksMutationVariables = { data: BodyType<BookForm> };
 
 /**
  * @summary Создание книги
  */
-export const usePostBooks = <TError = ErrorType<void | Error>, TContext = unknown>(
+export const usePostBooks = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof postBooks>>,
@@ -262,7 +262,7 @@ export type getBooksIdResponse200 = {
 };
 
 export type getBooksIdResponse404 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 404;
 };
 
@@ -296,7 +296,7 @@ export const getGetBooksIdQueryKey = (id: MaybeRefOrGetter<number>) => {
 
 export const getGetBooksIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getBooksId>>,
-  TError = ErrorType<Error>,
+  TError = ErrorType<ApiErrorResponse>,
 >(
   id: MaybeRefOrGetter<number>,
   options?: {
@@ -320,7 +320,7 @@ export const getGetBooksIdQueryOptions = <
 };
 
 export type GetBooksIdQueryResult = NonNullable<Awaited<ReturnType<typeof getBooksId>>>;
-export type GetBooksIdQueryError = ErrorType<Error>;
+export type GetBooksIdQueryError = ErrorType<ApiErrorResponse>;
 
 /**
  * @summary Получить книгу по ID
@@ -328,7 +328,7 @@ export type GetBooksIdQueryError = ErrorType<Error>;
 
 export function useGetBooksId<
   TData = Awaited<ReturnType<typeof getBooksId>>,
-  TError = ErrorType<Error>,
+  TError = ErrorType<ApiErrorResponse>,
 >(
   id: MaybeRefOrGetter<number>,
   options?: {
@@ -354,22 +354,22 @@ export type putBooksIdResponse200 = {
 };
 
 export type putBooksIdResponse401 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 401;
 };
 
 export type putBooksIdResponse403 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 403;
 };
 
 export type putBooksIdResponse404 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 404;
 };
 
 export type putBooksIdResponse422 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 422;
 };
 
@@ -416,7 +416,7 @@ export const putBooksId = async (
 export const getPutBooksIdMutationKey = () => ['putBooksId'] as const;
 
 export const getPutBooksIdMutationOptions = <
-  TError = ErrorType<void | Error>,
+  TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -453,13 +453,13 @@ export const getPutBooksIdMutationOptions = <
 
 export type PutBooksIdMutationResult = NonNullable<Awaited<ReturnType<typeof putBooksId>>>;
 export type PutBooksIdMutationBody = BodyType<BookForm>;
-export type PutBooksIdMutationError = ErrorType<void | Error>;
+export type PutBooksIdMutationError = ErrorType<ApiErrorResponse>;
 export type PutBooksIdMutationVariables = { id: number; data: BodyType<BookForm> };
 
 /**
  * @summary Полное обновление книги
  */
-export const usePutBooksId = <TError = ErrorType<void | Error>, TContext = unknown>(
+export const usePutBooksId = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof putBooksId>>,
@@ -484,22 +484,22 @@ export type patchBooksIdResponse200 = {
 };
 
 export type patchBooksIdResponse401 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 401;
 };
 
 export type patchBooksIdResponse403 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 403;
 };
 
 export type patchBooksIdResponse404 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 404;
 };
 
 export type patchBooksIdResponse422 = {
-  data: Error;
+  data: ApiErrorResponse;
   status: 422;
 };
 
@@ -557,7 +557,7 @@ export const patchBooksId = async (
 export const getPatchBooksIdMutationKey = () => ['patchBooksId'] as const;
 
 export const getPatchBooksIdMutationOptions = <
-  TError = ErrorType<void | Error>,
+  TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -594,13 +594,13 @@ export const getPatchBooksIdMutationOptions = <
 
 export type PatchBooksIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchBooksId>>>;
 export type PatchBooksIdMutationBody = BodyType<BookInput>;
-export type PatchBooksIdMutationError = ErrorType<void | Error>;
+export type PatchBooksIdMutationError = ErrorType<ApiErrorResponse>;
 export type PatchBooksIdMutationVariables = { id: number; data: BodyType<BookInput> };
 
 /**
  * @summary Частичное обновление книги
  */
-export const usePatchBooksId = <TError = ErrorType<void | Error>, TContext = unknown>(
+export const usePatchBooksId = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof patchBooksId>>,
@@ -625,17 +625,17 @@ export type deleteBooksIdResponse204 = {
 };
 
 export type deleteBooksIdResponse401 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 401;
 };
 
 export type deleteBooksIdResponse403 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 403;
 };
 
 export type deleteBooksIdResponse404 = {
-  data: void;
+  data: ApiErrorResponse;
   status: 404;
 };
 
@@ -668,7 +668,7 @@ export const deleteBooksId = async (
 export const getDeleteBooksIdMutationKey = () => ['deleteBooksId'] as const;
 
 export const getDeleteBooksIdMutationOptions = <
-  TError = ErrorType<void>,
+  TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -705,13 +705,13 @@ export const getDeleteBooksIdMutationOptions = <
 
 export type DeleteBooksIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteBooksId>>>;
 
-export type DeleteBooksIdMutationError = ErrorType<void>;
+export type DeleteBooksIdMutationError = ErrorType<ApiErrorResponse>;
 export type DeleteBooksIdMutationVariables = { id: number };
 
 /**
  * @summary Удаление книги
  */
-export const useDeleteBooksId = <TError = ErrorType<void>, TContext = unknown>(
+export const useDeleteBooksId = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof deleteBooksId>>,

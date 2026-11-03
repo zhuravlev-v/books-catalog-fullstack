@@ -1,4 +1,4 @@
-import type { AuthorShort } from '@/api/generated/models';
+import type { AuthorShort } from '@books/api-contract/models';
 import { mockDatabase, type MockDatabase } from '@/mocks/db/database';
 
 export interface AuthorsRepository {
