@@ -5,7 +5,7 @@ PNPM := pnpm
 
 .DEFAULT_GOAL := help
 
-.PHONY: help env check-env install generate build dev db-up db-stop db-shell \
+.PHONY: help env check-env install generate build dev db-up db-stop db-reset db-shell \
 	docker-build up deploy stop down restart logs logs-api logs-web logs-db ps config
 
 help: ## Показать доступные команды
@@ -34,6 +34,10 @@ db-up: check-env ## Запустить PostgreSQL для локальной ра
 
 db-stop: ## Остановить PostgreSQL
 	$(COMPOSE) stop db
+
+db-reset: check-env ## Удалить данные PostgreSQL и заново применить init.sql и seed.sql
+	$(COMPOSE) down --volumes
+	$(COMPOSE) up -d --wait db
 
 db-shell: ## Открыть psql внутри контейнера PostgreSQL
 	$(COMPOSE) exec db sh -lc 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"'
