@@ -12,7 +12,7 @@ if (!API_BASE_PATH) {
 export default defineConfig({
   bookCatalog: {
     input: {
-      target: './book.yaml',
+      target: '../../packages/api-contract/openapi/book.yaml',
     },
     output: {
       mode: 'tags-split',
@@ -51,7 +51,7 @@ export default defineConfig({
   },
   bookCatalogZod: {
     input: {
-      target: './book.yaml',
+      target: '../../packages/api-contract/openapi/book.yaml',
     },
     output: {
       mode: 'tags-split',

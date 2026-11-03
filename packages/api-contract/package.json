@@ -1,0 +1,12 @@
+{
+  "name": "@books/api-contract",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "openapi"
+  ],
+  "exports": {
+    "./openapi": "./openapi/book.yaml"
+  }
+}

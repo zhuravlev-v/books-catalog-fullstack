@@ -16,7 +16,7 @@ pnpm dev
 pnpm api:generate
 ```
 
-Orval читает `book.yaml` и создаёт Fetch-клиент, модели, Faker factories и MSW handler factories в `src/api/generated`.
+Orval читает `../../packages/api-contract/openapi/book.yaml` и создаёт Fetch-клиент, модели, Faker factories и MSW handler factories в `src/api/generated`.
 
 ## Mock API
 

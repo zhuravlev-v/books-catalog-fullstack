@@ -185,6 +185,8 @@ importers:
         specifier: ^3.3.11
         version: 3.3.14(typescript@6.0.3)
 
+  packages/api-contract: {}
+
 packages:
 
   '@babel/code-frame@7.29.7':
