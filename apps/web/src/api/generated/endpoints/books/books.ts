@@ -57,9 +57,7 @@ export const getGetBooksUrl = (params?: GetBooksParams) => {
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `http://localhost:5173/api/v1/books?${stringifiedParams}`
-    : `http://localhost:5173/api/v1/books`;
+  return stringifiedParams.length > 0 ? `/api/v1/books?${stringifiedParams}` : `/api/v1/books`;
 };
 
 /**
@@ -77,7 +75,7 @@ export const getBooks = async (
 };
 
 export const getGetBooksQueryKey = (params?: MaybeRefOrGetter<GetBooksParams>) => {
-  return ['http:', 'localhost:5173', 'api', 'v1', 'books', ...(params ? [params] : [])] as const;
+  return ['api', 'v1', 'books', ...(params ? [params] : [])] as const;
 };
 
 export const getGetBooksQueryOptions = <
@@ -163,7 +161,7 @@ export type postBooksResponseError = (
 };
 
 export const getPostBooksUrl = () => {
-  return `http://localhost:5173/api/v1/books`;
+  return `/api/v1/books`;
 };
 
 /**
@@ -276,7 +274,7 @@ export type getBooksIdResponseError = getBooksIdResponse404 & {
 };
 
 export const getGetBooksIdUrl = (id: number) => {
-  return `http://localhost:5173/api/v1/books/${id}`;
+  return `/api/v1/books/${id}`;
 };
 
 /**
@@ -293,7 +291,7 @@ export const getBooksId = async (
 };
 
 export const getGetBooksIdQueryKey = (id: MaybeRefOrGetter<number>) => {
-  return ['http:', 'localhost:5173', 'api', 'v1', 'books', id] as const;
+  return ['api', 'v1', 'books', id] as const;
 };
 
 export const getGetBooksIdQueryOptions = <
@@ -385,7 +383,7 @@ export type putBooksIdResponseError = (
 };
 
 export const getPutBooksIdUrl = (id: number) => {
-  return `http://localhost:5173/api/v1/books/${id}`;
+  return `/api/v1/books/${id}`;
 };
 
 /**
@@ -518,7 +516,7 @@ export type patchBooksIdResponseError = (
 };
 
 export const getPatchBooksIdUrl = (id: number) => {
-  return `http://localhost:5173/api/v1/books/${id}`;
+  return `/api/v1/books/${id}`;
 };
 
 /**
@@ -651,7 +649,7 @@ export type deleteBooksIdResponseError = (
 };
 
 export const getDeleteBooksIdUrl = (id: number) => {
-  return `http://localhost:5173/api/v1/books/${id}`;
+  return `/api/v1/books/${id}`;
 };
 
 /**

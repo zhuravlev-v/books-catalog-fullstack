@@ -16,5 +16,5 @@ export interface BookForm {
   isbn?: string;
   author_ids: number[];
   /** Файл изображения обложки */
-  cover: Blob;
+  cover: Blob | File;
 }

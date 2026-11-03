@@ -9,7 +9,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import { HttpResponse, delay, http } from 'msw';
-import type { RequestHandlerOptions } from 'msw';
+import type { HttpResponseResolver, RequestHandlerOptions } from 'msw';
 
 import type { TopAuthorsResponse } from '../../models';
 
@@ -21,13 +21,13 @@ export const getGetReportsTopAuthorsMockHandler = (
   overrideResponse?:
     | TopAuthorsResponse
     | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0]
+        info: Parameters<HttpResponseResolver>[0]
       ) => Promise<TopAuthorsResponse> | TopAuthorsResponse),
   options?: RequestHandlerOptions
 ) => {
   return http.get(
-    'http://localhost:5173/api/v1/reports/top-authors',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+    '/api/v1/reports/top-authors',
+    async (info: Parameters<HttpResponseResolver>[0]) => {
       await delay(200);
 
       return HttpResponse.json(

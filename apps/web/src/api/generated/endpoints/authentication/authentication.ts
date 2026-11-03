@@ -54,7 +54,7 @@ export type postAuthRegisterResponseError = (
 };
 
 export const getPostAuthRegisterUrl = () => {
-  return `http://localhost:5173/api/v1/auth/register`;
+  return `/api/v1/auth/register`;
 };
 
 /**
@@ -177,7 +177,7 @@ export type postAuthLoginResponseError = postAuthLoginResponse401 & {
 };
 
 export const getPostAuthLoginUrl = () => {
-  return `http://localhost:5173/api/v1/auth/login`;
+  return `/api/v1/auth/login`;
 };
 
 /**

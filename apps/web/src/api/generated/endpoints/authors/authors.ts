@@ -56,9 +56,7 @@ export const getGetAuthorsUrl = (params?: GetAuthorsParams) => {
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `http://localhost:5173/api/v1/authors?${stringifiedParams}`
-    : `http://localhost:5173/api/v1/authors`;
+  return stringifiedParams.length > 0 ? `/api/v1/authors?${stringifiedParams}` : `/api/v1/authors`;
 };
 
 /**
@@ -76,7 +74,7 @@ export const getAuthors = async (
 };
 
 export const getGetAuthorsQueryKey = (params?: MaybeRefOrGetter<GetAuthorsParams>) => {
-  return ['http:', 'localhost:5173', 'api', 'v1', 'authors', ...(params ? [params] : [])] as const;
+  return ['api', 'v1', 'authors', ...(params ? [params] : [])] as const;
 };
 
 export const getGetAuthorsQueryOptions = <
@@ -162,7 +160,7 @@ export type postAuthorsResponseError = (
 };
 
 export const getPostAuthorsUrl = () => {
-  return `http://localhost:5173/api/v1/authors`;
+  return `/api/v1/authors`;
 };
 
 /**
@@ -282,7 +280,7 @@ export type getAuthorsIdResponseError = getAuthorsIdResponse404 & {
 };
 
 export const getGetAuthorsIdUrl = (id: number) => {
-  return `http://localhost:5173/api/v1/authors/${id}`;
+  return `/api/v1/authors/${id}`;
 };
 
 /**
@@ -299,7 +297,7 @@ export const getAuthorsId = async (
 };
 
 export const getGetAuthorsIdQueryKey = (id: MaybeRefOrGetter<number>) => {
-  return ['http:', 'localhost:5173', 'api', 'v1', 'authors', id] as const;
+  return ['api', 'v1', 'authors', id] as const;
 };
 
 export const getGetAuthorsIdQueryOptions = <
@@ -394,7 +392,7 @@ export type putAuthorsIdResponseError = (
 };
 
 export const getPutAuthorsIdUrl = (id: number) => {
-  return `http://localhost:5173/api/v1/authors/${id}`;
+  return `/api/v1/authors/${id}`;
 };
 
 /**
@@ -527,7 +525,7 @@ export type deleteAuthorsIdResponseError = (
 };
 
 export const getDeleteAuthorsIdUrl = (id: number) => {
-  return `http://localhost:5173/api/v1/authors/${id}`;
+  return `/api/v1/authors/${id}`;
 };
 
 /**

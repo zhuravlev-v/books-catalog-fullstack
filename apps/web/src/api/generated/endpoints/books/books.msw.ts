@@ -9,9 +9,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import { HttpResponse, delay, http } from 'msw';
-import type { RequestHandlerOptions } from 'msw';
+import type { HttpResponseResolver, PathParams, RequestHandlerOptions } from 'msw';
 
-import type { BookListResponse, BookResponse } from '../../models';
+import type { BookForm, BookInput, BookListResponse, BookResponse } from '../../models';
 
 import {
   getGetBooksIdResponseMock,
@@ -32,14 +32,12 @@ export {
 export const getGetBooksMockHandler = (
   overrideResponse?:
     | BookListResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0]
-      ) => Promise<BookListResponse> | BookListResponse),
+    | ((info: Parameters<HttpResponseResolver>[0]) => Promise<BookListResponse> | BookListResponse),
   options?: RequestHandlerOptions
 ) => {
   return http.get(
-    'http://localhost:5173/api/v1/books',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+    '/api/v1/books',
+    async (info: Parameters<HttpResponseResolver>[0]) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -59,13 +57,13 @@ export const getPostBooksMockHandler = (
   overrideResponse?:
     | BookResponse
     | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0]
+        info: Parameters<HttpResponseResolver<PathParams, BookForm>>[0]
       ) => Promise<BookResponse> | BookResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.post(
-    'http://localhost:5173/api/v1/books',
-    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+  return http.post<PathParams, BookForm>(
+    '/api/v1/books',
+    async (info: Parameters<HttpResponseResolver<PathParams, BookForm>>[0]) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -85,13 +83,13 @@ export const getGetBooksIdMockHandler = (
   overrideResponse?:
     | BookResponse
     | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0]
+        info: Parameters<HttpResponseResolver<{ id: string }>>[0]
       ) => Promise<BookResponse> | BookResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.get(
-    'http://localhost:5173/api/v1/books/:id',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+  return http.get<{ id: string }>(
+    '/api/v1/books/:id',
+    async (info: Parameters<HttpResponseResolver<{ id: string }>>[0]) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -111,13 +109,13 @@ export const getPutBooksIdMockHandler = (
   overrideResponse?:
     | BookResponse
     | ((
-        info: Parameters<Parameters<typeof http.put>[1]>[0]
+        info: Parameters<HttpResponseResolver<{ id: string }, BookForm>>[0]
       ) => Promise<BookResponse> | BookResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.put(
-    'http://localhost:5173/api/v1/books/:id',
-    async (info: Parameters<Parameters<typeof http.put>[1]>[0]) => {
+  return http.put<{ id: string }, BookForm>(
+    '/api/v1/books/:id',
+    async (info: Parameters<HttpResponseResolver<{ id: string }, BookForm>>[0]) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -137,13 +135,13 @@ export const getPatchBooksIdMockHandler = (
   overrideResponse?:
     | BookResponse
     | ((
-        info: Parameters<Parameters<typeof http.patch>[1]>[0]
+        info: Parameters<HttpResponseResolver<{ id: string }, BookInput>>[0]
       ) => Promise<BookResponse> | BookResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.patch(
-    'http://localhost:5173/api/v1/books/:id',
-    async (info: Parameters<Parameters<typeof http.patch>[1]>[0]) => {
+  return http.patch<{ id: string }, BookInput>(
+    '/api/v1/books/:id',
+    async (info: Parameters<HttpResponseResolver<{ id: string }, BookInput>>[0]) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -161,12 +159,12 @@ export const getPatchBooksIdMockHandler = (
 
 export const getDeleteBooksIdMockHandler = (
   overrideResponse?:
-    void | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+    void | ((info: Parameters<HttpResponseResolver<{ id: string }>>[0]) => Promise<void> | void),
   options?: RequestHandlerOptions
 ) => {
-  return http.delete(
-    'http://localhost:5173/api/v1/books/:id',
-    async (info: Parameters<Parameters<typeof http.delete>[1]>[0]) => {
+  return http.delete<{ id: string }>(
+    '/api/v1/books/:id',
+    async (info: Parameters<HttpResponseResolver<{ id: string }>>[0]) => {
       await delay(200);
       if (typeof overrideResponse === 'function') {
         await overrideResponse(info);

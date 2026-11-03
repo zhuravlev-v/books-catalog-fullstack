@@ -57,8 +57,8 @@ export const getGetReportsTopAuthorsUrl = (params: GetReportsTopAuthorsParams) =
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `http://localhost:5173/api/v1/reports/top-authors?${stringifiedParams}`
-    : `http://localhost:5173/api/v1/reports/top-authors`;
+    ? `/api/v1/reports/top-authors?${stringifiedParams}`
+    : `/api/v1/reports/top-authors`;
 };
 
 /**
@@ -78,15 +78,7 @@ export const getReportsTopAuthors = async (
 export const getGetReportsTopAuthorsQueryKey = (
   params?: MaybeRefOrGetter<GetReportsTopAuthorsParams>
 ) => {
-  return [
-    'http:',
-    'localhost:5173',
-    'api',
-    'v1',
-    'reports',
-    'top-authors',
-    ...(params ? [params] : []),
-  ] as const;
+  return ['api', 'v1', 'reports', 'top-authors', ...(params ? [params] : [])] as const;
 };
 
 export const getGetReportsTopAuthorsQueryOptions = <

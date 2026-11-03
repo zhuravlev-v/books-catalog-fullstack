@@ -1,10 +1,12 @@
 import { defineConfig } from 'orval';
 import { loadEnv } from 'vite';
+import { fileURLToPath } from 'node:url';
 
-const { VITE_API_URL } = loadEnv('development', process.cwd(), '');
+const rootEnvDir = fileURLToPath(new URL('../..', import.meta.url));
+const { API_BASE_PATH } = loadEnv('development', rootEnvDir, '');
 
-if (!VITE_API_URL) {
-  throw new Error('VITE_API_URL is required');
+if (!API_BASE_PATH) {
+  throw new Error('API_BASE_PATH is required');
 }
 
 export default defineConfig({
@@ -16,7 +18,7 @@ export default defineConfig({
       mode: 'tags-split',
       target: './src/api/generated/endpoints',
       schemas: './src/api/generated/models',
-      baseUrl: VITE_API_URL,
+      baseUrl: API_BASE_PATH,
       client: 'vue-query',
       httpClient: 'fetch',
       override: {
@@ -36,7 +38,7 @@ export default defineConfig({
         generators: [
           {
             type: 'msw',
-            baseUrl: VITE_API_URL,
+            baseUrl: API_BASE_PATH,
             delay: 200,
           },
           {

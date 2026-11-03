@@ -9,9 +9,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import { HttpResponse, delay, http } from 'msw';
-import type { RequestHandlerOptions } from 'msw';
+import type { HttpResponseResolver, PathParams, RequestHandlerOptions } from 'msw';
 
-import type { AuthorListResponse, AuthorResponse } from '../../models';
+import type { AuthorInput, AuthorListResponse, AuthorResponse } from '../../models';
 
 import {
   getGetAuthorsIdResponseMock,
@@ -31,13 +31,13 @@ export const getGetAuthorsMockHandler = (
   overrideResponse?:
     | AuthorListResponse
     | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0]
+        info: Parameters<HttpResponseResolver>[0]
       ) => Promise<AuthorListResponse> | AuthorListResponse),
   options?: RequestHandlerOptions
 ) => {
   return http.get(
-    'http://localhost:5173/api/v1/authors',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+    '/api/v1/authors',
+    async (info: Parameters<HttpResponseResolver>[0]) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -57,13 +57,13 @@ export const getPostAuthorsMockHandler = (
   overrideResponse?:
     | AuthorResponse
     | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0]
+        info: Parameters<HttpResponseResolver<PathParams, AuthorInput>>[0]
       ) => Promise<AuthorResponse> | AuthorResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.post(
-    'http://localhost:5173/api/v1/authors',
-    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+  return http.post<PathParams, AuthorInput>(
+    '/api/v1/authors',
+    async (info: Parameters<HttpResponseResolver<PathParams, AuthorInput>>[0]) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -83,13 +83,13 @@ export const getGetAuthorsIdMockHandler = (
   overrideResponse?:
     | AuthorResponse
     | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0]
+        info: Parameters<HttpResponseResolver<{ id: string }>>[0]
       ) => Promise<AuthorResponse> | AuthorResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.get(
-    'http://localhost:5173/api/v1/authors/:id',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+  return http.get<{ id: string }>(
+    '/api/v1/authors/:id',
+    async (info: Parameters<HttpResponseResolver<{ id: string }>>[0]) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -109,13 +109,13 @@ export const getPutAuthorsIdMockHandler = (
   overrideResponse?:
     | AuthorResponse
     | ((
-        info: Parameters<Parameters<typeof http.put>[1]>[0]
+        info: Parameters<HttpResponseResolver<{ id: string }, AuthorInput>>[0]
       ) => Promise<AuthorResponse> | AuthorResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.put(
-    'http://localhost:5173/api/v1/authors/:id',
-    async (info: Parameters<Parameters<typeof http.put>[1]>[0]) => {
+  return http.put<{ id: string }, AuthorInput>(
+    '/api/v1/authors/:id',
+    async (info: Parameters<HttpResponseResolver<{ id: string }, AuthorInput>>[0]) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -133,12 +133,12 @@ export const getPutAuthorsIdMockHandler = (
 
 export const getDeleteAuthorsIdMockHandler = (
   overrideResponse?:
-    void | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+    void | ((info: Parameters<HttpResponseResolver<{ id: string }>>[0]) => Promise<void> | void),
   options?: RequestHandlerOptions
 ) => {
-  return http.delete(
-    'http://localhost:5173/api/v1/authors/:id',
-    async (info: Parameters<Parameters<typeof http.delete>[1]>[0]) => {
+  return http.delete<{ id: string }>(
+    '/api/v1/authors/:id',
+    async (info: Parameters<HttpResponseResolver<{ id: string }>>[0]) => {
       await delay(200);
       if (typeof overrideResponse === 'function') {
         await overrideResponse(info);

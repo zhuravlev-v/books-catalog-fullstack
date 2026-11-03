@@ -10,8 +10,6 @@
  */
 
 export type GetReportsTopAuthorsParams = {
-  /**
-   * Год выпуска книг
-   */
+  /** Год выпуска книг */
   year: number;
 };

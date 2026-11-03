@@ -9,9 +9,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import { HttpResponse, delay, http } from 'msw';
-import type { RequestHandlerOptions } from 'msw';
+import type { HttpResponseResolver, PathParams, RequestHandlerOptions } from 'msw';
 
-import type { LoginResponse, RegisterResponse } from '../../models';
+import type { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '../../models';
 
 import {
   getPostAuthLoginResponseMock,
@@ -27,13 +27,13 @@ export const getPostAuthRegisterMockHandler = (
   overrideResponse?:
     | RegisterResponse
     | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0]
+        info: Parameters<HttpResponseResolver<PathParams, RegisterRequest>>[0]
       ) => Promise<RegisterResponse> | RegisterResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.post(
-    'http://localhost:5173/api/v1/auth/register',
-    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+  return http.post<PathParams, RegisterRequest>(
+    '/api/v1/auth/register',
+    async (info: Parameters<HttpResponseResolver<PathParams, RegisterRequest>>[0]) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -53,13 +53,13 @@ export const getPostAuthLoginMockHandler = (
   overrideResponse?:
     | LoginResponse
     | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0]
+        info: Parameters<HttpResponseResolver<PathParams, LoginRequest>>[0]
       ) => Promise<LoginResponse> | LoginResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.post(
-    'http://localhost:5173/api/v1/auth/login',
-    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+  return http.post<PathParams, LoginRequest>(
+    '/api/v1/auth/login',
+    async (info: Parameters<HttpResponseResolver<PathParams, LoginRequest>>[0]) => {
       await delay(200);
 
       return HttpResponse.json(

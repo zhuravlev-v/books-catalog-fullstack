@@ -2,7 +2,13 @@ import * as z from 'zod';
 
 const createEnv = () => {
   const EnvSchema = z.object({
-    API_URL: z.url().default('http://localhost:5173/api/v1'),
+    API_URL: z
+      .string()
+      .refine(
+        (value) => value.startsWith('/') || URL.canParse(value),
+        'API_URL must be an absolute URL or an absolute path',
+      )
+      .default('/api/v1'),
     BASE_URL: z
       .string()
       .regex(/^\/(?:[^?#]*\/)?$/, 'BASE_URL must be a path like / or /subcatalog/'),
@@ -23,6 +29,7 @@ const createEnv = () => {
       }
       return acc;
     }, {}),
+    API_URL: import.meta.env.API_BASE_PATH,
     // vite.config.ts provides this variable
     BASE_URL: import.meta.env.BASE_URL,
     DEV: import.meta.env.DEV,
