@@ -185,7 +185,27 @@ importers:
         specifier: ^3.3.11
         version: 3.3.14(typescript@6.0.3)
 
-  packages/api-contract: {}
+  packages/api-contract:
+    dependencies:
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.7
+    devDependencies:
+      '@types/node':
+        specifier: ^24.19.2
+        version: 24.19.2
+      jiti:
+        specifier: ^2.7.0
+        version: 2.7.0
+      orval:
+        specifier: ^8.33.0
+        version: 8.46.0(@faker-js/faker@10.6.0)(@tanstack/vue-query@5.105.1(vue@3.5.44(typescript@6.0.3)))(effect@3.20.0)(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(prettier@3.9.6)(zod@4.6.7)
+      prettier:
+        specifier: 3.9.6
+        version: 3.9.6
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
 
 packages:
 
