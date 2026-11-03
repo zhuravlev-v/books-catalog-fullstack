@@ -13,6 +13,7 @@ servers:
 paths:
   /auth/register:
     post:
+      operationId: postAuthRegister
       summary: Регистрация нового пользователя
       description: Создаёт новый аккаунт пользователя на основе логина, email и пароля.
       tags:
@@ -35,7 +36,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
               example:
                 success: false
                 errors:
@@ -46,7 +47,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
               example:
                 success: false
                 errors:
@@ -55,6 +56,7 @@ paths:
 
   /auth/login:
     post:
+      operationId: postAuthLogin
       summary: Авторизация пользователя
       description: Возвращает access-токен для роли `user`.
       tags:
@@ -77,10 +79,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
 
   /books:
     get:
+      operationId: getBooks
       summary: Список книг
       description: Доступно гостям и пользователям. Поддерживает пагинацию, фильтрацию и поиск.
       tags:
@@ -90,20 +93,25 @@ paths:
           in: query
           schema:
             type: integer
+            minimum: 1
             default: 1
-        - name: per-page
+        - name: per_page
           in: query
           schema:
             type: integer
+            minimum: 1
+            maximum: 100
             default: 20
         - name: author_id
           in: query
           schema:
             type: integer
+            minimum: 1
         - name: year
           in: query
           schema:
             type: integer
+            minimum: 1
         - name: search
           in: query
           schema:
@@ -116,6 +124,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookListResponse'
     post:
+      operationId: postBooks
       summary: Создание книги
       description: Доступно только авторизованным пользователям.
       tags:
@@ -137,14 +146,22 @@ paths:
                 $ref: '#/components/schemas/BookResponse'
         '401':
           description: Неавторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '403':
           description: Недостаточно прав
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '422':
           description: Ошибки валидации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
 
   /books/{id}:
     parameters:
@@ -153,7 +170,9 @@ paths:
         required: true
         schema:
           type: integer
+          minimum: 1
     get:
+      operationId: getBooksId
       summary: Получить книгу по ID
       tags:
         - Books
@@ -169,8 +188,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
     put:
+      operationId: putBooksId
       summary: Полное обновление книги
       tags:
         - Books
@@ -191,17 +211,30 @@ paths:
                 $ref: '#/components/schemas/BookResponse'
         '401':
           description: Неавторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '403':
           description: Недостаточно прав
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '404':
           description: Книга не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '422':
           description: Ошибки валидации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
     patch:
+      operationId: patchBooksId
       summary: Частичное обновление книги
       tags:
         - Books
@@ -222,17 +255,30 @@ paths:
                 $ref: '#/components/schemas/BookResponse'
         '401':
           description: Неавторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '403':
           description: Недостаточно прав
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '404':
           description: Книга не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '422':
           description: Ошибки валидации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
     delete:
+      operationId: deleteBooksId
       summary: Удаление книги
       tags:
         - Books
@@ -243,13 +289,26 @@ paths:
           description: Книга удалена
         '401':
           description: Неавторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '403':
           description: Недостаточно прав
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '404':
           description: Книга не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
 
   /authors:
     get:
+      operationId: getAuthors
       summary: Список авторов
       description: Доступно гостям и пользователям.
       tags:
@@ -259,11 +318,14 @@ paths:
           in: query
           schema:
             type: integer
+            minimum: 1
             default: 1
-        - name: per-page
+        - name: per_page
           in: query
           schema:
             type: integer
+            minimum: 1
+            maximum: 100
             default: 20
         - name: search
           in: query
@@ -277,6 +339,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthorListResponse'
     post:
+      operationId: postAuthors
       summary: Создание автора
       tags:
         - Authors
@@ -297,14 +360,22 @@ paths:
                 $ref: '#/components/schemas/AuthorResponse'
         '401':
           description: Неавторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '403':
           description: Недостаточно прав
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '422':
           description: Ошибки валидации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
 
   /authors/{id}:
     parameters:
@@ -313,7 +384,9 @@ paths:
         required: true
         schema:
           type: integer
+          minimum: 1
     get:
+      operationId: getAuthorsId
       summary: Информация об авторе и его книгах
       tags:
         - Authors
@@ -329,8 +402,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
     put:
+      operationId: putAuthorsId
       summary: Обновление автора
       tags:
         - Authors
@@ -351,17 +425,30 @@ paths:
                 $ref: '#/components/schemas/AuthorResponse'
         '401':
           description: Неавторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '403':
           description: Недостаточно прав
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '404':
           description: Автор не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '422':
           description: Ошибки валидации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
     delete:
+      operationId: deleteAuthorsId
       summary: Удаление автора
       tags:
         - Authors
@@ -372,13 +459,26 @@ paths:
           description: Автор удалён
         '401':
           description: Неавторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '403':
           description: Недостаточно прав
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '404':
           description: Автор не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
 
   /reports/top-authors:
     get:
+      operationId: getReportsTopAuthors
       summary: ТОП-10 авторов по количеству книг за год
       description: Публичный отчёт. Доступен гостям и пользователям.
       tags:
@@ -389,6 +489,7 @@ paths:
           required: true
           schema:
             type: integer
+            minimum: 1
           description: Год выпуска книг
       responses:
         '200':
@@ -402,7 +503,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ApiErrorResponse'
 
 components:
   securitySchemes:
@@ -414,6 +515,7 @@ components:
   schemas:
     RegisterRequest:
       type: object
+      additionalProperties: false
       required:
         - username
         - email
@@ -440,12 +542,21 @@ components:
 
     RegisterResponse:
       type: object
+      additionalProperties: false
+      required:
+        - success
+        - data
       properties:
         success:
           type: boolean
+          enum: [true]
           example: true
         data:
           type: object
+          additionalProperties: false
+          required:
+            - token
+            - user
           properties:
             token:
               type: string
@@ -453,6 +564,12 @@ components:
               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
             user:
               type: object
+              additionalProperties: false
+              required:
+                - id
+                - username
+                - email
+                - created_at
               properties:
                 id:
                   type: string
@@ -474,26 +591,37 @@ components:
 
     LoginRequest:
       type: object
+      additionalProperties: false
       required:
         - username
         - password
       properties:
         username:
           type: string
+          minLength: 1
         password:
           type: string
           format: password
+          minLength: 1
 
     LoginResponse:
       type: object
+      additionalProperties: false
+      required:
+        - success
+        - data
       properties:
         success:
           type: boolean
+          enum: [true]
           example: true
         data:
           type: object
+          additionalProperties: false
           required:
+            - token
             - expires_at
+            - user
           properties:
             token:
               type: string
@@ -502,6 +630,12 @@ components:
               format: date-time
             user:
               type: object
+              additionalProperties: false
+              required:
+                - id
+                - username
+                - email
+                - role
               properties:
                 id:
                   type: string
@@ -513,23 +647,37 @@ components:
                   format: email
                 role:
                   type: string
+                  enum: [user]
                   example: user
 
     Book:
       type: object
+      additionalProperties: false
+      required:
+        - id
+        - title
+        - year
+        - description
+        - isbn
+        - cover_url
+        - authors
       properties:
         id:
           type: integer
+          minimum: 1
         title:
           type: string
+          minLength: 1
         year:
           type: integer
+          minimum: 1
         description:
           type: string
         isbn:
           type: string
         cover_url:
           type: string
+          nullable: true
         authors:
           type: array
           items:
@@ -537,19 +685,32 @@ components:
 
     AuthorShort:
       type: object
+      additionalProperties: false
+      required:
+        - id
+        - full_name
       properties:
         id:
           type: integer
+          minimum: 1
         full_name:
           type: string
+          minLength: 1
 
     Author:
       type: object
+      additionalProperties: false
+      required:
+        - id
+        - full_name
+        - books
       properties:
         id:
           type: integer
+          minimum: 1
         full_name:
           type: string
+          minLength: 1
         books:
           type: array
           items:
@@ -557,32 +718,48 @@ components:
 
     BookShort:
       type: object
+      additionalProperties: false
+      required:
+        - id
+        - title
+        - year
       properties:
         id:
           type: integer
+          minimum: 1
         title:
           type: string
+          minLength: 1
         year:
           type: integer
+          minimum: 1
 
     BookInput:
       type: object
+      additionalProperties: false
+      minProperties: 1
       properties:
         title:
           type: string
+          minLength: 1
         year:
           type: integer
+          minimum: 1
         description:
           type: string
         isbn:
           type: string
         author_ids:
           type: array
+          minItems: 1
+          uniqueItems: true
           items:
             type: integer
+            minimum: 1
 
     BookForm:
       type: object
+      additionalProperties: false
       required:
         - title
         - year
@@ -591,16 +768,21 @@ components:
       properties:
         title:
           type: string
+          minLength: 1
         year:
           type: integer
+          minimum: 1
         description:
           type: string
         isbn:
           type: string
         author_ids:
           type: array
+          minItems: 1
+          uniqueItems: true
           items:
             type: integer
+            minimum: 1
         cover:
           type: string
           format: binary
@@ -608,38 +790,59 @@ components:
 
     AuthorInput:
       type: object
+      additionalProperties: false
       required:
         - full_name
       properties:
         full_name:
           type: string
+          minLength: 1
 
     BookResponse:
       type: object
+      additionalProperties: false
+      required:
+        - success
+        - data
       properties:
         success:
           type: boolean
+          enum: [true]
           example: true
         data:
           $ref: '#/components/schemas/Book'
 
     AuthorResponse:
       type: object
+      additionalProperties: false
+      required:
+        - success
+        - data
       properties:
         success:
           type: boolean
+          enum: [true]
           example: true
         data:
           $ref: '#/components/schemas/Author'
 
     BookListResponse:
       type: object
+      additionalProperties: false
+      required:
+        - success
+        - data
       properties:
         success:
           type: boolean
+          enum: [true]
           example: true
         data:
           type: object
+          additionalProperties: false
+          required:
+            - items
+            - pagination
           properties:
             items:
               type: array
@@ -650,12 +853,21 @@ components:
 
     AuthorListResponse:
       type: object
+      additionalProperties: false
+      required:
+        - success
+        - data
       properties:
         success:
           type: boolean
+          enum: [true]
           example: true
         data:
           type: object
+          additionalProperties: false
+          required:
+            - items
+            - pagination
           properties:
             items:
               type: array
@@ -666,15 +878,25 @@ components:
 
     TopAuthorsResponse:
       type: object
+      additionalProperties: false
+      required:
+        - success
+        - data
       properties:
         success:
           type: boolean
+          enum: [true]
           example: true
         data:
           type: object
+          additionalProperties: false
+          required:
+            - year
+            - items
           properties:
             year:
               type: integer
+              minimum: 1
             items:
               type: array
               items:
@@ -682,33 +904,58 @@ components:
 
     TopAuthor:
       type: object
+      additionalProperties: false
+      required:
+        - rank
+        - author_id
+        - full_name
+        - books_count
       properties:
         rank:
           type: integer
+          minimum: 1
         author_id:
           type: integer
+          minimum: 1
         full_name:
           type: string
+          minLength: 1
         books_count:
           type: integer
+          minimum: 0
 
     Pagination:
       type: object
+      additionalProperties: false
+      required:
+        - total
+        - page
+        - per_page
+        - total_pages
       properties:
         total:
           type: integer
+          minimum: 0
         page:
           type: integer
+          minimum: 1
         per_page:
           type: integer
+          minimum: 1
         total_pages:
           type: integer
+          minimum: 0
 
-    Error:
+    ApiErrorResponse:
       type: object
+      additionalProperties: false
+      required:
+        - success
+        - errors
       properties:
         success:
           type: boolean
+          enum: [false]
           example: false
         errors:
           type: array
@@ -717,8 +964,12 @@ components:
 
     ErrorItem:
       type: object
+      additionalProperties: false
+      required:
+        - message
       properties:
         field:
           type: string
         message:
           type: string
+          minLength: 1
