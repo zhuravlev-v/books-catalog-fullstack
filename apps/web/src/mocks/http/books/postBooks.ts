@@ -7,6 +7,8 @@ import {
 export type CreateBookInput = BookFormInput;
 export type { ParseBookFormResult };
 
-export function parsePostBooksRequest(request: Request): Promise<ParseBookFormResult> {
+export function parsePostBooksRequest(
+  request: Request
+): Promise<ParseBookFormResult> {
   return parseBookFormRequest(request);
 }

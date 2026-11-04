@@ -13,7 +13,9 @@ export const useAuthStore = defineStore('auth', () => {
   const expiresAt = ref<string | null>(null);
   const isSessionRestored = ref(false);
 
-  const isAuthenticated = computed(() => token.value !== null && user.value !== null);
+  const isAuthenticated = computed(
+    () => token.value !== null && user.value !== null
+  );
 
   function setSession(session: AuthSession): void {
     token.value = session.token;

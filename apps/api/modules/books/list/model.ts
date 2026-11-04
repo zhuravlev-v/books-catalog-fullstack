@@ -2,10 +2,7 @@ import type { GetBooksParams } from '@books/api-contract/models';
 
 import { prisma } from '../../../prisma/prisma-client.ts';
 import type { Prisma } from '../../../generated/prisma/client.ts';
-import {
-  bookWithAuthors,
-  type BookWithAuthors,
-} from '../shared/prisma.ts';
+import { bookWithAuthors, type BookWithAuthors } from '../shared/prisma.ts';
 
 export interface BooksPage {
   items: BookWithAuthors[];

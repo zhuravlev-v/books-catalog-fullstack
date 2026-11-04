@@ -16,7 +16,10 @@ export class DexiePostBooksRepository implements PostBooksRepository {
       'rw',
       [this.database.books, this.database.authors, this.database.bookAuthors],
       async () => {
-        const authors = await getBookAuthors(this.database.authors, input.authorIds);
+        const authors = await getBookAuthors(
+          this.database.authors,
+          input.authorIds
+        );
 
         const lastBook = await this.database.books.orderBy('id').last();
         const id = (lastBook?.id ?? 0) + 1;

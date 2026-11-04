@@ -1,7 +1,13 @@
 import { HttpResponse } from 'msw';
 
-import type { ApiErrorResponse as ApiError, BookResponse } from '@books/api-contract/models';
-import { parseGetBooksIdParams, type GetBooksIdPathParams } from '@/mocks/http/books/getBooksId';
+import type {
+  ApiErrorResponse as ApiError,
+  BookResponse,
+} from '@books/api-contract/models';
+import {
+  parseGetBooksIdParams,
+  type GetBooksIdPathParams,
+} from '@/mocks/http/books/getBooksId';
 import { getBooksIdRepository } from '@/mocks/repositories/books/getBooksId';
 
 interface GetBooksIdRequestInfo {
@@ -17,7 +23,9 @@ function notFound(): never {
   throw HttpResponse.json(error, { status: 404 });
 }
 
-export async function getBooksIdResolver({ params }: GetBooksIdRequestInfo): Promise<BookResponse> {
+export async function getBooksIdResolver({
+  params,
+}: GetBooksIdRequestInfo): Promise<BookResponse> {
   const parsedParams = parseGetBooksIdParams(params);
 
   if (parsedParams === undefined) {

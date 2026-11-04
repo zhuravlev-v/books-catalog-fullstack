@@ -37,7 +37,10 @@ export async function putAuthorsIdResolver({
     return unprocessableAuthorMutation(parsedRequest.errors);
   }
 
-  const result = await putAuthorsIdRepository.put(parsedParams.id, parsedRequest.data);
+  const result = await putAuthorsIdRepository.put(
+    parsedParams.id,
+    parsedRequest.data
+  );
 
   if (result === 'not-found') {
     return notFound();

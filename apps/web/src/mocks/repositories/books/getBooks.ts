@@ -14,14 +14,18 @@ export class DexieBooksRepository implements BooksRepository {
       'r',
       [this.database.books, this.database.authors, this.database.bookAuthors],
       async () => {
-        const [bookRecords, authorRecords, bookAuthorRecords] = await Promise.all([
-          this.database.books.toArray(),
-          this.database.authors.toArray(),
-          this.database.bookAuthors.toArray(),
-        ]);
+        const [bookRecords, authorRecords, bookAuthorRecords] =
+          await Promise.all([
+            this.database.books.toArray(),
+            this.database.authors.toArray(),
+            this.database.bookAuthors.toArray(),
+          ]);
 
         const authorsById = new Map<number, AuthorShort>(
-          authorRecords.map(({ id, fullName }) => [id, { id, full_name: fullName }])
+          authorRecords.map(({ id, fullName }) => [
+            id,
+            { id, full_name: fullName },
+          ])
         );
         const authorIdsByBookId = new Map<number, Set<number>>();
 
@@ -31,21 +35,23 @@ export class DexieBooksRepository implements BooksRepository {
           authorIdsByBookId.set(bookId, authorIds);
         }
 
-        return bookRecords.map(({ id, title, year, description, isbn, cover }) => {
-          const authors = [...(authorIdsByBookId.get(id) ?? [])]
-            .map((authorId) => authorsById.get(authorId))
-            .filter((author): author is AuthorShort => author !== undefined);
+        return bookRecords.map(
+          ({ id, title, year, description, isbn, cover }) => {
+            const authors = [...(authorIdsByBookId.get(id) ?? [])]
+              .map((authorId) => authorsById.get(authorId))
+              .filter((author): author is AuthorShort => author !== undefined);
 
-          return {
-            id,
-            title,
-            year,
-            description,
-            isbn,
-            cover_url: getBookCoverUrl(id, cover),
-            authors,
-          };
-        });
+            return {
+              id,
+              title,
+              year,
+              description,
+              isbn,
+              cover_url: getBookCoverUrl(id, cover),
+              authors,
+            };
+          }
+        );
       }
     );
   }

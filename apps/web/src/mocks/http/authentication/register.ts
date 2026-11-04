@@ -44,10 +44,14 @@ export async function parseRegisterRequest(
     username.length < USERNAME_MIN_LENGTH ||
     username.length > USERNAME_MAX_LENGTH
   ) {
-    errors.push({ field: 'username', message: 'Логин должен содержать от 3 до 30 символов' });
+    errors.push({
+      field: 'username',
+      message: 'Логин должен содержать от 3 до 30 символов',
+    });
   }
 
-  const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : undefined;
+  const normalizedEmail =
+    typeof email === 'string' ? email.trim().toLowerCase() : undefined;
 
   if (normalizedEmail === undefined) {
     errors.push({ field: 'email', message: 'Email должен быть строкой' });
@@ -61,7 +65,10 @@ export async function parseRegisterRequest(
     password.length < PASSWORD_MIN_LENGTH ||
     password.length > PASSWORD_MAX_LENGTH
   ) {
-    errors.push({ field: 'password', message: 'Пароль должен содержать от 8 до 100 символов' });
+    errors.push({
+      field: 'password',
+      message: 'Пароль должен содержать от 8 до 100 символов',
+    });
   }
 
   if (

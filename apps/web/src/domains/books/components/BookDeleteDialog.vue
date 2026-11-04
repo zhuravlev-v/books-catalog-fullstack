@@ -31,10 +31,14 @@ const emit = defineEmits<{
 const mutation = useDeleteBooksId();
 const querySync = useBookQuerySync();
 const synchronizing = ref(false);
-const deleting = computed(() => mutation.isPending.value || synchronizing.value);
+const deleting = computed(
+  () => mutation.isPending.value || synchronizing.value
+);
 const bookId = computed(() => {
   const id = props.book?.id;
-  return id !== undefined && Number.isSafeInteger(id) && id > 0 ? id : undefined;
+  return id !== undefined && Number.isSafeInteger(id) && id > 0
+    ? id
+    : undefined;
 });
 const bookTitle = computed(() => props.book?.title?.trim() || 'эту книгу');
 
@@ -42,7 +46,7 @@ watch(
   () => props.open,
   (open) => {
     if (!open) mutation.reset();
-  },
+  }
 );
 
 function handleOpenChange(open: boolean) {
@@ -80,11 +84,17 @@ async function handleDelete() {
       <AlertDialogHeader>
         <AlertDialogTitle>Удалить книгу?</AlertDialogTitle>
         <AlertDialogDescription>
-          Вы действительно хотите удалить «{{ bookTitle }}»? Это действие нельзя отменить.
+          Вы действительно хотите удалить «{{ bookTitle }}»? Это действие нельзя
+          отменить.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <Button type="button" variant="outline" :disabled="deleting" @click="handleOpenChange(false)">
+        <Button
+          type="button"
+          variant="outline"
+          :disabled="deleting"
+          @click="handleOpenChange(false)"
+        >
           Отмена
         </Button>
         <Button

@@ -46,13 +46,22 @@ defineSlots<{
       </ol>
     </nav>
 
-    <div class="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div
+      class="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"
+    >
       <div class="min-w-0 space-y-2">
-        <h1 class="break-words text-3xl font-semibold tracking-tight">{{ title }}</h1>
-        <p v-if="description" class="break-words text-muted-foreground">{{ description }}</p>
+        <h1 class="break-words text-3xl font-semibold tracking-tight">
+          {{ title }}
+        </h1>
+        <p v-if="description" class="break-words text-muted-foreground">
+          {{ description }}
+        </p>
       </div>
 
-      <div v-if="$slots.actions" class="flex min-w-0 shrink-0 flex-wrap items-center gap-2">
+      <div
+        v-if="$slots.actions"
+        class="flex min-w-0 shrink-0 flex-wrap items-center gap-2"
+      >
         <slot name="actions" />
       </div>
     </div>

@@ -11,13 +11,18 @@ export interface AuthorsPage {
   };
 }
 
-export function getAuthorsPage(authors: AuthorShort[], query: GetAuthorsQuery): AuthorsPage {
+export function getAuthorsPage(
+  authors: AuthorShort[],
+  query: GetAuthorsQuery
+): AuthorsPage {
   const normalizedSearch = query.search?.toLocaleLowerCase('ru-RU');
   const filteredAuthors = authors
     .filter(
       (author) =>
         normalizedSearch === undefined ||
-        author.full_name?.toLocaleLowerCase('ru-RU').includes(normalizedSearch) === true
+        author.full_name
+          ?.toLocaleLowerCase('ru-RU')
+          .includes(normalizedSearch) === true
     )
     .sort((left, right) => (left.id ?? 0) - (right.id ?? 0));
   const total = filteredAuthors.length;

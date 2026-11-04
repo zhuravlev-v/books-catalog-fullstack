@@ -8,12 +8,18 @@ const AUTH_ENDPOINT_PATHS = ['/auth/login', '/auth/register'];
 type AuthStore = ReturnType<typeof useAuthStore>;
 
 function isAuthRequest(url: string): boolean {
-  const pathname = new URL(url, window.location.origin).pathname.replace(/\/+$/, '');
+  const pathname = new URL(url, window.location.origin).pathname.replace(
+    /\/+$/,
+    ''
+  );
 
   return AUTH_ENDPOINT_PATHS.some((path) => pathname.endsWith(path));
 }
 
-export function configureApplicationApiClient(authStore: AuthStore, router: Router): void {
+export function configureApplicationApiClient(
+  authStore: AuthStore,
+  router: Router
+): void {
   let unauthorizedRedirect: Promise<void> | null = null;
 
   configureApiClient({
@@ -28,7 +34,8 @@ export function configureApplicationApiClient(authStore: AuthStore, router: Rout
       if (unauthorizedRedirect === null) {
         notify.error('Сессия истекла. Войдите снова.');
 
-        const redirect = router.currentRoute.value.fullPath.split('#', 1)[0] || '/';
+        const redirect =
+          router.currentRoute.value.fullPath.split('#', 1)[0] || '/';
 
         unauthorizedRedirect = router
           .replace({ name: 'login', query: { redirect } })

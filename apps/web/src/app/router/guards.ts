@@ -4,7 +4,10 @@ import { getSafeRedirect } from './redirect';
 
 type AuthStore = ReturnType<typeof useAuthStore>;
 
-export function installRouterGuards(router: Router, authStore: AuthStore): void {
+export function installRouterGuards(
+  router: Router,
+  authStore: AuthStore
+): void {
   router.beforeEach((to) => {
     if (to.meta.access === 'guest' && authStore.isAuthenticated) {
       return { name: 'home' };

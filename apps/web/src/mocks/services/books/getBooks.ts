@@ -24,7 +24,8 @@ export function getBooksPage(books: Book[], query: GetBooksQuery): BooksPage {
     .filter(
       (book) =>
         normalizedSearch === undefined ||
-        book.title?.toLocaleLowerCase('ru-RU').includes(normalizedSearch) === true
+        book.title?.toLocaleLowerCase('ru-RU').includes(normalizedSearch) ===
+          true
     )
     .sort((left, right) => (left.id ?? 0) - (right.id ?? 0));
 

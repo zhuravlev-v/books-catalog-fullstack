@@ -1,1 +1,1 @@
-export type FormDrawerMode = 'create' | 'edit'
+export type FormDrawerMode = 'create' | 'edit';

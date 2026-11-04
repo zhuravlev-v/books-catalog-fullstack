@@ -30,13 +30,18 @@ const updateMutation = usePutAuthorsId();
 const querySync = useAuthorQuerySync();
 
 const submitting = computed(
-  () => createMutation.isPending.value || updateMutation.isPending.value || synchronizing.value
+  () =>
+    createMutation.isPending.value ||
+    updateMutation.isPending.value ||
+    synchronizing.value
 );
 const title = computed(() =>
   props.mode === 'create' ? 'Добавить автора' : 'Редактировать автора'
 );
 const description = computed(() =>
-  props.mode === 'create' ? 'Укажите полное имя нового автора.' : 'Измените полное имя автора.'
+  props.mode === 'create'
+    ? 'Укажите полное имя нового автора.'
+    : 'Измените полное имя автора.'
 );
 
 async function handleSubmit(values: AuthorFormValues) {
@@ -71,7 +76,9 @@ async function handleSubmit(values: AuthorFormValues) {
       await querySync.afterUpdate(id);
     }
 
-    notify.success(props.mode === 'create' ? 'Автор добавлен' : 'Изменения сохранены');
+    notify.success(
+      props.mode === 'create' ? 'Автор добавлен' : 'Изменения сохранены'
+    );
     dirty.value = false;
     emit('update:open', false);
   } catch (error) {

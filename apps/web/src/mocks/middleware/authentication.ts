@@ -26,7 +26,9 @@ function getBearerToken(request: Request): string | undefined {
   return match?.[1];
 }
 
-export async function authenticateRequest(request: Request): Promise<AuthenticationContext> {
+export async function authenticateRequest(
+  request: Request
+): Promise<AuthenticationContext> {
   const token = getBearerToken(request);
 
   if (token === undefined) {
@@ -43,7 +45,9 @@ export async function authenticateRequest(request: Request): Promise<Authenticat
     return {
       claims: payload,
       ...(payload.sub === undefined ? {} : { userId: payload.sub }),
-      ...(typeof payload.username === 'string' ? { username: payload.username } : {}),
+      ...(typeof payload.username === 'string'
+        ? { username: payload.username }
+        : {}),
       ...(typeof payload.role === 'string' ? { role: payload.role } : {}),
     };
   } catch {

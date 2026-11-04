@@ -1,8 +1,4 @@
-import {
-  ApiError,
-  getApiErrorMessage,
-  getApiFieldErrors,
-} from './api-error';
+import { ApiError, getApiErrorMessage, getApiFieldErrors } from './api-error';
 
 type ResponseData<T> = T extends { data: infer Data } ? Data : T;
 
@@ -22,7 +18,7 @@ export function configureApiClient(nextConfiguration: ApiClientConfiguration) {
 
 export async function apiRequest<T>(
   url: string,
-  options: RequestInit,
+  options: RequestInit
 ): Promise<T> {
   const headers = new Headers(options.headers);
   const accessToken = configuration.getAccessToken?.();

@@ -43,7 +43,9 @@ async function logout(): Promise<void> {
 
 <template>
   <header class="shrink-0 border-b bg-background">
-    <div class="mx-auto flex h-16 w-full max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
+    <div
+      class="mx-auto flex h-16 w-full max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8"
+    >
       <RouterLink
         to="/"
         class="shrink-0 rounded-sm text-lg font-semibold tracking-tight transition-colors hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -51,7 +53,10 @@ async function logout(): Promise<void> {
         Каталог книг
       </RouterLink>
 
-      <nav class="hidden items-center gap-1 md:flex" aria-label="Основная навигация">
+      <nav
+        class="hidden items-center gap-1 md:flex"
+        aria-label="Основная навигация"
+      >
         <RouterLink
           v-for="item in navigation"
           :key="item.section"
@@ -64,10 +69,17 @@ async function logout(): Promise<void> {
       </nav>
 
       <div class="ml-auto hidden min-w-0 items-center gap-2 md:flex">
-        <Skeleton v-if="!isSessionRestored" class="h-9 w-40" aria-label="Восстановление сессии" />
+        <Skeleton
+          v-if="!isSessionRestored"
+          class="h-9 w-40"
+          aria-label="Восстановление сессии"
+        />
 
         <template v-else-if="isAuthenticated">
-          <span class="max-w-48 truncate text-sm font-medium" :title="user?.username">
+          <span
+            class="max-w-48 truncate text-sm font-medium"
+            :title="user?.username"
+          >
             {{ user?.username }}
           </span>
           <Button type="button" variant="outline" @click="logout">Выйти</Button>
@@ -99,10 +111,15 @@ async function logout(): Promise<void> {
         <SheetContent side="right" class="w-full max-w-xs">
           <SheetHeader>
             <SheetTitle>Навигация</SheetTitle>
-            <SheetDescription class="sr-only">Разделы каталога книг</SheetDescription>
+            <SheetDescription class="sr-only"
+              >Разделы каталога книг</SheetDescription
+            >
           </SheetHeader>
 
-          <nav class="flex flex-col gap-1 px-4" aria-label="Мобильная навигация">
+          <nav
+            class="flex flex-col gap-1 px-4"
+            aria-label="Мобильная навигация"
+          >
             <RouterLink
               v-for="item in navigation"
               :key="item.section"
@@ -123,17 +140,27 @@ async function logout(): Promise<void> {
             />
 
             <template v-else-if="isAuthenticated">
-              <p class="truncate px-3 py-2 text-sm font-medium" :title="user?.username">
+              <p
+                class="truncate px-3 py-2 text-sm font-medium"
+                :title="user?.username"
+              >
                 {{ user?.username }}
               </p>
-              <Button type="button" variant="outline" class="w-full" @click="logout">
+              <Button
+                type="button"
+                variant="outline"
+                class="w-full"
+                @click="logout"
+              >
                 Выйти
               </Button>
             </template>
 
             <template v-else>
               <Button as-child variant="ghost" class="w-full justify-start">
-                <RouterLink to="/login" @click="isMobileMenuOpen = false">Войти</RouterLink>
+                <RouterLink to="/login" @click="isMobileMenuOpen = false"
+                  >Войти</RouterLink
+                >
               </Button>
               <Button as-child class="w-full justify-start">
                 <RouterLink to="/register" @click="isMobileMenuOpen = false">

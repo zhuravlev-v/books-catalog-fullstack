@@ -27,19 +27,26 @@ const bookId = computed(() => {
   return Number.isSafeInteger(id) && id > 0 ? id : undefined;
 });
 
-const query = useGetBooksId(computed(() => bookId.value ?? 0), {
-  query: {
-    enabled: computed(() => bookId.value !== undefined),
-  },
-});
+const query = useGetBooksId(
+  computed(() => bookId.value ?? 0),
+  {
+    query: {
+      enabled: computed(() => bookId.value !== undefined),
+    },
+  }
+);
 
 const book = computed(() => query.data.value?.data.data);
-const bookTitle = computed(() => book.value?.title?.trim() || 'Название книги не указано');
+const bookTitle = computed(
+  () => book.value?.title?.trim() || 'Название книги не указано'
+);
 const isNotFound = computed(
   () =>
     bookId.value === undefined ||
-    (query.isError.value && isApiError(query.error.value) && query.error.value.status === 404) ||
-    (query.isSuccess.value && book.value === undefined),
+    (query.isError.value &&
+      isApiError(query.error.value) &&
+      query.error.value.status === 404) ||
+    (query.isSuccess.value && book.value === undefined)
 );
 const breadcrumbs = computed(() => [
   { label: 'Книги', to: { name: 'books' } },
@@ -69,7 +76,11 @@ async function handleDeleted() {
     >
       <template v-if="authStore.isAuthenticated && book" #actions>
         <Button type="button" @click="drawerOpen = true">Редактировать</Button>
-        <Button type="button" variant="destructive" @click="deleteDialogOpen = true">
+        <Button
+          type="button"
+          variant="destructive"
+          @click="deleteDialogOpen = true"
+        >
           Удалить
         </Button>
       </template>
@@ -87,7 +98,11 @@ async function handleDeleted() {
       </template>
     </PageState>
 
-    <div v-else-if="query.isPending.value" class="grid gap-6 md:grid-cols-[12rem_minmax(0,1fr)]" aria-label="Загрузка книги">
+    <div
+      v-else-if="query.isPending.value"
+      class="grid gap-6 md:grid-cols-[12rem_minmax(0,1fr)]"
+      aria-label="Загрузка книги"
+    >
       <Skeleton class="aspect-[2/3] w-full rounded-xl" />
       <div class="space-y-3">
         <Skeleton class="h-8 w-2/3" />
@@ -108,7 +123,10 @@ async function handleDeleted() {
       </template>
     </PageState>
 
-    <article v-else-if="book" class="grid min-w-0 gap-6 md:grid-cols-[12rem_minmax(0,1fr)]">
+    <article
+      v-else-if="book"
+      class="grid min-w-0 gap-6 md:grid-cols-[12rem_minmax(0,1fr)]"
+    >
       <AppImage
         :src="book.cover_url"
         :alt="`Обложка книги «${bookTitle}»`"
@@ -118,19 +136,29 @@ async function handleDeleted() {
       <div class="min-w-0 space-y-5">
         <dl class="grid gap-4 sm:grid-cols-2">
           <div>
-            <dt class="text-sm font-medium text-muted-foreground">Год издания</dt>
+            <dt class="text-sm font-medium text-muted-foreground">
+              Год издания
+            </dt>
             <dd class="mt-1 break-words">{{ book.year ?? 'Не указан' }}</dd>
           </div>
           <div>
             <dt class="text-sm font-medium text-muted-foreground">ISBN</dt>
-            <dd class="mt-1 break-words">{{ book.isbn?.trim() || 'Не указан' }}</dd>
+            <dd class="mt-1 break-words">
+              {{ book.isbn?.trim() || 'Не указан' }}
+            </dd>
           </div>
         </dl>
 
         <section>
           <h2 class="text-sm font-medium text-muted-foreground">Авторы</h2>
-          <div v-if="book.authors?.length" class="mt-1 flex min-w-0 flex-wrap gap-x-3 gap-y-1">
-            <template v-for="(author, index) in book.authors" :key="author.id ?? index">
+          <div
+            v-if="book.authors?.length"
+            class="mt-1 flex min-w-0 flex-wrap gap-x-3 gap-y-1"
+          >
+            <template
+              v-for="(author, index) in book.authors"
+              :key="author.id ?? index"
+            >
               <RouterLink
                 v-if="hasValidId(author.id)"
                 :to="{ name: 'author-details', params: { id: author.id } }"

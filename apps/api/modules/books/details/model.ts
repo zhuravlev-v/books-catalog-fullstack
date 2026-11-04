@@ -1,16 +1,15 @@
-import * as z from "zod";
+import * as z from 'zod';
 import { GetBooksIdParams } from '@books/api-contract/schemas';
 import { HttpError } from '../../../http/errors.ts';
 import { prisma } from '../../../prisma/prisma-client.ts';
-import {
-  bookWithAuthors,
-  type BookWithAuthors,
-} from '../shared/prisma.ts';
+import { bookWithAuthors, type BookWithAuthors } from '../shared/prisma.ts';
 
-export async function queryBook(params: z.infer<typeof GetBooksIdParams>): Promise<BookWithAuthors> {
+export async function queryBook(
+  params: z.infer<typeof GetBooksIdParams>
+): Promise<BookWithAuthors> {
   const book = await prisma.books.findUnique({
     where: { id: params.id },
-    include: bookWithAuthors
+    include: bookWithAuthors,
   });
 
   if (book === null) {

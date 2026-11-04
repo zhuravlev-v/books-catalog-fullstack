@@ -20,13 +20,19 @@ export class DexieGetBooksIdRepository implements GetBooksIdRepository {
           return undefined;
         }
 
-        const bookAuthors = await this.database.bookAuthors.where('bookId').equals(id).toArray();
+        const bookAuthors = await this.database.bookAuthors
+          .where('bookId')
+          .equals(id)
+          .toArray();
         const authorRecords = await this.database.authors.bulkGet(
           bookAuthors.map(({ authorId }) => authorId)
         );
         const authors: AuthorShort[] = authorRecords
           .filter((author) => author !== undefined)
-          .map(({ id: authorId, fullName }) => ({ id: authorId, full_name: fullName }));
+          .map(({ id: authorId, fullName }) => ({
+            id: authorId,
+            full_name: fullName,
+          }));
 
         return {
           id: book.id,

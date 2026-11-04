@@ -17,7 +17,7 @@ interface BookFormErrorHandlers {
 
 export function applyBookFormError(
   error: unknown,
-  { setFieldError, setFormError }: BookFormErrorHandlers,
+  { setFieldError, setFormError }: BookFormErrorHandlers
 ) {
   const result = applyServerValidationErrors(error, FORM_FIELDS, setFieldError);
 

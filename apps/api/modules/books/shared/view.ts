@@ -19,7 +19,7 @@ export const presentBook = defineMapper(
       id: authors.id,
       full_name: authors.full_name,
     })),
-  }),
+  })
 );
 
 export const presentBookShort = defineMapper(
@@ -28,5 +28,5 @@ export const presentBookShort = defineMapper(
     id: book.id,
     title: book.title,
     year: book.year,
-  }),
+  })
 );

@@ -22,20 +22,28 @@ const CONFLICT_MESSAGES: Record<RegistrationConflictField, string> = {
 };
 
 function unprocessable(errors: ErrorItem[]): never {
-  throw HttpResponse.json<ApiError>({ success: false, errors }, { status: 422 });
+  throw HttpResponse.json<ApiError>(
+    { success: false, errors },
+    { status: 422 }
+  );
 }
 
 function conflict(fields: RegistrationConflictField[]): never {
   throw HttpResponse.json<ApiError>(
     {
       success: false,
-      errors: fields.map((field) => ({ field, message: CONFLICT_MESSAGES[field] })),
+      errors: fields.map((field) => ({
+        field,
+        message: CONFLICT_MESSAGES[field],
+      })),
     },
     { status: 409 }
   );
 }
 
-export async function registerResolver({ request }: RegisterRequestInfo): Promise<RegisterResponse> {
+export async function registerResolver({
+  request,
+}: RegisterRequestInfo): Promise<RegisterResponse> {
   const parsedRequest = await parseRegisterRequest(request);
 
   if (parsedRequest.errors !== undefined) {

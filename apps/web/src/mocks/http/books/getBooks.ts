@@ -11,10 +11,17 @@ export interface GetBooksQuery {
   search?: string;
 }
 
-export function parseGetBooksQuery(searchParams: URLSearchParams): GetBooksQuery {
-  const page = parsePositiveIntegerQueryParam(searchParams.get('page')) ?? DEFAULT_PAGE;
-  const perPage = parsePositiveIntegerQueryParam(searchParams.get('per_page')) ?? DEFAULT_PER_PAGE;
-  const authorId = parsePositiveIntegerQueryParam(searchParams.get('author_id'));
+export function parseGetBooksQuery(
+  searchParams: URLSearchParams
+): GetBooksQuery {
+  const page =
+    parsePositiveIntegerQueryParam(searchParams.get('page')) ?? DEFAULT_PAGE;
+  const perPage =
+    parsePositiveIntegerQueryParam(searchParams.get('per_page')) ??
+    DEFAULT_PER_PAGE;
+  const authorId = parsePositiveIntegerQueryParam(
+    searchParams.get('author_id')
+  );
   const year = parsePositiveIntegerQueryParam(searchParams.get('year'));
   const search = searchParams.get('search')?.trim();
 

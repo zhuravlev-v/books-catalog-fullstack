@@ -12,7 +12,9 @@ interface PostBooksRequestInfo {
   request: Request;
 }
 
-export async function postBooksResolver({ request }: PostBooksRequestInfo): Promise<BookResponse> {
+export async function postBooksResolver({
+  request,
+}: PostBooksRequestInfo): Promise<BookResponse> {
   await requireUser(request);
 
   const parsedRequest = await parsePostBooksRequest(request);

@@ -18,7 +18,8 @@ export interface PatchBookInput {
 }
 
 export type ParsePatchBookResult =
-  { data: PatchBookInput; errors?: never } | { data?: never; errors: ErrorItem[] };
+  | { data: PatchBookInput; errors?: never }
+  | { data?: never; errors: ErrorItem[] };
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -36,7 +37,9 @@ export function parsePatchBooksIdParams(
   return id === undefined ? undefined : { id };
 }
 
-export async function parsePatchBooksIdRequest(request: Request): Promise<ParsePatchBookResult> {
+export async function parsePatchBooksIdRequest(
+  request: Request
+): Promise<ParsePatchBookResult> {
   let body: unknown;
 
   try {
@@ -54,7 +57,10 @@ export async function parsePatchBooksIdRequest(request: Request): Promise<ParseP
 
   if (hasOwn(body, 'title')) {
     if (typeof body.title !== 'string' || body.title.trim().length === 0) {
-      errors.push({ field: 'title', message: 'Название должно быть непустой строкой' });
+      errors.push({
+        field: 'title',
+        message: 'Название должно быть непустой строкой',
+      });
     } else {
       data.title = body.title.trim();
     }
@@ -70,7 +76,10 @@ export async function parsePatchBooksIdRequest(request: Request): Promise<ParseP
 
   if (hasOwn(body, 'description')) {
     if (typeof body.description !== 'string') {
-      errors.push({ field: 'description', message: 'Описание должно быть строкой' });
+      errors.push({
+        field: 'description',
+        message: 'Описание должно быть строкой',
+      });
     } else {
       data.description = body.description;
     }
@@ -90,12 +99,15 @@ export async function parsePatchBooksIdRequest(request: Request): Promise<ParseP
       body.author_ids.length === 0 ||
       body.author_ids.some(
         (authorId) =>
-          typeof authorId !== 'number' || !Number.isSafeInteger(authorId) || authorId <= 0
+          typeof authorId !== 'number' ||
+          !Number.isSafeInteger(authorId) ||
+          authorId <= 0
       )
     ) {
       errors.push({
         field: 'author_ids',
-        message: 'Укажите хотя бы одного автора с положительным целочисленным ID',
+        message:
+          'Укажите хотя бы одного автора с положительным целочисленным ID',
       });
     } else {
       data.authorIds = [...new Set(body.author_ids as number[])];

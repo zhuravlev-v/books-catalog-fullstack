@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { usePatchBooksId, usePostBooks, usePutBooksId } from '@/api/generated/endpoints';
-import type { Book, BookForm as BookFormPayload, BookInput } from '@books/api-contract/models';
+import {
+  usePatchBooksId,
+  usePostBooks,
+  usePutBooksId,
+} from '@/api/generated/endpoints';
+import type {
+  Book,
+  BookForm as BookFormPayload,
+  BookInput,
+} from '@books/api-contract/models';
 import { FormDrawer } from '@/shared/components';
 import { notify } from '@/shared/lib/notifications';
 import BookForm from './BookForm.vue';
@@ -37,7 +45,9 @@ const submitting = computed(
     replaceMutation.isPending.value ||
     synchronizing.value
 );
-const title = computed(() => (props.mode === 'create' ? 'Добавить книгу' : 'Редактировать книгу'));
+const title = computed(() =>
+  props.mode === 'create' ? 'Добавить книгу' : 'Редактировать книгу'
+);
 const description = computed(() =>
   props.mode === 'create'
     ? 'Заполните данные новой книги.'
@@ -77,7 +87,9 @@ async function handleSubmit(values: BookFormValues) {
     let id: number | undefined;
 
     if (props.mode === 'create') {
-      const response = await createMutation.mutateAsync({ data: toBookForm(values) });
+      const response = await createMutation.mutateAsync({
+        data: toBookForm(values),
+      });
       id = response.data.data?.id;
 
       if (!response.data.data) {
@@ -105,7 +117,9 @@ async function handleSubmit(values: BookFormValues) {
     } else if (id !== undefined) {
       await querySync.afterUpdate(id);
     }
-    notify.success(props.mode === 'create' ? 'Книга добавлена' : 'Изменения сохранены');
+    notify.success(
+      props.mode === 'create' ? 'Книга добавлена' : 'Изменения сохранены'
+    );
     dirty.value = false;
     emit('update:open', false);
   } catch (error) {

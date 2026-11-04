@@ -42,7 +42,10 @@ export async function patchBooksIdResolver({
   }
 
   try {
-    const result = await patchBooksIdRepository.patch(parsedParams.id, parsedRequest.data);
+    const result = await patchBooksIdRepository.patch(
+      parsedParams.id,
+      parsedRequest.data
+    );
 
     if (result === 'not-found') {
       return notFound();

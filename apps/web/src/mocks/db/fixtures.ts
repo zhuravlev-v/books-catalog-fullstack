@@ -1,6 +1,11 @@
 import { faker } from '@faker-js/faker/locale/ru';
 
-import type { AuthorRecord, BookAuthorRecord, BookRecord, UserRecord } from './types';
+import type {
+  AuthorRecord,
+  BookAuthorRecord,
+  BookRecord,
+  UserRecord,
+} from './types';
 
 const MOCK_DATA_SEED = 20260918;
 const AUTHORS_COUNT = 12;
@@ -35,32 +40,40 @@ export function createMockDatabaseFixtures(): MockDatabaseFixtures {
     },
   ];
 
-  const authors: AuthorRecord[] = Array.from({ length: AUTHORS_COUNT }, (_, index) => ({
-    id: index + 1,
-    fullName: faker.person.fullName(),
-  }));
+  const authors: AuthorRecord[] = Array.from(
+    { length: AUTHORS_COUNT },
+    (_, index) => ({
+      id: index + 1,
+      fullName: faker.person.fullName(),
+    })
+  );
 
-  const books: BookRecord[] = Array.from({ length: BOOKS_COUNT }, (_, index) => {
-    const id = index + 1;
+  const books: BookRecord[] = Array.from(
+    { length: BOOKS_COUNT },
+    (_, index) => {
+      const id = index + 1;
 
-    return {
-      id,
-      title: faker.book.title(),
-      year: PUBLICATION_YEARS[index % PUBLICATION_YEARS.length]!,
-      description: faker.lorem.paragraph(),
-      isbn: faker.commerce.isbn(13),
-      cover: createCover(id),
-    };
-  });
+      return {
+        id,
+        title: faker.book.title(),
+        year: PUBLICATION_YEARS[index % PUBLICATION_YEARS.length]!,
+        description: faker.lorem.paragraph(),
+        isbn: faker.commerce.isbn(13),
+        cover: createCover(id),
+      };
+    }
+  );
 
   const authorIds = authors.map(({ id }) => id);
   const bookAuthors = books.flatMap(({ id: bookId }, index) => {
     const authorsCount = index === 0 ? 2 : faker.number.int({ min: 1, max: 3 });
 
-    return faker.helpers.arrayElements(authorIds, authorsCount).map((authorId) => ({
-      bookId,
-      authorId,
-    }));
+    return faker.helpers
+      .arrayElements(authorIds, authorsCount)
+      .map((authorId) => ({
+        bookId,
+        authorId,
+      }));
   });
 
   return { users, authors, books, bookAuthors };

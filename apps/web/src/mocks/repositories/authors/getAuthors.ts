@@ -11,7 +11,10 @@ export class DexieAuthorsRepository implements AuthorsRepository {
   async getAll(): Promise<AuthorShort[]> {
     const authorRecords = await this.database.authors.toArray();
 
-    return authorRecords.map(({ id, fullName }) => ({ id, full_name: fullName }));
+    return authorRecords.map(({ id, fullName }) => ({
+      id,
+      full_name: fullName,
+    }));
   }
 }
 

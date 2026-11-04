@@ -8,7 +8,9 @@ export interface GetBooksIdParams {
   id: number;
 }
 
-export function parseGetBooksIdParams(params: GetBooksIdPathParams): GetBooksIdParams | undefined {
+export function parseGetBooksIdParams(
+  params: GetBooksIdPathParams
+): GetBooksIdParams | undefined {
   const id = parsePositiveIntegerPathParam(params.id);
 
   return id === undefined ? undefined : { id };

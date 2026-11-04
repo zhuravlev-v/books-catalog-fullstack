@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useMediaQuery } from '@vueuse/core'
-import { computed, nextTick, ref, watch } from 'vue'
-import type { FormDrawerMode } from './types'
+import { useMediaQuery } from '@vueuse/core';
+import { computed, nextTick, ref, watch } from 'vue';
+import type { FormDrawerMode } from './types';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,8 +11,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/shared/ui/alert-dialog'
-import { Button } from '@/shared/ui/button'
+} from '@/shared/ui/alert-dialog';
+import { Button } from '@/shared/ui/button';
 import {
   Drawer,
   DrawerContent,
@@ -20,19 +20,19 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-} from '@/shared/ui/drawer'
+} from '@/shared/ui/drawer';
 
 interface Props {
-  open: boolean
-  mode: FormDrawerMode
-  title: string
-  description?: string
-  dirty?: boolean
-  submitting?: boolean
-  saveLabel?: string
-  cancelLabel?: string
-  discardLabel?: string
-  continueLabel?: string
+  open: boolean;
+  mode: FormDrawerMode;
+  title: string;
+  description?: string;
+  dirty?: boolean;
+  submitting?: boolean;
+  saveLabel?: string;
+  cancelLabel?: string;
+  discardLabel?: string;
+  continueLabel?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -43,78 +43,82 @@ const props = withDefaults(defineProps<Props>(), {
   cancelLabel: 'Отмена',
   discardLabel: 'Выйти без сохранения',
   continueLabel: 'Продолжить редактирование',
-})
+});
 
 const emit = defineEmits<{
-  'update:open': [value: boolean]
-  'submit': []
-  'closed': []
-}>()
+  'update:open': [value: boolean];
+  submit: [];
+  closed: [];
+}>();
 
-const isDesktop = useMediaQuery('(min-width: 768px)')
-const showDiscardConfirmation = ref(false)
-const forceClosing = ref(false)
-const opener = ref<HTMLElement | null>(null)
+const isDesktop = useMediaQuery('(min-width: 768px)');
+const showDiscardConfirmation = ref(false);
+const forceClosing = ref(false);
+const opener = ref<HTMLElement | null>(null);
 
-const swipeDirection = computed(() => isDesktop.value ? 'right' : 'down')
+const swipeDirection = computed(() => (isDesktop.value ? 'right' : 'down'));
 
-watch(() => props.open, (open, wasOpen) => {
-  if (open && !wasOpen) {
-    opener.value = document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : null
+watch(
+  () => props.open,
+  (open, wasOpen) => {
+    if (open && !wasOpen) {
+      opener.value =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+    }
+
+    if (!open) {
+      showDiscardConfirmation.value = false;
+    }
   }
-
-  if (!open) {
-    showDiscardConfirmation.value = false
-  }
-})
+);
 
 function requestClose() {
   if (props.submitting) {
-    return
+    return;
   }
 
   if (props.dirty && !forceClosing.value) {
-    showDiscardConfirmation.value = true
-    return
+    showDiscardConfirmation.value = true;
+    return;
   }
 
-  emit('update:open', false)
+  emit('update:open', false);
 }
 
 function handleOpenChange(open: boolean) {
   if (open) {
-    emit('update:open', true)
-    return
+    emit('update:open', true);
+    return;
   }
 
-  requestClose()
+  requestClose();
 }
 
 function discardChanges() {
-  showDiscardConfirmation.value = false
-  forceClosing.value = true
-  emit('update:open', false)
+  showDiscardConfirmation.value = false;
+  forceClosing.value = true;
+  emit('update:open', false);
 }
 
 function handleSubmit() {
   if (!props.submitting) {
-    emit('submit')
+    emit('submit');
   }
 }
 
 async function handleOpenComplete(open: boolean) {
   if (open) {
-    return
+    return;
   }
 
-  forceClosing.value = false
-  emit('closed')
+  forceClosing.value = false;
+  emit('closed');
 
-  await nextTick()
-  opener.value?.focus()
-  opener.value = null
+  await nextTick();
+  opener.value?.focus();
+  opener.value = null;
 }
 </script>
 
@@ -141,11 +145,7 @@ async function handleOpenComplete(open: boolean) {
       </div>
 
       <DrawerFooter class="shrink-0 flex-row-reverse border-t px-6 py-4">
-        <Button
-          type="button"
-          :disabled="submitting"
-          @click="handleSubmit"
-        >
+        <Button type="button" :disabled="submitting" @click="handleSubmit">
           {{ saveLabel }}
         </Button>
         <Button

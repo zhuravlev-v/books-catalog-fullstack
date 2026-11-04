@@ -7,8 +7,7 @@ const host = process.env.DB_HOST ?? 'localhost';
 const port = process.env.DB_PORT ?? '5432';
 const database = encodeURIComponent(process.env.DB_NAME ?? '');
 
-const connectionString =
-  `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`;
+const connectionString = `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`;
 
 const adapter = new PrismaPg({ connectionString });
 

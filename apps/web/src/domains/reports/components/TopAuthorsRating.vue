@@ -39,7 +39,9 @@ const reportYear = computed(() => report.value?.year ?? year);
   />
 
   <section v-else class="min-w-0 space-y-3" aria-labelledby="top-authors-title">
-    <h2 id="top-authors-title" class="text-lg font-semibold">Рейтинг за {{ reportYear }} год</h2>
+    <h2 id="top-authors-title" class="text-lg font-semibold">
+      Рейтинг за {{ reportYear }} год
+    </h2>
 
     <ol class="space-y-3">
       <li
@@ -48,7 +50,9 @@ const reportYear = computed(() => report.value?.year ?? year);
         class="grid min-w-0 gap-3 rounded-xl border bg-card p-4 text-card-foreground shadow-sm sm:grid-cols-[7rem_minmax(0,1fr)_auto] sm:items-center"
       >
         <span class="text-sm font-medium text-muted-foreground">
-          {{ author.rank == null ? 'Место не указано' : `${author.rank} место` }}
+          {{
+            author.rank == null ? 'Место не указано' : `${author.rank} место`
+          }}
         </span>
 
         <RouterLink

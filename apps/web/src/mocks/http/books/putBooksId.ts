@@ -16,12 +16,16 @@ export interface PutBooksIdParams {
 export type PutBookInput = BookFormInput;
 export type { ParseBookFormResult };
 
-export function parsePutBooksIdParams(params: PutBooksIdPathParams): PutBooksIdParams | undefined {
+export function parsePutBooksIdParams(
+  params: PutBooksIdPathParams
+): PutBooksIdParams | undefined {
   const id = parsePositiveIntegerPathParam(params.id);
 
   return id === undefined ? undefined : { id };
 }
 
-export function parsePutBooksIdRequest(request: Request): Promise<ParseBookFormResult> {
+export function parsePutBooksIdRequest(
+  request: Request
+): Promise<ParseBookFormResult> {
   return parseBookFormRequest(request);
 }

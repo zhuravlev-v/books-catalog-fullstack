@@ -1,6 +1,9 @@
 import { HttpResponse } from 'msw';
 
-import type { ApiErrorResponse as ApiError, AuthorResponse } from '@books/api-contract/models';
+import type {
+  ApiErrorResponse as ApiError,
+  AuthorResponse,
+} from '@books/api-contract/models';
 import {
   parseGetAuthorsIdParams,
   type GetAuthorsIdPathParams,

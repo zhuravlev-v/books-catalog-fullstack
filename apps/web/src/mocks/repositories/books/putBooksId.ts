@@ -25,7 +25,10 @@ export class DexiePutBooksIdRepository implements PutBooksIdRepository {
           return 'not-found' as const;
         }
 
-        const authors = await getBookAuthors(this.database.authors, input.authorIds);
+        const authors = await getBookAuthors(
+          this.database.authors,
+          input.authorIds
+        );
         const record: BookRecord = {
           id,
           title: input.title,

@@ -21,16 +21,23 @@ export async function getBookAuthors(
   authorIds: number[]
 ): Promise<AuthorRecord[]> {
   const authors = await authorsTable.bulkGet(authorIds);
-  const unknownAuthorIds = authorIds.filter((_, index) => authors[index] === undefined);
+  const unknownAuthorIds = authorIds.filter(
+    (_, index) => authors[index] === undefined
+  );
 
   if (unknownAuthorIds.length > 0) {
     throw new UnknownBookAuthorsError(unknownAuthorIds);
   }
 
-  return authors.filter((author): author is AuthorRecord => author !== undefined);
+  return authors.filter(
+    (author): author is AuthorRecord => author !== undefined
+  );
 }
 
-export function createBookModel(record: BookRecord, authors: AuthorRecord[]): Book {
+export function createBookModel(
+  record: BookRecord,
+  authors: AuthorRecord[]
+): Book {
   return {
     id: record.id,
     title: record.title,
@@ -38,15 +45,23 @@ export function createBookModel(record: BookRecord, authors: AuthorRecord[]): Bo
     description: record.description,
     isbn: record.isbn,
     cover_url: getBookCoverUrl(record.id, record.cover),
-    authors: authors.map((author) => ({ id: author.id, full_name: author.fullName })),
+    authors: authors.map((author) => ({
+      id: author.id,
+      full_name: author.fullName,
+    })),
   };
 }
 
 export function unprocessableBookMutation(errors: ErrorItem[]): never {
-  throw HttpResponse.json<ApiError>({ success: false, errors }, { status: 422 });
+  throw HttpResponse.json<ApiError>(
+    { success: false, errors },
+    { status: 422 }
+  );
 }
 
-export function unprocessableUnknownBookAuthors(error: UnknownBookAuthorsError): never {
+export function unprocessableUnknownBookAuthors(
+  error: UnknownBookAuthorsError
+): never {
   return unprocessableBookMutation([
     {
       field: 'author_ids',

@@ -8,7 +8,9 @@ export const MOCK_JWT_ISSUER = 'book-catalog-mock';
 export const MOCK_JWT_AUDIENCE = 'book-catalog-frontend';
 export const MOCK_JWT_EXPIRES_IN_SECONDS = 60 * 60;
 
-export function getMockJwtSecret(secret: string = env.MOCK_JWT_SECRET): Uint8Array {
+export function getMockJwtSecret(
+  secret: string = env.MOCK_JWT_SECRET
+): Uint8Array {
   return new TextEncoder().encode(secret);
 }
 

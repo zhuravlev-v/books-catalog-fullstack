@@ -8,7 +8,9 @@ type AuthUserDto = LoginResponseDataUser | RegisterResponseDataUser;
 
 export function normalizeAuthUser(user: AuthUserDto, role = 'user'): AuthUser {
   if (!user.id || !user.username || !user.email) {
-    throw new Error('Ответ API авторизации не содержит обязательных данных пользователя');
+    throw new Error(
+      'Ответ API авторизации не содержит обязательных данных пользователя'
+    );
   }
 
   return {

@@ -5,13 +5,16 @@ export interface AuthorFormInput {
 }
 
 export type ParseAuthorFormResult =
-  { data: AuthorFormInput; errors?: never } | { data?: never; errors: ErrorItem[] };
+  | { data: AuthorFormInput; errors?: never }
+  | { data?: never; errors: ErrorItem[] };
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-export async function parseAuthorFormRequest(request: Request): Promise<ParseAuthorFormResult> {
+export async function parseAuthorFormRequest(
+  request: Request
+): Promise<ParseAuthorFormResult> {
   let body: unknown;
 
   try {
@@ -24,9 +27,14 @@ export async function parseAuthorFormRequest(request: Request): Promise<ParseAut
     return { errors: [{ message: 'Тело запроса должно быть JSON-объектом' }] };
   }
 
-  if (typeof body.full_name !== 'string' || body.full_name.trim().length === 0) {
+  if (
+    typeof body.full_name !== 'string' ||
+    body.full_name.trim().length === 0
+  ) {
     return {
-      errors: [{ field: 'full_name', message: 'ФИО должно быть непустой строкой' }],
+      errors: [
+        { field: 'full_name', message: 'ФИО должно быть непустой строкой' },
+      ],
     };
   }
 

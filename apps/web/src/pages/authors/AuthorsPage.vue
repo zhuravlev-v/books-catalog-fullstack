@@ -3,7 +3,11 @@ import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import type { AuthorShort } from '@books/api-contract/models';
 import { useAuthStore } from '@/domains/auth';
-import { AuthorDeleteDialog, AuthorFormDrawer, useAuthorsList } from '@/domains/authors';
+import {
+  AuthorDeleteDialog,
+  AuthorFormDrawer,
+  useAuthorsList,
+} from '@/domains/authors';
 import { AppPagination, PageHeader, PageState } from '@/shared/components';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -51,7 +55,9 @@ function handleDeleted() {
     </PageHeader>
 
     <div class="max-w-xl space-y-2">
-      <label for="authors-search" class="text-sm font-medium">Поиск авторов</label>
+      <label for="authors-search" class="text-sm font-medium"
+        >Поиск авторов</label
+      >
       <Input
         id="authors-search"
         v-model="search"
@@ -61,7 +67,11 @@ function handleDeleted() {
       />
     </div>
 
-    <div v-if="query.isPending.value" class="space-y-3" aria-label="Загрузка авторов">
+    <div
+      v-if="query.isPending.value"
+      class="space-y-3"
+      aria-label="Загрузка авторов"
+    >
       <Skeleton v-for="item in 6" :key="item" class="h-16 w-full rounded-xl" />
     </div>
 
@@ -94,7 +104,9 @@ function handleDeleted() {
           :key="author.id ?? `${author.full_name ?? 'author'}-${index}`"
           class="min-w-0 rounded-xl border bg-card p-4 text-card-foreground shadow-sm"
         >
-          <div class="flex min-w-0 flex-wrap items-center justify-between gap-3">
+          <div
+            class="flex min-w-0 flex-wrap items-center justify-between gap-3"
+          >
             <RouterLink
               v-if="author.id !== undefined"
               :to="{ name: 'author-details', params: { id: author.id } }"
@@ -105,8 +117,16 @@ function handleDeleted() {
             <span v-else class="block break-words font-medium">
               {{ author.full_name?.trim() || 'Имя автора не указано' }}
             </span>
-            <div v-if="authStore.isAuthenticated && author.id !== undefined" class="flex gap-2">
-              <Button type="button" variant="outline" size="sm" @click="openEditDrawer(author)">
+            <div
+              v-if="authStore.isAuthenticated && author.id !== undefined"
+              class="flex gap-2"
+            >
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                @click="openEditDrawer(author)"
+              >
                 Редактировать
               </Button>
               <Button

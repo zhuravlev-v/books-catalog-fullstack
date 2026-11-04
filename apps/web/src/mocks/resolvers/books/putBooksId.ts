@@ -42,7 +42,10 @@ export async function putBooksIdResolver({
   }
 
   try {
-    const result = await putBooksIdRepository.put(parsedParams.id, parsedRequest.data);
+    const result = await putBooksIdRepository.put(
+      parsedParams.id,
+      parsedRequest.data
+    );
 
     if (result === 'not-found') {
       return notFound();

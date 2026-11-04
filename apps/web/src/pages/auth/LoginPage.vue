@@ -20,7 +20,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/card';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 
 const route = useRoute();
@@ -41,7 +47,7 @@ const onSubmit = handleSubmit(async (values) => {
     const validationResult = applyServerValidationErrors(
       error,
       ['username', 'password'] as const,
-      setFieldError,
+      setFieldError
     );
 
     if (validationResult.handled) {

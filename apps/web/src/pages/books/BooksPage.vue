@@ -3,11 +3,26 @@ import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import type { Book } from '@books/api-contract/models';
 import { useAuthStore } from '@/domains/auth';
-import { BookDeleteDialog, BookFormDrawer, useBooksList } from '@/domains/books';
-import { AppImage, AppPagination, PageHeader, PageState } from '@/shared/components';
+import {
+  BookDeleteDialog,
+  BookFormDrawer,
+  useBooksList,
+} from '@/domains/books';
+import {
+  AppImage,
+  AppPagination,
+  PageHeader,
+  PageState,
+} from '@/shared/components';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/ui/select';
 import { Skeleton } from '@/shared/ui/skeleton';
 
 const {
@@ -35,7 +50,10 @@ const total = computed(() => pagination.value?.total ?? books.value.length);
 const totalPages = computed(() => pagination.value?.total_pages ?? 1);
 const authors = computed(() => authorsQuery.data.value?.data.data?.items ?? []);
 const hasActiveFilters = computed(
-  () => Boolean(search.value.trim()) || year.value !== undefined || authorId.value !== undefined
+  () =>
+    Boolean(search.value.trim()) ||
+    year.value !== undefined ||
+    authorId.value !== undefined
 );
 
 function hasValidId(id: number | undefined): id is number {
@@ -129,7 +147,11 @@ function handleDeleted() {
       class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
       aria-label="Загрузка книг"
     >
-      <Skeleton v-for="item in 6" :key="item" class="aspect-[3/2] w-full rounded-xl" />
+      <Skeleton
+        v-for="item in 6"
+        :key="item"
+        class="aspect-[3/2] w-full rounded-xl"
+      />
     </div>
 
     <PageState
@@ -155,7 +177,10 @@ function handleDeleted() {
     />
 
     <template v-else>
-      <ul class="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Список книг">
+      <ul
+        class="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        aria-label="Список книг"
+      >
         <li
           v-for="(book, index) in books"
           :key="book.id ?? `${book.title ?? 'book'}-${index}`"
@@ -178,7 +203,9 @@ function handleDeleted() {
               {{ book.title?.trim() || 'Название книги не указано' }}
             </span>
             <p class="text-sm text-muted-foreground">
-              {{ book.year !== undefined ? `Год: ${book.year}` : 'Год не указан' }}
+              {{
+                book.year !== undefined ? `Год: ${book.year}` : 'Год не указан'
+              }}
             </p>
             <div class="flex min-w-0 flex-wrap gap-x-2 gap-y-1 text-sm">
               <template v-if="book.authors?.length">
@@ -198,16 +225,28 @@ function handleDeleted() {
                   </span>
                 </template>
               </template>
-              <span v-else class="text-muted-foreground">Авторы не указаны</span>
+              <span v-else class="text-muted-foreground"
+                >Авторы не указаны</span
+              >
             </div>
             <div
               v-if="authStore.isAuthenticated && hasValidId(book.id)"
               class="flex flex-wrap gap-2"
             >
-              <Button type="button" variant="outline" size="sm" @click="openDrawer(book)">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                @click="openDrawer(book)"
+              >
                 Редактировать
               </Button>
-              <Button type="button" variant="destructive" size="sm" @click="openDeleteDialog(book)">
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                @click="openDeleteDialog(book)"
+              >
                 Удалить
               </Button>
             </div>

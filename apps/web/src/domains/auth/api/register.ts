@@ -9,7 +9,9 @@ export type RegisterResult =
   | { status: 'authenticated'; session: AuthSession }
   | { status: 'login-required'; user: AuthUser };
 
-export async function register(request: RegisterRequest): Promise<RegisterResult> {
+export async function register(
+  request: RegisterRequest
+): Promise<RegisterResult> {
   const response = await postAuthRegister(request);
   const result = PostAuthRegisterResponse.safeParse(response.data);
 
@@ -20,7 +22,9 @@ export async function register(request: RegisterRequest): Promise<RegisterResult
   const data = result.data.data;
 
   if (!data?.user) {
-    throw new Error('Ответ API регистрации не содержит обязательных данных пользователя');
+    throw new Error(
+      'Ответ API регистрации не содержит обязательных данных пользователя'
+    );
   }
 
   const user = normalizeAuthUser(data.user);

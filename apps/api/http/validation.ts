@@ -23,7 +23,7 @@ const validationStatus = {
 
 export function parseRequest<const Schemas extends RequestSchemas>(
   request: Request,
-  schemas: Schemas,
+  schemas: Schemas
 ): ParsedRequest<Schemas> {
   const sources = {
     body: request.body,
@@ -49,10 +49,11 @@ export function parseRequest<const Schemas extends RequestSchemas>(
       throw new HttpError(
         validationStatus[location],
         error.issues.map((issue) => ({
-          field: issue.path.length > 0 ? issue.path.map(String).join('.') : location,
+          field:
+            issue.path.length > 0 ? issue.path.map(String).join('.') : location,
           message: issue.message,
         })),
-        { cause: error },
+        { cause: error }
       );
     }
   }

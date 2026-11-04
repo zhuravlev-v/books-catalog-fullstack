@@ -44,7 +44,10 @@ export function isApiError(error: unknown): error is ApiError {
   return error instanceof ApiError;
 }
 
-export function getApiErrorMessage(body: unknown, fallback = DEFAULT_ERROR_MESSAGE) {
+export function getApiErrorMessage(
+  body: unknown,
+  fallback = DEFAULT_ERROR_MESSAGE
+) {
   if (!isApiErrorBody(body)) {
     return fallback;
   }
@@ -75,7 +78,7 @@ function isApiErrorBody(value: unknown): value is ApiErrorBody {
           !!error &&
           typeof error === 'object' &&
           (error.field === undefined || typeof error.field === 'string') &&
-          (error.message === undefined || typeof error.message === 'string'),
+          (error.message === undefined || typeof error.message === 'string')
       ))
   );
 }

@@ -1,7 +1,8 @@
 import { prisma } from './prisma-client.ts';
 
-await prisma.$transaction(async (transaction) => {
-  await transaction.$executeRaw`
+await prisma
+  .$transaction(async (transaction) => {
+    await transaction.$executeRaw`
     INSERT INTO "users" (
       "id",
       "username",
@@ -26,7 +27,7 @@ await prisma.$transaction(async (transaction) => {
       "created_at" = EXCLUDED."created_at"
   `;
 
-  await transaction.$executeRaw`
+    await transaction.$executeRaw`
     INSERT INTO "authors" ("id", "full_name")
     OVERRIDING SYSTEM VALUE
     VALUES
@@ -37,7 +38,7 @@ await prisma.$transaction(async (transaction) => {
       "full_name" = EXCLUDED."full_name"
   `;
 
-  await transaction.$executeRaw`
+    await transaction.$executeRaw`
     INSERT INTO "books" (
       "id",
       "title",
@@ -56,7 +57,7 @@ await prisma.$transaction(async (transaction) => {
       "isbn" = EXCLUDED."isbn"
   `;
 
-  await transaction.$executeRaw`
+    await transaction.$executeRaw`
     INSERT INTO "book_authors" ("book_id", "author_id")
     VALUES
       (1, 1),
@@ -65,17 +66,18 @@ await prisma.$transaction(async (transaction) => {
     ON CONFLICT ("book_id", "author_id") DO NOTHING
   `;
 
-  await transaction.$queryRaw`
+    await transaction.$queryRaw`
     SELECT setval(
       pg_get_serial_sequence('authors', 'id'),
       (SELECT MAX("id") FROM "authors")
     )
   `;
 
-  await transaction.$queryRaw`
+    await transaction.$queryRaw`
     SELECT setval(
       pg_get_serial_sequence('books', 'id'),
       (SELECT MAX("id") FROM "books")
     )
   `;
-}).finally(() => prisma.$disconnect());
+  })
+  .finally(() => prisma.$disconnect());

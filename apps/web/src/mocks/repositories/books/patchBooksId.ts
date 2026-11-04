@@ -28,13 +28,16 @@ export class DexiePatchBooksIdRepository implements PatchBooksIdRepository {
           .where('bookId')
           .equals(id)
           .toArray();
-        const authorIds = input.authorIds ?? currentBookAuthors.map(({ authorId }) => authorId);
+        const authorIds =
+          input.authorIds ?? currentBookAuthors.map(({ authorId }) => authorId);
         const authors = await getBookAuthors(this.database.authors, authorIds);
         const record: BookRecord = {
           ...existingBook,
           ...(input.title === undefined ? {} : { title: input.title }),
           ...(input.year === undefined ? {} : { year: input.year }),
-          ...(input.description === undefined ? {} : { description: input.description }),
+          ...(input.description === undefined
+            ? {}
+            : { description: input.description }),
           ...(input.isbn === undefined ? {} : { isbn: input.isbn }),
         };
 
@@ -51,7 +54,9 @@ export class DexiePatchBooksIdRepository implements PatchBooksIdRepository {
       }
     );
 
-    return result === 'not-found' ? result : createBookModel(result.record, result.authors);
+    return result === 'not-found'
+      ? result
+      : createBookModel(result.record, result.authors);
   }
 }
 

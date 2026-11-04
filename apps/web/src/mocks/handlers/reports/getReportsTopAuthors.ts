@@ -2,7 +2,9 @@ import { getGetReportsTopAuthorsUrl } from '@/api/generated/endpoints/reports/re
 import { getReportsTopAuthorsResolver } from '@/mocks/resolvers/reports/getReportsTopAuthors';
 import { delay, HttpResponse, http } from 'msw';
 
-const REPORTS_TOP_AUTHORS_URL = getGetReportsTopAuthorsUrl({ year: 1 }).split('?')[0]!;
+const REPORTS_TOP_AUTHORS_URL = getGetReportsTopAuthorsUrl({ year: 1 }).split(
+  '?'
+)[0]!;
 
 export const getReportsTopAuthorsHandler = http.get(
   REPORTS_TOP_AUTHORS_URL,

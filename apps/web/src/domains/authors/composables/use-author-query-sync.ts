@@ -29,7 +29,7 @@ export function useAuthorQuerySync() {
           return suffix === undefined || typeof suffix === 'object';
         },
       },
-      { throwOnError: true },
+      { throwOnError: true }
     );
   }
 
@@ -37,20 +37,17 @@ export function useAuthorQuerySync() {
     return Promise.all([
       queryClient.invalidateQueries(
         { queryKey: booksPrefix },
-        { throwOnError: true },
+        { throwOnError: true }
       ),
       queryClient.invalidateQueries(
         { queryKey: topAuthorsPrefix },
-        { throwOnError: true },
+        { throwOnError: true }
       ),
     ]);
   }
 
   async function afterCreate() {
-    await Promise.all([
-      invalidateAuthorLists(),
-      invalidateRelatedQueries(),
-    ]);
+    await Promise.all([invalidateAuthorLists(), invalidateRelatedQueries()]);
   }
 
   async function afterUpdate(authorId: number) {
@@ -58,7 +55,7 @@ export function useAuthorQuerySync() {
       invalidateAuthorLists(),
       queryClient.invalidateQueries(
         { queryKey: getGetAuthorsIdQueryKey(authorId), exact: true },
-        { throwOnError: true },
+        { throwOnError: true }
       ),
       invalidateRelatedQueries(),
     ]);
@@ -70,10 +67,7 @@ export function useAuthorQuerySync() {
     await queryClient.cancelQueries({ queryKey: authorQueryKey, exact: true });
     queryClient.removeQueries({ queryKey: authorQueryKey, exact: true });
 
-    await Promise.all([
-      invalidateAuthorLists(),
-      invalidateRelatedQueries(),
-    ]);
+    await Promise.all([invalidateAuthorLists(), invalidateRelatedQueries()]);
   }
 
   return {

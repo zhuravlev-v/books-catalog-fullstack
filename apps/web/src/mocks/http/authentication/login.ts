@@ -1,6 +1,8 @@
 import type { LoginRequest } from '@books/api-contract/models';
 
-export async function parseLoginRequest(request: Request): Promise<LoginRequest | undefined> {
+export async function parseLoginRequest(
+  request: Request
+): Promise<LoginRequest | undefined> {
   try {
     const body: unknown = await request.json();
 

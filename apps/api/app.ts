@@ -13,13 +13,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 
-const basePathApi = process.env.API_BASE_PATH ?? '/api/v1'; 
+const basePathApi = process.env.API_BASE_PATH ?? '/api/v1';
 
 app.use(basePathApi, indexRouter);
 app.use(basePathApi, booksRouter);
 
 // catch 404 and forward to error handler
-app.use(function(_, res) {
+app.use(function (_, res) {
   res.status(404).send('Not Found');
 });
 

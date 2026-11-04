@@ -27,21 +27,26 @@ const authorId = computed(() => {
   return Number.isSafeInteger(id) && id > 0 ? id : undefined;
 });
 
-const query = useGetAuthorsId(computed(() => authorId.value ?? 0), {
-  query: {
-    enabled: computed(() => authorId.value !== undefined),
-  },
-});
+const query = useGetAuthorsId(
+  computed(() => authorId.value ?? 0),
+  {
+    query: {
+      enabled: computed(() => authorId.value !== undefined),
+    },
+  }
+);
 
 const author = computed(() => query.data.value?.data.data);
 const authorName = computed(
-  () => author.value?.full_name?.trim() || 'Имя автора не указано',
+  () => author.value?.full_name?.trim() || 'Имя автора не указано'
 );
 const books = computed(() => author.value?.books ?? []);
 const isNotFound = computed(
   () =>
     authorId.value === undefined ||
-    (query.isError.value && isApiError(query.error.value) && query.error.value.status === 404) ||
+    (query.isError.value &&
+      isApiError(query.error.value) &&
+      query.error.value.status === 404) ||
     (query.isSuccess.value && author.value === undefined)
 );
 const breadcrumbs = computed(() => [
@@ -72,7 +77,11 @@ async function handleDeleted() {
     >
       <template v-if="authStore.isAuthenticated && author" #actions>
         <Button type="button" @click="drawerOpen = true">Редактировать</Button>
-        <Button type="button" variant="destructive" @click="deleteDialogOpen = true">
+        <Button
+          type="button"
+          variant="destructive"
+          @click="deleteDialogOpen = true"
+        >
           Удалить
         </Button>
       </template>
@@ -90,7 +99,11 @@ async function handleDeleted() {
       </template>
     </PageState>
 
-    <div v-else-if="query.isPending.value" class="space-y-3" aria-label="Загрузка автора">
+    <div
+      v-else-if="query.isPending.value"
+      class="space-y-3"
+      aria-label="Загрузка автора"
+    >
       <Skeleton class="h-24 w-full rounded-xl" />
       <Skeleton class="h-24 w-full rounded-xl" />
       <Skeleton class="h-24 w-full rounded-xl" />

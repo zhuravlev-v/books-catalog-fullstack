@@ -20,21 +20,28 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/card';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const { register } = useAuth();
 const formError = ref<string | null>(null);
-const { handleSubmit, isSubmitting, setFieldError } = useForm<RegisterFormValues>({
-  validationSchema: registerValidationSchema,
-  initialValues: {
-    username: '',
-    email: '',
-    password: '',
-  },
-});
+const { handleSubmit, isSubmitting, setFieldError } =
+  useForm<RegisterFormValues>({
+    validationSchema: registerValidationSchema,
+    initialValues: {
+      username: '',
+      email: '',
+      password: '',
+    },
+  });
 
 const conflictMessages: Record<'username' | 'email', string> = {
   username: 'Пользователь с таким именем уже зарегистрирован',
@@ -54,7 +61,7 @@ const onSubmit = handleSubmit(async (values) => {
     const validationResult = applyServerValidationErrors(
       error,
       ['username', 'email', 'password'] as const,
-      setFieldError,
+      setFieldError
     );
 
     if (validationResult.handled) {
@@ -78,7 +85,8 @@ const onSubmit = handleSubmit(async (values) => {
       }
 
       if (!hasFieldError) {
-        formError.value = 'Не удалось зарегистрироваться: имя пользователя или email уже заняты.';
+        formError.value =
+          'Не удалось зарегистрироваться: имя пользователя или email уже заняты.';
       }
 
       return;
@@ -93,7 +101,9 @@ const onSubmit = handleSubmit(async (values) => {
   <Card>
     <CardHeader>
       <CardTitle class="text-2xl">Регистрация</CardTitle>
-      <CardDescription>Создайте учётную запись для управления каталогом.</CardDescription>
+      <CardDescription
+        >Создайте учётную запись для управления каталогом.</CardDescription
+      >
     </CardHeader>
 
     <CardContent>

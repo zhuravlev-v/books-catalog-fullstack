@@ -1,6 +1,11 @@
 import Dexie, { type Table } from 'dexie';
 
-import type { AuthorRecord, BookAuthorRecord, BookRecord, UserRecord } from './types';
+import type {
+  AuthorRecord,
+  BookAuthorRecord,
+  BookRecord,
+  UserRecord,
+} from './types';
 
 export class MockDatabase extends Dexie {
   users!: Table<UserRecord, string>;

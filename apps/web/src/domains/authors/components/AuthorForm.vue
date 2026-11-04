@@ -3,7 +3,13 @@ import { ref, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import type { Author } from '@books/api-contract/models';
 import { FormError } from '@/shared/components';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { applyAuthorFormError } from '../lib/author-form-error';
 import {
@@ -34,10 +40,11 @@ function getInitialValues(): AuthorFormValues {
   };
 }
 
-const { handleSubmit, meta, resetForm, setFieldError } = useForm<AuthorFormValues>({
-  validationSchema: authorValidationSchema,
-  initialValues: getInitialValues(),
-});
+const { handleSubmit, meta, resetForm, setFieldError } =
+  useForm<AuthorFormValues>({
+    validationSchema: authorValidationSchema,
+    initialValues: getInitialValues(),
+  });
 
 const submit = handleSubmit((values) => {
   formError.value = null;
@@ -61,13 +68,13 @@ function setSubmissionError(error: unknown) {
 
 watch(
   () => props.author?.full_name,
-  () => reset(),
+  () => reset()
 );
 
 watch(
   () => meta.value.dirty,
   (dirty) => emit('dirty-change', dirty),
-  { immediate: true },
+  { immediate: true }
 );
 
 defineExpose({

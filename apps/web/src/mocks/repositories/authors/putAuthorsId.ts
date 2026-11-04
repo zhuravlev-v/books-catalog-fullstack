@@ -28,7 +28,10 @@ export class DexiePutAuthorsIdRepository implements PutAuthorsIdRepository {
           ...existingAuthor,
           fullName: input.fullName,
         };
-        const bookAuthors = await this.database.bookAuthors.where('authorId').equals(id).toArray();
+        const bookAuthors = await this.database.bookAuthors
+          .where('authorId')
+          .equals(id)
+          .toArray();
         const bookRecords = await this.database.books.bulkGet(
           bookAuthors.map(({ bookId }) => bookId)
         );

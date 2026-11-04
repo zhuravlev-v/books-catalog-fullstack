@@ -1,7 +1,9 @@
 import { mockDatabase, type MockDatabase } from './database';
 import { createMockDatabaseFixtures } from './fixtures';
 
-export async function seedMockDatabase(database: MockDatabase = mockDatabase): Promise<void> {
+export async function seedMockDatabase(
+  database: MockDatabase = mockDatabase
+): Promise<void> {
   await database.transaction(
     'rw',
     [database.users, database.authors, database.books, database.bookAuthors],
@@ -17,7 +19,8 @@ export async function seedMockDatabase(database: MockDatabase = mockDatabase): P
         return;
       }
 
-      const { users, authors, books, bookAuthors } = createMockDatabaseFixtures();
+      const { users, authors, books, bookAuthors } =
+        createMockDatabaseFixtures();
 
       await database.users.bulkAdd(users);
       await database.authors.bulkAdd(authors);

@@ -28,10 +28,13 @@ export const toAuthorDto = defineMapper(
       title: books.title,
       year: books.year,
     })),
-  }),
+  })
 );
 
-export const toAuthorShortDto = defineMapper(AuthorShortSchema, (author: authors) => ({
-  id: author.id,
-  full_name: author.full_name,
-}));
+export const toAuthorShortDto = defineMapper(
+  AuthorShortSchema,
+  (author: authors) => ({
+    id: author.id,
+    full_name: author.full_name,
+  })
+);

@@ -1,6 +1,11 @@
 import { computed, ref, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
-import { onBeforeRouteLeave, useRoute, useRouter, type LocationQueryValue } from 'vue-router';
+import {
+  onBeforeRouteLeave,
+  useRoute,
+  useRouter,
+  type LocationQueryValue,
+} from 'vue-router';
 import { useGetAuthors } from '@/api/generated/endpoints';
 
 const DEFAULT_PAGE = 1;
@@ -13,7 +18,9 @@ function getQueryValue(
   return typeof value === 'string' ? value : undefined;
 }
 
-function normalizePage(value: LocationQueryValue | LocationQueryValue[] | undefined): number {
+function normalizePage(
+  value: LocationQueryValue | LocationQueryValue[] | undefined
+): number {
   const rawValue = getQueryValue(value);
 
   if (rawValue === undefined || !/^\d+$/.test(rawValue)) {
@@ -49,8 +56,10 @@ export function useAuthorsList() {
   const query = useGetAuthors(params);
 
   function setPage(nextPage: number) {
-    const normalizedPage = Number.isSafeInteger(nextPage) && nextPage > 0 ? nextPage : DEFAULT_PAGE;
-    const pageQuery = normalizedPage === DEFAULT_PAGE ? undefined : String(normalizedPage);
+    const normalizedPage =
+      Number.isSafeInteger(nextPage) && nextPage > 0 ? nextPage : DEFAULT_PAGE;
+    const pageQuery =
+      normalizedPage === DEFAULT_PAGE ? undefined : String(normalizedPage);
 
     if (route.query.page === pageQuery) {
       return;

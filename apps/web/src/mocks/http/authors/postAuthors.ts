@@ -7,6 +7,8 @@ import {
 export type CreateAuthorInput = AuthorFormInput;
 export type { ParseAuthorFormResult };
 
-export function parsePostAuthorsRequest(request: Request): Promise<ParseAuthorFormResult> {
+export function parsePostAuthorsRequest(
+  request: Request
+): Promise<ParseAuthorFormResult> {
   return parseAuthorFormRequest(request);
 }

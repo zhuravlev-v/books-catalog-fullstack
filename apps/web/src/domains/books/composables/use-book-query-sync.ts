@@ -28,7 +28,7 @@ export function useBookQuerySync() {
           return suffix === undefined || typeof suffix === 'object';
         },
       },
-      { throwOnError: true },
+      { throwOnError: true }
     );
   }
 
@@ -36,11 +36,11 @@ export function useBookQuerySync() {
     return Promise.all([
       queryClient.invalidateQueries(
         { queryKey: authorsPrefix },
-        { throwOnError: true },
+        { throwOnError: true }
       ),
       queryClient.invalidateQueries(
         { queryKey: topAuthorsPrefix },
-        { throwOnError: true },
+        { throwOnError: true }
       ),
     ]);
   }
@@ -54,7 +54,7 @@ export function useBookQuerySync() {
       invalidateBookLists(),
       queryClient.invalidateQueries(
         { queryKey: getGetBooksIdQueryKey(bookId), exact: true },
-        { throwOnError: true },
+        { throwOnError: true }
       ),
       invalidateRelatedQueries(),
     ]);

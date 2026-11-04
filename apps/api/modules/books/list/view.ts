@@ -17,5 +17,5 @@ export const booksListDto = defineMapper(
         total_pages: Math.ceil(booksPage.total / booksPage.perPage),
       },
     },
-  }),
+  })
 );

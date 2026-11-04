@@ -13,7 +13,9 @@ export const getBook: RequestHandler = async (req, res, next) => {
     const book = await queryBook(params);
     const basePath = req.baseUrl.replace(/\/+$/, '');
 
-    res.status(200).json(bookDto(book, (bookId) => `${basePath}/books/${bookId}/cover`));
+    res
+      .status(200)
+      .json(bookDto(book, (bookId) => `${basePath}/books/${bookId}/cover`));
   } catch (error) {
     next(error);
   }

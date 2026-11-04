@@ -24,6 +24,8 @@ export function parsePutAuthorsIdParams(
   return id === undefined ? undefined : { id };
 }
 
-export function parsePutAuthorsIdRequest(request: Request): Promise<ParseAuthorFormResult> {
+export function parsePutAuthorsIdRequest(
+  request: Request
+): Promise<ParseAuthorFormResult> {
   return parseAuthorFormRequest(request);
 }

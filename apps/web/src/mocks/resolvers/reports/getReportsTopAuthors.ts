@@ -17,7 +17,9 @@ export type GetReportsTopAuthorsResolverResult =
 export async function getReportsTopAuthorsResolver({
   request,
 }: GetReportsTopAuthorsRequestInfo): Promise<GetReportsTopAuthorsResolverResult> {
-  const queryResult = parseGetReportsTopAuthorsQuery(new URL(request.url).searchParams);
+  const queryResult = parseGetReportsTopAuthorsQuery(
+    new URL(request.url).searchParams
+  );
 
   if (!queryResult.success) {
     return {

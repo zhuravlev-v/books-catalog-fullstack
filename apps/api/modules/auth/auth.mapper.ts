@@ -21,9 +21,12 @@ export const toLoginUserDto = defineMapper(LoginUserSchema, (user: users) => {
   };
 });
 
-export const toRegisterUserDto = defineMapper(RegisterUserSchema, (user: users) => ({
-  id: user.id,
-  username: user.username,
-  email: user.email,
-  created_at: user.created_at.toISOString(),
-}));
+export const toRegisterUserDto = defineMapper(
+  RegisterUserSchema,
+  (user: users) => ({
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    created_at: user.created_at.toISOString(),
+  })
+);

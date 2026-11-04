@@ -9,7 +9,10 @@ interface AuthorBookCount {
   booksCount: number;
 }
 
-export function getTopAuthors(books: TopAuthorsReportBook[], year: number): TopAuthor[] {
+export function getTopAuthors(
+  books: TopAuthorsReportBook[],
+  year: number
+): TopAuthor[] {
   const authorsById = new Map<number, AuthorBookCount>();
 
   for (const book of books) {
@@ -29,7 +32,10 @@ export function getTopAuthors(books: TopAuthorsReportBook[], year: number): TopA
   }
 
   return [...authorsById.values()]
-    .sort((left, right) => right.booksCount - left.booksCount || left.authorId - right.authorId)
+    .sort(
+      (left, right) =>
+        right.booksCount - left.booksCount || left.authorId - right.authorId
+    )
     .slice(0, TOP_AUTHORS_LIMIT)
     .map(({ authorId, fullName, booksCount }, index) => ({
       rank: index + 1,

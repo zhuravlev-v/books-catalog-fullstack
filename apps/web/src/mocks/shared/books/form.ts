@@ -10,7 +10,8 @@ export interface BookFormInput {
 }
 
 export type ParseBookFormResult =
-  { data: BookFormInput; errors?: never } | { data?: never; errors: ErrorItem[] };
+  | { data: BookFormInput; errors?: never }
+  | { data?: never; errors: ErrorItem[] };
 
 function parseInteger(value: FormDataEntryValue | null): number | undefined {
   if (typeof value !== 'string' || !/^-?\d+$/.test(value.trim())) {
@@ -36,13 +37,19 @@ function parseAuthorIds(values: FormDataEntryValue[]): number[] | undefined {
   return [...new Set(authorIds as number[])];
 }
 
-export async function parseBookFormRequest(request: Request): Promise<ParseBookFormResult> {
+export async function parseBookFormRequest(
+  request: Request
+): Promise<ParseBookFormResult> {
   let formData: FormData;
 
   try {
     formData = await request.formData();
   } catch {
-    return { errors: [{ message: 'Тело запроса должно быть в формате multipart/form-data' }] };
+    return {
+      errors: [
+        { message: 'Тело запроса должно быть в формате multipart/form-data' },
+      ],
+    };
   }
 
   const titleEntry = formData.get('title');
@@ -50,7 +57,8 @@ export async function parseBookFormRequest(request: Request): Promise<ParseBookF
   const year = parseInteger(formData.get('year'));
   const authorIds = parseAuthorIds(formData.getAll('author_ids'));
   const coverEntry = formData.get('cover');
-  const cover = coverEntry instanceof Blob && coverEntry.size > 0 ? coverEntry : undefined;
+  const cover =
+    coverEntry instanceof Blob && coverEntry.size > 0 ? coverEntry : undefined;
   const descriptionEntry = formData.get('description');
   const isbnEntry = formData.get('isbn');
   const errors: ErrorItem[] = [];
@@ -64,7 +72,10 @@ export async function parseBookFormRequest(request: Request): Promise<ParseBookF
   }
 
   if (authorIds === undefined) {
-    errors.push({ field: 'author_ids', message: 'Укажите хотя бы одного автора' });
+    errors.push({
+      field: 'author_ids',
+      message: 'Укажите хотя бы одного автора',
+    });
   }
 
   if (cover === undefined) {
@@ -72,14 +83,22 @@ export async function parseBookFormRequest(request: Request): Promise<ParseBookF
   }
 
   if (descriptionEntry !== null && typeof descriptionEntry !== 'string') {
-    errors.push({ field: 'description', message: 'Описание должно быть строкой' });
+    errors.push({
+      field: 'description',
+      message: 'Описание должно быть строкой',
+    });
   }
 
   if (isbnEntry !== null && typeof isbnEntry !== 'string') {
     errors.push({ field: 'isbn', message: 'ISBN должен быть строкой' });
   }
 
-  if (errors.length > 0 || year === undefined || authorIds === undefined || cover === undefined) {
+  if (
+    errors.length > 0 ||
+    year === undefined ||
+    authorIds === undefined ||
+    cover === undefined
+  ) {
     return { errors };
   }
 
@@ -89,7 +108,9 @@ export async function parseBookFormRequest(request: Request): Promise<ParseBookF
       year,
       authorIds,
       cover,
-      ...(typeof descriptionEntry === 'string' ? { description: descriptionEntry } : {}),
+      ...(typeof descriptionEntry === 'string'
+        ? { description: descriptionEntry }
+        : {}),
       ...(typeof isbnEntry === 'string' ? { isbn: isbnEntry } : {}),
     },
   };

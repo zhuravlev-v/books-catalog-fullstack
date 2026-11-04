@@ -7,5 +7,8 @@ export {
   registerFormSchema,
   registerValidationSchema,
 } from './model/auth-form.schemas';
-export type { LoginFormValues, RegisterFormValues } from './model/auth-form.schemas';
+export type {
+  LoginFormValues,
+  RegisterFormValues,
+} from './model/auth-form.schemas';
 export type { AuthSession, AuthUser } from './model/auth.types';

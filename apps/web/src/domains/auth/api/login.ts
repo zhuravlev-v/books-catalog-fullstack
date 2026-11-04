@@ -15,7 +15,9 @@ export async function login(request: LoginRequest): Promise<AuthSession> {
   const data = result.data.data;
 
   if (!data?.token || !data.expires_at || !data.user) {
-    throw new Error('Ответ API авторизации не содержит обязательных данных сессии');
+    throw new Error(
+      'Ответ API авторизации не содержит обязательных данных сессии'
+    );
   }
 
   return {

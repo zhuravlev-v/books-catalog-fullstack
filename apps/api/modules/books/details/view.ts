@@ -9,5 +9,5 @@ export const bookDto = defineMapper(
   (book: BookWithAuthors, getCoverUrl: (bookId: number) => string) => ({
     success: true as const,
     data: presentBook(book, getCoverUrl),
-  }),
+  })
 );

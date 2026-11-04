@@ -13,12 +13,11 @@ export const getBooksList: RequestHandler = async (req, res, next) => {
     const booksPage = await queryBooks(query);
     const basePath = req.baseUrl.replace(/\/+$/, '');
 
-    res.status(200).json(
-      booksListDto(
-        booksPage,
-        (bookId) => `${basePath}/books/${bookId}/cover`,
-      ),
-    );
+    res
+      .status(200)
+      .json(
+        booksListDto(booksPage, (bookId) => `${basePath}/books/${bookId}/cover`)
+      );
   } catch (error) {
     next(error);
   }

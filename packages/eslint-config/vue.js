@@ -1,4 +1,7 @@
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
+import {
+  defineConfigWithVueTs,
+  vueTsConfigs,
+} from '@vue/eslint-config-typescript';
 import skipFormatting from 'eslint-config-prettier/flat';
 import { globalIgnores } from 'eslint/config';
 import pluginOxlint from 'eslint-plugin-oxlint';
@@ -13,7 +16,12 @@ export default defineConfigWithVueTs(
       globals: globals.browser,
     },
   },
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/generated/**']),
+  globalIgnores([
+    '**/dist/**',
+    '**/dist-ssr/**',
+    '**/coverage/**',
+    '**/generated/**',
+  ]),
   ...pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
   {

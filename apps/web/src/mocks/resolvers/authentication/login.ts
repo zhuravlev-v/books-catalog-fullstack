@@ -1,9 +1,15 @@
 import { HttpResponse } from 'msw';
 
-import type { ApiErrorResponse as ApiError, LoginResponse } from '@books/api-contract/models';
+import type {
+  ApiErrorResponse as ApiError,
+  LoginResponse,
+} from '@books/api-contract/models';
 import { parseLoginRequest } from '@/mocks/http/authentication/login';
 import { usersRepository } from '@/mocks/repositories/authentication/login';
-import { createLoginResponse, hasValidPassword } from '@/mocks/services/authentication/login';
+import {
+  createLoginResponse,
+  hasValidPassword,
+} from '@/mocks/services/authentication/login';
 
 interface LoginRequestInfo {
   request: Request;
@@ -19,7 +25,9 @@ function unauthorized(): never {
   );
 }
 
-export async function loginResolver({ request }: LoginRequestInfo): Promise<LoginResponse> {
+export async function loginResolver({
+  request,
+}: LoginRequestInfo): Promise<LoginResponse> {
   const credentials = await parseLoginRequest(request);
 
   if (credentials === undefined) {

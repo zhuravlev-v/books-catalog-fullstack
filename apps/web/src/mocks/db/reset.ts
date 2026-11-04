@@ -2,7 +2,9 @@ import { mockDatabase, type MockDatabase } from './database';
 import { revokeAllBookCoverUrls } from './covers';
 import { createMockDatabaseFixtures } from './fixtures';
 
-export async function resetMockDatabase(database: MockDatabase = mockDatabase): Promise<void> {
+export async function resetMockDatabase(
+  database: MockDatabase = mockDatabase
+): Promise<void> {
   revokeAllBookCoverUrls();
 
   await database.transaction(
@@ -16,7 +18,8 @@ export async function resetMockDatabase(database: MockDatabase = mockDatabase): 
         database.bookAuthors.clear(),
       ]);
 
-      const { users, authors, books, bookAuthors } = createMockDatabaseFixtures();
+      const { users, authors, books, bookAuthors } =
+        createMockDatabaseFixtures();
 
       await database.users.bulkAdd(users);
       await database.authors.bulkAdd(authors);

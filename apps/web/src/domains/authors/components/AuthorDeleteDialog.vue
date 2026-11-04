@@ -31,21 +31,28 @@ const emit = defineEmits<{
 const mutation = useDeleteAuthorsId();
 const querySync = useAuthorQuerySync();
 const synchronizing = ref(false);
-const deleting = computed(() => mutation.isPending.value || synchronizing.value);
+const deleting = computed(
+  () => mutation.isPending.value || synchronizing.value
+);
 const authorId = computed(() => {
   const id = props.author?.id;
 
-  return id !== undefined && Number.isSafeInteger(id) && id > 0 ? id : undefined;
+  return id !== undefined && Number.isSafeInteger(id) && id > 0
+    ? id
+    : undefined;
 });
 const authorName = computed(
-  () => props.author?.full_name?.trim() || 'этого автора',
+  () => props.author?.full_name?.trim() || 'этого автора'
 );
 
-watch(() => props.open, (open) => {
-  if (!open) {
-    mutation.reset();
+watch(
+  () => props.open,
+  (open) => {
+    if (!open) {
+      mutation.reset();
+    }
   }
-});
+);
 
 function handleOpenChange(open: boolean) {
   if (!open && deleting.value) {
@@ -89,7 +96,8 @@ async function handleDelete() {
       <AlertDialogHeader>
         <AlertDialogTitle>Удалить автора?</AlertDialogTitle>
         <AlertDialogDescription>
-          Вы действительно хотите удалить {{ authorName }}? Это действие нельзя отменить.
+          Вы действительно хотите удалить {{ authorName }}? Это действие нельзя
+          отменить.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>

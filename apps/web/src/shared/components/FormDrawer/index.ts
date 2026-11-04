@@ -1,2 +1,2 @@
-export { default as FormDrawer } from './FormDrawer.vue'
-export type { FormDrawerMode } from './types'
+export { default as FormDrawer } from './FormDrawer.vue';
+export type { FormDrawerMode } from './types';

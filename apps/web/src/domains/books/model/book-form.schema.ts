@@ -9,7 +9,9 @@ export const bookFormSchema = z.object({
     .positive('Год должен быть положительным числом'),
   description: z.string(),
   isbn: z.string(),
-  author_ids: z.array(z.number().int().positive()).min(1, 'Выберите хотя бы одного автора'),
+  author_ids: z
+    .array(z.number().int().positive())
+    .min(1, 'Выберите хотя бы одного автора'),
   cover: z.instanceof(File).nullable(),
 });
 
@@ -23,7 +25,7 @@ export function createBookValidationSchema(mode: 'create' | 'edit') {
           message: 'Выберите файл обложки',
         });
       }
-    }),
+    })
   );
 }
 

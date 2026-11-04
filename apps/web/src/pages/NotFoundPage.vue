@@ -5,7 +5,10 @@ import { Button } from '@/shared/ui/button';
 </script>
 
 <template>
-  <PageState title="Страница не найдена" description="Запрошенная страница не существует.">
+  <PageState
+    title="Страница не найдена"
+    description="Запрошенная страница не существует."
+  >
     <template #action>
       <Button as-child>
         <RouterLink :to="{ name: 'home' }">Вернуться на главную</RouterLink>

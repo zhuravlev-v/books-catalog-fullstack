@@ -5,7 +5,13 @@ import { useGetAuthors } from '@/api/generated/endpoints';
 import type { Book } from '@books/api-contract/models';
 import { AppImage, FormError } from '@/shared/components';
 import { Button } from '@/shared/ui/button';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 import { applyBookFormError } from '../lib/book-form-error';
@@ -41,9 +47,13 @@ function getInitialValues(): BookFormValues {
     year: props.book?.year ?? new Date().getFullYear(),
     description: props.book?.description ?? '',
     isbn: props.book?.isbn ?? '',
-    author_ids: props.book?.authors
-      ?.map((author) => author.id)
-      .filter((id): id is number => id !== undefined && Number.isSafeInteger(id) && id > 0) ?? [],
+    author_ids:
+      props.book?.authors
+        ?.map((author) => author.id)
+        .filter(
+          (id): id is number =>
+            id !== undefined && Number.isSafeInteger(id) && id > 0
+        ) ?? [],
     cover: null,
   };
 }
@@ -108,13 +118,13 @@ function setSubmissionError(error: unknown) {
 
 watch(
   () => [props.book?.id, props.mode],
-  () => reset(),
+  () => reset()
 );
 
 watch(
   () => meta.value.dirty,
   (dirty) => emit('dirty-change', dirty),
-  { immediate: true },
+  { immediate: true }
 );
 
 onBeforeUnmount(releasePreview);
@@ -129,7 +139,9 @@ defineExpose({ reset, setSubmissionError, submit });
     <FormField v-slot="{ componentField }" name="title">
       <FormItem>
         <FormLabel>Название</FormLabel>
-        <FormControl><Input v-bind="componentField" :disabled="submitting" /></FormControl>
+        <FormControl
+          ><Input v-bind="componentField" :disabled="submitting"
+        /></FormControl>
         <FormMessage />
       </FormItem>
     </FormField>
@@ -138,7 +150,13 @@ defineExpose({ reset, setSubmissionError, submit });
       <FormItem>
         <FormLabel>Год издания</FormLabel>
         <FormControl>
-          <Input v-bind="componentField" type="number" min="1" step="1" :disabled="submitting" />
+          <Input
+            v-bind="componentField"
+            type="number"
+            min="1"
+            step="1"
+            :disabled="submitting"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -147,7 +165,9 @@ defineExpose({ reset, setSubmissionError, submit });
     <FormField v-slot="{ componentField }" name="description">
       <FormItem>
         <FormLabel>Описание</FormLabel>
-        <FormControl><Textarea v-bind="componentField" :disabled="submitting" /></FormControl>
+        <FormControl
+          ><Textarea v-bind="componentField" :disabled="submitting"
+        /></FormControl>
         <FormMessage />
       </FormItem>
     </FormField>
@@ -155,17 +175,25 @@ defineExpose({ reset, setSubmissionError, submit });
     <FormField v-slot="{ componentField }" name="isbn">
       <FormItem>
         <FormLabel>ISBN</FormLabel>
-        <FormControl><Input v-bind="componentField" :disabled="submitting" /></FormControl>
+        <FormControl
+          ><Input v-bind="componentField" :disabled="submitting"
+        /></FormControl>
         <FormMessage />
       </FormItem>
     </FormField>
 
-    <fieldset class="space-y-2" :disabled="submitting || authorsQuery.isPending.value">
+    <fieldset
+      class="space-y-2"
+      :disabled="submitting || authorsQuery.isPending.value"
+    >
       <legend class="text-sm font-medium">Авторы</legend>
       <p v-if="authorsQuery.isError.value" class="text-sm text-destructive">
         Не удалось загрузить список авторов.
       </p>
-      <div v-else class="max-h-44 space-y-2 overflow-y-auto rounded-md border p-3">
+      <div
+        v-else
+        class="max-h-44 space-y-2 overflow-y-auto rounded-md border p-3"
+      >
         <label
           v-for="(author, index) in authors"
           :key="author.id ?? index"
@@ -176,12 +204,21 @@ defineExpose({ reset, setSubmissionError, submit });
             type="checkbox"
             class="mt-0.5 size-4 accent-primary"
             :checked="values.author_ids.includes(author.id)"
-            @change="toggleAuthor(author.id, ($event.target as HTMLInputElement).checked)"
+            @change="
+              toggleAuthor(
+                author.id,
+                ($event.target as HTMLInputElement).checked
+              )
+            "
           />
-          <span class="break-words">{{ author.full_name?.trim() || 'Имя автора не указано' }}</span>
+          <span class="break-words">{{
+            author.full_name?.trim() || 'Имя автора не указано'
+          }}</span>
         </label>
       </div>
-      <p v-if="errors.author_ids" class="text-sm text-destructive">{{ errors.author_ids }}</p>
+      <p v-if="errors.author_ids" class="text-sm text-destructive">
+        {{ errors.author_ids }}
+      </p>
     </fieldset>
 
     <div class="space-y-2">
@@ -195,7 +232,9 @@ defineExpose({ reset, setSubmissionError, submit });
         :disabled="submitting"
         @change="handleCoverChange"
       />
-      <p v-if="errors.cover" class="text-sm text-destructive">{{ errors.cover }}</p>
+      <p v-if="errors.cover" class="text-sm text-destructive">
+        {{ errors.cover }}
+      </p>
       <AppImage
         v-if="previewUrl || book?.cover_url"
         :src="previewUrl || book?.cover_url"
@@ -209,7 +248,10 @@ defineExpose({ reset, setSubmissionError, submit });
         variant="outline"
         size="sm"
         :disabled="submitting"
-        @click="releasePreview(); setFieldValue('cover', null)"
+        @click="
+          releasePreview();
+          setFieldValue('cover', null);
+        "
       >
         Сбросить новую обложку
       </Button>

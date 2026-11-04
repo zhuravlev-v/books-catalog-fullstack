@@ -22,7 +22,7 @@ const props = withDefaults(
     fallbackSrc: defaultFallbackSrc,
     size: 'full',
     fit: 'cover',
-  },
+  }
 );
 
 const sizeClasses: Record<ImageSize, string> = {
@@ -41,8 +41,12 @@ const primaryFailed = ref(false);
 const fallbackFailed = ref(false);
 
 const normalizedSrc = computed(() => props.src?.trim() || undefined);
-const normalizedFallbackSrc = computed(() => props.fallbackSrc.trim() || defaultFallbackSrc);
-const usesPrimarySource = computed(() => Boolean(normalizedSrc.value) && !primaryFailed.value);
+const normalizedFallbackSrc = computed(
+  () => props.fallbackSrc.trim() || defaultFallbackSrc
+);
+const usesPrimarySource = computed(
+  () => Boolean(normalizedSrc.value) && !primaryFailed.value
+);
 const currentSrc = computed(() => {
   if (usesPrimarySource.value) {
     return normalizedSrc.value;
@@ -52,7 +56,7 @@ const currentSrc = computed(() => {
 });
 
 const imageClass = computed(() =>
-  cn('block bg-muted', sizeClasses[props.size], fitClasses[props.fit]),
+  cn('block bg-muted', sizeClasses[props.size], fitClasses[props.fit])
 );
 
 watch(
@@ -60,14 +64,14 @@ watch(
   () => {
     primaryFailed.value = false;
     fallbackFailed.value = false;
-  },
+  }
 );
 
 watch(
   () => props.fallbackSrc,
   () => {
     fallbackFailed.value = false;
-  },
+  }
 );
 
 function handleError(): void {
@@ -94,10 +98,5 @@ function handleError(): void {
     :class="imageClass"
     @error="handleError"
   />
-  <div
-    v-else
-    :class="imageClass"
-    role="img"
-    :aria-label="alt"
-  />
+  <div v-else :class="imageClass" role="img" :aria-label="alt" />
 </template>
