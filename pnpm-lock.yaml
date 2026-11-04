@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      prettier:
+        specifier: 3.9.6
+        version: 3.9.6
       turbo:
         specifier: ^2.11.10
         version: 2.11.10
@@ -45,6 +48,9 @@ importers:
         specifier: ^4.6.5
         version: 4.6.7
     devDependencies:
+      '@books/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@types/cookie-parser':
         specifier: ^1.4.10
         version: 1.4.10(@types/express@5.0.6)
@@ -57,6 +63,12 @@ importers:
       '@types/pg':
         specifier: ^8.23.1
         version: 8.23.1
+      eslint:
+        specifier: ^10.10.0
+        version: 10.14.0(jiti@2.7.0)
+      prettier:
+        specifier: 3.9.6
+        version: 3.9.6
       prisma:
         specifier: ^7.10.1
         version: 7.10.1(@types/node@24.19.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
@@ -121,6 +133,9 @@ importers:
         specifier: ^4.6.5
         version: 4.6.7
     devDependencies:
+      '@books/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
@@ -139,24 +154,12 @@ importers:
       '@vitejs/plugin-vue':
         specifier: ^6.0.8
         version: 6.0.10(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(vue@3.5.44(typescript@6.0.3))
-      '@vue/eslint-config-typescript':
-        specifier: ^14.9.0
-        version: 14.9.0(eslint-plugin-vue@10.11.1(@typescript-eslint/parser@8.72.1(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.14.0(jiti@2.7.0))(vue-eslint-parser@10.4.1(eslint@10.14.0(jiti@2.7.0))))(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3)
       '@vue/tsconfig':
         specifier: ^0.9.1
         version: 0.9.1(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3))
       eslint:
         specifier: ^10.10.0
         version: 10.14.0(jiti@2.7.0)
-      eslint-config-prettier:
-        specifier: ^10.1.8
-        version: 10.1.8(eslint@10.14.0(jiti@2.7.0))
-      eslint-plugin-oxlint:
-        specifier: ~1.82.0
-        version: 1.82.0(oxlint@1.82.0)
-      eslint-plugin-vue:
-        specifier: ~10.11.0
-        version: 10.11.1(@typescript-eslint/parser@8.72.1(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.14.0(jiti@2.7.0))(vue-eslint-parser@10.4.1(eslint@10.14.0(jiti@2.7.0)))
       jiti:
         specifier: ^2.7.0
         version: 2.7.0
@@ -187,9 +190,6 @@ importers:
       vite-plugin-vue-devtools:
         specifier: ^8.2.1
         version: 8.2.1(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(vue@3.5.44(typescript@6.0.3))
-      vue-eslint-parser:
-        specifier: ^10.4.1
-        version: 10.4.1(eslint@10.14.0(jiti@2.7.0))
       vue-tsc:
         specifier: ^3.3.11
         version: 3.3.14(typescript@6.0.3)
@@ -200,21 +200,57 @@ importers:
         specifier: ^4.6.5
         version: 4.6.7
     devDependencies:
+      '@books/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
+      eslint:
+        specifier: ^10.10.0
+        version: 10.14.0(jiti@2.7.0)
       jiti:
         specifier: ^2.7.0
         version: 2.7.0
       orval:
         specifier: ^8.33.0
-        version: 8.46.0(@faker-js/faker@10.6.0)(@tanstack/vue-query@5.105.1(vue@3.5.44(typescript@6.0.3)))(effect@3.20.0)(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(prettier@3.9.6)(zod@4.6.7)
+        version: 8.46.0(@faker-js/faker@10.6.0)(@tanstack/vue-query@5.105.1(vue@3.5.44(typescript@7.0.2)))(effect@3.20.0)(msw@2.15.0(@types/node@24.19.2)(typescript@7.0.2))(prettier@3.9.6)(zod@4.6.7)
       prettier:
         specifier: 3.9.6
         version: 3.9.6
       typescript:
         specifier: 7.0.2
         version: 7.0.2
+
+  packages/eslint-config:
+    dependencies:
+      '@vue/eslint-config-typescript':
+        specifier: ^14.9.0
+        version: 14.9.0(eslint-plugin-vue@10.11.1(@typescript-eslint/parser@8.72.1(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.14.0(jiti@2.7.0))(vue-eslint-parser@10.4.1(eslint@10.14.0(jiti@2.7.0))))(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3)
+      eslint:
+        specifier: ^10.10.0
+        version: 10.14.0(jiti@2.7.0)
+      eslint-config-prettier:
+        specifier: ^10.1.8
+        version: 10.1.8(eslint@10.14.0(jiti@2.7.0))
+      eslint-plugin-oxlint:
+        specifier: ~1.82.0
+        version: 1.82.0(oxlint@1.82.0)
+      eslint-plugin-vue:
+        specifier: ~10.11.0
+        version: 10.11.1(@typescript-eslint/parser@8.72.1(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.14.0(jiti@2.7.0))(vue-eslint-parser@10.4.1(eslint@10.14.0(jiti@2.7.0)))
+      globals:
+        specifier: ^17.14.0
+        version: 17.14.0
+      typescript:
+        specifier: ~6.0.0
+        version: 6.0.3
+      typescript-eslint:
+        specifier: ^8.72.1
+        version: 8.72.1(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3)
+      vue-eslint-parser:
+        specifier: ^10.4.1
+        version: 10.4.1(eslint@10.14.0(jiti@2.7.0))
 
 packages:
 
@@ -4512,6 +4548,15 @@ snapshots:
     transitivePeerDependencies:
       - '@modelcontextprotocol/server'
 
+  '@orval/mock@8.46.0(@faker-js/faker@10.6.0)(msw@2.15.0(@types/node@24.19.2)(typescript@7.0.2))':
+    dependencies:
+      '@orval/core': 8.46.0(@faker-js/faker@10.6.0)
+    optionalDependencies:
+      '@faker-js/faker': 10.6.0
+      msw: 2.15.0(@types/node@24.19.2)(typescript@7.0.2)
+    transitivePeerDependencies:
+      - '@modelcontextprotocol/server'
+
   '@orval/pinia-colada@8.46.0(@faker-js/faker@10.6.0)':
     dependencies:
       '@orval/axios': 8.46.0(@faker-js/faker@10.6.0)
@@ -4527,6 +4572,16 @@ snapshots:
       '@orval/fetch': 8.46.0(@faker-js/faker@10.6.0)
     optionalDependencies:
       '@tanstack/vue-query': 5.105.1(vue@3.5.44(typescript@6.0.3))
+    transitivePeerDependencies:
+      - '@faker-js/faker'
+      - '@modelcontextprotocol/server'
+
+  '@orval/query@8.46.0(@faker-js/faker@10.6.0)(@tanstack/vue-query@5.105.1(vue@3.5.44(typescript@7.0.2)))':
+    dependencies:
+      '@orval/core': 8.46.0(@faker-js/faker@10.6.0)
+      '@orval/fetch': 8.46.0(@faker-js/faker@10.6.0)
+    optionalDependencies:
+      '@tanstack/vue-query': 5.105.1(vue@3.5.44(typescript@7.0.2))
     transitivePeerDependencies:
       - '@faker-js/faker'
       - '@modelcontextprotocol/server'
@@ -5067,6 +5122,15 @@ snapshots:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.44(typescript@6.0.3)
       vue-demi: 0.14.10(vue@3.5.44(typescript@6.0.3))
+
+  '@tanstack/vue-query@5.105.1(vue@3.5.44(typescript@7.0.2))':
+    dependencies:
+      '@tanstack/match-sorter-utils': 9.2.6
+      '@tanstack/query-core': 5.105.1
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.44(typescript@7.0.2)
+      vue-demi: 0.14.10(vue@3.5.44(typescript@7.0.2))
+    optional: true
 
   '@tanstack/vue-virtual@3.13.51(vue@3.5.44(typescript@6.0.3))':
     dependencies:
@@ -6613,6 +6677,32 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
+  msw@2.15.0(@types/node@24.19.2)(typescript@7.0.2):
+    dependencies:
+      '@inquirer/confirm': 6.3.5(@types/node@24.19.2)
+      '@mswjs/interceptors': 0.41.9
+      '@open-draft/deferred-promise': 3.0.0
+      '@types/statuses': 2.0.6
+      cookie: 1.1.1
+      graphql: 16.14.2
+      headers-polyfill: 5.0.1
+      is-node-process: 1.2.0
+      outvariant: 1.4.3
+      path-to-regexp: 6.3.0
+      picocolors: 1.1.1
+      rettime: 0.11.12
+      statuses: 2.0.2
+      strict-event-emitter: 0.5.1
+      tough-cookie: 6.0.2
+      type-fest: 5.10.0
+      until-async: 3.0.2
+      yargs: 17.7.3
+    optionalDependencies:
+      typescript: 7.0.2
+    transitivePeerDependencies:
+      - '@types/node'
+    optional: true
+
   muggle-string@0.4.1: {}
 
   mute-stream@3.0.0: {}
@@ -6705,6 +6795,49 @@ snapshots:
       '@orval/mock': 8.46.0(@faker-js/faker@10.6.0)(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@orval/pinia-colada': 8.46.0(@faker-js/faker@10.6.0)
       '@orval/query': 8.46.0(@faker-js/faker@10.6.0)(@tanstack/vue-query@5.105.1(vue@3.5.44(typescript@6.0.3)))
+      '@orval/solid-start': 8.46.0(@faker-js/faker@10.6.0)
+      '@orval/swr': 8.46.0(@faker-js/faker@10.6.0)
+      '@orval/zod': 8.46.0(@faker-js/faker@10.6.0)(zod@4.6.7)
+      '@scalar/json-magic': 0.16.1
+      '@scalar/openapi-parser': 0.29.19
+      '@scalar/openapi-types': 0.9.8
+      chokidar: 5.0.0
+      commander: 15.0.0
+      execa: 9.6.1
+      get-tsconfig: 4.14.3
+      jiti: 2.7.0
+      js-yaml: 4.3.2
+      json5: 2.2.3
+      string-argv: 0.3.2
+    optionalDependencies:
+      prettier: 3.9.6
+    transitivePeerDependencies:
+      - '@faker-js/faker'
+      - '@modelcontextprotocol/server'
+      - '@pinia/colada'
+      - '@tanstack/angular-query-experimental'
+      - '@tanstack/react-query'
+      - '@tanstack/solid-query'
+      - '@tanstack/svelte-query'
+      - '@tanstack/vue-query'
+      - effect
+      - msw
+      - swr
+      - zod
+
+  orval@8.46.0(@faker-js/faker@10.6.0)(@tanstack/vue-query@5.105.1(vue@3.5.44(typescript@7.0.2)))(effect@3.20.0)(msw@2.15.0(@types/node@24.19.2)(typescript@7.0.2))(prettier@3.9.6)(zod@4.6.7):
+    dependencies:
+      '@commander-js/extra-typings': 15.0.0(commander@15.0.0)
+      '@orval/angular': 8.46.0(@faker-js/faker@10.6.0)
+      '@orval/axios': 8.46.0(@faker-js/faker@10.6.0)
+      '@orval/core': 8.46.0(@faker-js/faker@10.6.0)
+      '@orval/effect': 8.46.0(@faker-js/faker@10.6.0)(effect@3.20.0)
+      '@orval/fetch': 8.46.0(@faker-js/faker@10.6.0)
+      '@orval/hono': 8.46.0(@faker-js/faker@10.6.0)(zod@4.6.7)
+      '@orval/mcp': 8.46.0(@faker-js/faker@10.6.0)(zod@4.6.7)
+      '@orval/mock': 8.46.0(@faker-js/faker@10.6.0)(msw@2.15.0(@types/node@24.19.2)(typescript@7.0.2))
+      '@orval/pinia-colada': 8.46.0(@faker-js/faker@10.6.0)
+      '@orval/query': 8.46.0(@faker-js/faker@10.6.0)(@tanstack/vue-query@5.105.1(vue@3.5.44(typescript@7.0.2)))
       '@orval/solid-start': 8.46.0(@faker-js/faker@10.6.0)
       '@orval/swr': 8.46.0(@faker-js/faker@10.6.0)
       '@orval/zod': 8.46.0(@faker-js/faker@10.6.0)(zod@4.6.7)
@@ -7385,6 +7518,11 @@ snapshots:
     dependencies:
       vue: 3.5.44(typescript@6.0.3)
 
+  vue-demi@0.14.10(vue@3.5.44(typescript@7.0.2)):
+    dependencies:
+      vue: 3.5.44(typescript@7.0.2)
+    optional: true
+
   vue-eslint-parser@10.4.1(eslint@10.14.0(jiti@2.7.0)):
     dependencies:
       debug: 4.4.3
@@ -7448,6 +7586,17 @@ snapshots:
       '@vue/shared': 3.5.44
     optionalDependencies:
       typescript: 6.0.3
+
+  vue@3.5.44(typescript@7.0.2):
+    dependencies:
+      '@vue/compiler-dom': 3.5.44
+      '@vue/compiler-sfc': 3.5.44
+      '@vue/runtime-dom': 3.5.44
+      '@vue/server-renderer': 3.5.44
+      '@vue/shared': 3.5.44
+    optionalDependencies:
+      typescript: 7.0.2
+    optional: true
 
   webpack-virtual-modules@0.6.2: {}
 

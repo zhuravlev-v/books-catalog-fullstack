@@ -2,6 +2,7 @@
 
 # Dependencies
 node_modules
+.pnpm-store
 .pnp
 .pnp.js
 
@@ -36,3 +37,7 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json

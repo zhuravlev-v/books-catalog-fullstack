@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "api:generate": "orval --config orval.config.ts"
+    "api:generate": "orval --config orval.config.ts",
+    "lint": "eslint .",
+    "format:check": "prettier --check ."
   },
   "files": [
     "openapi",
@@ -19,7 +21,9 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@books/eslint-config": "workspace:*",
     "@types/node": "^24.19.2",
+    "eslint": "^10.10.0",
     "jiti": "^2.7.0",
     "orval": "^8.33.0",
     "prettier": "3.9.6",

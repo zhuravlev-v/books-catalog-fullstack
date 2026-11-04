@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": [".prettierignore", "prettier.config.mjs"],
   "tasks": {
     "dev": {
       "cache": false,
@@ -8,6 +9,12 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "format:check": {
+      "dependsOn": ["^format:check"]
     }
   }
 }

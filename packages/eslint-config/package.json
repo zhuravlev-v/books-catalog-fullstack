@@ -1,0 +1,21 @@
+{
+  "name": "@books/eslint-config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./node": "./node.js",
+    "./vue": "./vue.js"
+  },
+  "dependencies": {
+    "@vue/eslint-config-typescript": "^14.9.0",
+    "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-oxlint": "~1.82.0",
+    "eslint-plugin-vue": "~10.11.0",
+    "globals": "^17.14.0",
+    "typescript": "~6.0.0",
+    "typescript-eslint": "^8.72.1",
+    "vue-eslint-parser": "^10.4.1"
+  }
+}
