@@ -1,22 +1,11 @@
 import {
   Book as BookSchema,
+  BookListResponse as BookListResponseSchema,
   BookShort as BookShortSchema,
 } from '@books/api-contract/schemas';
 
-import type { Prisma } from '../../generated/prisma/client.ts';
 import { defineMapper } from '../../http/mapper.ts';
-
-export const bookWithAuthors = {
-  book_authors: {
-    include: {
-      authors: true,
-    },
-  },
-} satisfies Prisma.booksInclude;
-
-export type BookWithAuthors = Prisma.booksGetPayload<{
-  include: typeof bookWithAuthors;
-}>;
+import type { BooksPage, BookWithAuthors } from './books.model.ts';
 
 export const toBookDto = defineMapper(
   BookSchema,
@@ -40,5 +29,21 @@ export const toBookShortDto = defineMapper(
     id: book.id,
     title: book.title,
     year: book.year,
+  }),
+);
+
+export const toBooksView = defineMapper(
+  BookListResponseSchema,
+  (booksPage: BooksPage, getCoverUrl: (bookId: number) => string) => ({
+    success: true as const,
+    data: {
+      items: booksPage.items.map((book) => toBookDto(book, getCoverUrl)),
+      pagination: {
+        total: booksPage.total,
+        page: booksPage.page,
+        per_page: booksPage.perPage,
+        total_pages: Math.ceil(booksPage.total / booksPage.perPage),
+      },
+    },
   }),
 );

@@ -2,7 +2,8 @@ import express, { type ErrorRequestHandler } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 
-import indexRouter from './routes/index.ts';
+import indexRouter from './modules/index.ts';
+import booksRouter from './modules/books/books.routes.ts';
 import { isHttpError } from './http/errors.ts';
 
 const app = express();
@@ -12,7 +13,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 
-app.use(process.env.API_BASE_PATH ?? '/api/v1', indexRouter);
+const basePathApi = process.env.API_BASE_PATH ?? '/api/v1'; 
+
+app.use(basePathApi, indexRouter);
+app.use(basePathApi, booksRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
