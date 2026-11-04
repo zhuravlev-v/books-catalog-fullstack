@@ -1,0 +1,41 @@
+# lefthook.yml
+# yaml-language-server: $schema=https://lefthook.dev/schema.json
+
+glob_matcher: doublestar
+
+pre-commit:
+  commands:
+    prettier:
+      priority: 1
+      run: pnpm exec prettier --check --ignore-unknown {staged_files}
+      file_types:
+        - text
+
+    web-oxlint:
+      priority: 2
+      root: apps/web/
+      glob: apps/web/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx,vue}
+      run: pnpm exec oxlint {staged_files}
+
+    web-eslint:
+      priority: 3
+      root: apps/web/
+      glob: apps/web/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx,vue}
+      run: pnpm exec eslint {staged_files}
+
+    api-eslint:
+      priority: 4
+      root: apps/api/
+      glob: apps/api/**/*.{js,mjs,cjs,ts,mts,cts}
+      run: pnpm exec eslint {staged_files}
+
+    api-contract-eslint:
+      priority: 5
+      root: packages/api-contract/
+      glob: packages/api-contract/**/*.{js,mjs,cjs,ts,mts,cts}
+      run: pnpm exec eslint {staged_files}
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}
