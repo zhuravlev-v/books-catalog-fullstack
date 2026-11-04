@@ -11,8 +11,7 @@
     "src"
   ],
   "exports": {
-    "./models": "./src/models.ts",
-    "./models/*": "./src/generated/models/*.ts",
+    "./models": "./src/generated/models.ts",
     "./schemas": "./src/generated/schemas/index.ts",
     "./openapi": "./openapi/book.yaml"
   },

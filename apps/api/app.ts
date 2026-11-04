@@ -3,6 +3,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 
 import indexRouter from './routes/index.ts';
+import { isHttpError } from './http/errors.ts';
 
 const app = express();
 
@@ -20,6 +21,11 @@ app.use(function(req, res, next) {
 
 // error handler
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  if (isHttpError(err)) {
+    res.status(err.status).json(err.toResponse());
+    return;
+  }
+
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 

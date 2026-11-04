@@ -8,12 +8,15 @@ export default defineConfig({
       target: specification,
     },
     output: {
+      mode: 'single',
+      target: './src/generated/http-client.ts',
       schemas: {
-        path: './src/generated/models',
+        path: './src/generated/models.ts',
+        mode: 'single',
         type: 'typescript',
       },
-      operationSchemas: './src/generated/operations',
-      clean: true,
+      client: 'fetch',
+      clean: ['./src/generated/http-client.ts', './src/generated/models.ts'],
       formatter: 'prettier',
     },
   },
@@ -31,6 +34,17 @@ export default defineConfig({
         zod: {
           version: 4,
           variant: 'classic',
+          strict: {
+            param: true,
+            query: true,
+            body: true,
+            response: true,
+          },
+          coerce: {
+            param: true,
+            query: true,
+          },
+          generateReusableSchemas: true,
         },
       },
     },

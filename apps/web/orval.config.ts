@@ -18,11 +18,11 @@ export default defineConfig({
       mode: 'tags-split',
       target: './src/api/generated/endpoints',
       schemas: {
-        path: '../../packages/api-contract/src/generated/models',
+        path: '../../packages/api-contract/src/generated/models.ts',
+        mode: 'single',
         type: 'typescript',
         importPath: '@books/api-contract/models',
       },
-      operationSchemas: '../../packages/api-contract/src/generated/operations',
       baseUrl: API_BASE_PATH,
       client: 'vue-query',
       httpClient: 'fetch',

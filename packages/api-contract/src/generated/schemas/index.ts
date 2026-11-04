@@ -10,37 +10,36 @@
  */
 import * as zod from "zod";
 
-/**
- * Создаёт новый аккаунт пользователя на основе логина, email и пароля.
- * @summary Регистрация нового пользователя
- */
-export const postAuthRegisterBodyUsernameMin = 3;
-export const postAuthRegisterBodyUsernameMax = 30;
+export const registerRequestUsernameMin = 3;
+export const registerRequestUsernameMax = 30;
 
-export const postAuthRegisterBodyPasswordMin = 8;
-export const postAuthRegisterBodyPasswordMax = 100;
+export const registerRequestPasswordMin = 8;
+export const registerRequestPasswordMax = 100;
 
-export const PostAuthRegisterBody = zod.object({
+export const RegisterRequest = zod.strictObject({
   username: zod
     .string()
-    .min(postAuthRegisterBodyUsernameMin)
-    .max(postAuthRegisterBodyUsernameMax)
+    .min(registerRequestUsernameMin)
+    .max(registerRequestUsernameMax)
     .describe("Уникальное имя пользователя (логин)"),
   email: zod.email().describe("Электронная почта пользователя"),
   password: zod
     .string()
-    .min(postAuthRegisterBodyPasswordMin)
-    .max(postAuthRegisterBodyPasswordMax)
+    .min(registerRequestPasswordMin)
+    .max(registerRequestPasswordMax)
     .describe("Пароль пользователя"),
 });
 
-export const PostAuthRegisterResponse = zod.object({
+export type RegisterRequest = zod.input<typeof RegisterRequest>;
+export type RegisterRequestOutput = zod.output<typeof RegisterRequest>;
+
+export const RegisterResponse = zod.strictObject({
   success: zod.literal(true),
-  data: zod.object({
+  data: zod.strictObject({
     token: zod
       .string()
       .describe("JWT-токен авторизации, если выдаётся сразу после регистрации"),
-    user: zod.object({
+    user: zod.strictObject({
       id: zod
         .uuid()
         .describe("Уникальный идентификатор созданного пользователя"),
@@ -53,29 +52,213 @@ export const PostAuthRegisterResponse = zod.object({
   }),
 });
 
-/**
- * Возвращает access-токен для роли `user`.
- * @summary Авторизация пользователя
- */
+export type RegisterResponse = zod.input<typeof RegisterResponse>;
+export type RegisterResponseOutput = zod.output<typeof RegisterResponse>;
 
-export const PostAuthLoginBody = zod.object({
+export const LoginRequest = zod.strictObject({
   username: zod.string().min(1),
   password: zod.string().min(1),
 });
 
-export const PostAuthLoginResponse = zod.object({
+export type LoginRequest = zod.input<typeof LoginRequest>;
+export type LoginRequestOutput = zod.output<typeof LoginRequest>;
+
+export const UserRole = zod.enum(["user"]);
+
+export type UserRole = zod.input<typeof UserRole>;
+export type UserRoleOutput = zod.output<typeof UserRole>;
+
+export const LoginResponse = zod.strictObject({
   success: zod.literal(true),
-  data: zod.object({
+  data: zod.strictObject({
     token: zod.string(),
     expires_at: zod.iso.datetime({ offset: true }),
-    user: zod.object({
+    user: zod.strictObject({
       id: zod.uuid(),
       username: zod.string(),
       email: zod.email(),
-      role: zod.enum(["user"]),
+      role: UserRole,
     }),
   }),
 });
+
+export type LoginResponse = zod.input<typeof LoginResponse>;
+export type LoginResponseOutput = zod.output<typeof LoginResponse>;
+
+export const AuthorShort = zod.strictObject({
+  id: zod.int().min(1),
+  full_name: zod.string().min(1),
+});
+
+export type AuthorShort = zod.input<typeof AuthorShort>;
+export type AuthorShortOutput = zod.output<typeof AuthorShort>;
+
+export const Book = zod.strictObject({
+  id: zod.int().min(1),
+  title: zod.string().min(1),
+  year: zod.int().min(1),
+  description: zod.string(),
+  isbn: zod.string(),
+  cover_url: zod.string().nullable(),
+  authors: zod.array(AuthorShort),
+});
+
+export type Book = zod.input<typeof Book>;
+export type BookOutput = zod.output<typeof Book>;
+
+export const BookShort = zod.strictObject({
+  id: zod.int().min(1),
+  title: zod.string().min(1),
+  year: zod.int().min(1),
+});
+
+export type BookShort = zod.input<typeof BookShort>;
+export type BookShortOutput = zod.output<typeof BookShort>;
+
+export const Author = zod.strictObject({
+  id: zod.int().min(1),
+  full_name: zod.string().min(1),
+  books: zod.array(BookShort),
+});
+
+export type Author = zod.input<typeof Author>;
+export type AuthorOutput = zod.output<typeof Author>;
+
+export const BookInput = zod.strictObject({
+  title: zod.string().min(1).optional(),
+  year: zod.int().min(1).optional(),
+  description: zod.string().optional(),
+  isbn: zod.string().optional(),
+  author_ids: zod.array(zod.int().min(1)).min(1).optional(),
+});
+
+export type BookInput = zod.input<typeof BookInput>;
+export type BookInputOutput = zod.output<typeof BookInput>;
+
+export const BookForm = zod.strictObject({
+  title: zod.string().min(1),
+  year: zod.int().min(1),
+  description: zod.string().optional(),
+  isbn: zod.string().optional(),
+  author_ids: zod.array(zod.int().min(1)).min(1),
+  cover: zod.instanceof(Blob).describe("Файл изображения обложки"),
+});
+
+export type BookForm = zod.input<typeof BookForm>;
+export type BookFormOutput = zod.output<typeof BookForm>;
+
+export const AuthorInput = zod.strictObject({
+  full_name: zod.string().min(1),
+});
+
+export type AuthorInput = zod.input<typeof AuthorInput>;
+export type AuthorInputOutput = zod.output<typeof AuthorInput>;
+
+export const BookResponse = zod.strictObject({
+  success: zod.literal(true),
+  data: Book,
+});
+
+export type BookResponse = zod.input<typeof BookResponse>;
+export type BookResponseOutput = zod.output<typeof BookResponse>;
+
+export const AuthorResponse = zod.strictObject({
+  success: zod.literal(true),
+  data: Author,
+});
+
+export type AuthorResponse = zod.input<typeof AuthorResponse>;
+export type AuthorResponseOutput = zod.output<typeof AuthorResponse>;
+
+export const paginationTotalMin = 0;
+
+export const paginationTotalPagesMin = 0;
+
+export const Pagination = zod.strictObject({
+  total: zod.int().min(paginationTotalMin),
+  page: zod.int().min(1),
+  per_page: zod.int().min(1),
+  total_pages: zod.int().min(paginationTotalPagesMin),
+});
+
+export type Pagination = zod.input<typeof Pagination>;
+export type PaginationOutput = zod.output<typeof Pagination>;
+
+export const BookListResponse = zod.strictObject({
+  success: zod.literal(true),
+  data: zod.strictObject({
+    items: zod.array(Book),
+    pagination: Pagination,
+  }),
+});
+
+export type BookListResponse = zod.input<typeof BookListResponse>;
+export type BookListResponseOutput = zod.output<typeof BookListResponse>;
+
+export const AuthorListResponse = zod.strictObject({
+  success: zod.literal(true),
+  data: zod.strictObject({
+    items: zod.array(AuthorShort),
+    pagination: Pagination,
+  }),
+});
+
+export type AuthorListResponse = zod.input<typeof AuthorListResponse>;
+export type AuthorListResponseOutput = zod.output<typeof AuthorListResponse>;
+
+export const topAuthorBooksCountMin = 0;
+
+export const TopAuthor = zod.strictObject({
+  rank: zod.int().min(1),
+  author_id: zod.int().min(1),
+  full_name: zod.string().min(1),
+  books_count: zod.int().min(topAuthorBooksCountMin),
+});
+
+export type TopAuthor = zod.input<typeof TopAuthor>;
+export type TopAuthorOutput = zod.output<typeof TopAuthor>;
+
+export const TopAuthorsResponse = zod.strictObject({
+  success: zod.literal(true),
+  data: zod.strictObject({
+    year: zod.int().min(1),
+    items: zod.array(TopAuthor),
+  }),
+});
+
+export type TopAuthorsResponse = zod.input<typeof TopAuthorsResponse>;
+export type TopAuthorsResponseOutput = zod.output<typeof TopAuthorsResponse>;
+
+export const ErrorItem = zod.strictObject({
+  field: zod.string().optional(),
+  message: zod.string().min(1),
+});
+
+export type ErrorItem = zod.input<typeof ErrorItem>;
+export type ErrorItemOutput = zod.output<typeof ErrorItem>;
+
+export const ApiErrorResponse = zod.strictObject({
+  success: zod.literal(false),
+  errors: zod.array(ErrorItem),
+});
+
+export type ApiErrorResponse = zod.input<typeof ApiErrorResponse>;
+export type ApiErrorResponseOutput = zod.output<typeof ApiErrorResponse>;
+/**
+ * Создаёт новый аккаунт пользователя на основе логина, email и пароля.
+ * @summary Регистрация нового пользователя
+ */
+export const PostAuthRegisterBody = RegisterRequest;
+
+export const PostAuthRegisterResponse = RegisterResponse;
+
+/**
+ * Возвращает access-токен для роли `user`.
+ * @summary Авторизация пользователя
+ */
+export const PostAuthLoginBody = LoginRequest;
+
+export const PostAuthLoginResponse = LoginResponse;
 
 /**
  * Доступно гостям и пользователям. Поддерживает пагинацию, фильтрацию и поиск.
@@ -86,183 +269,69 @@ export const getBooksQueryPageDefault = 1;
 export const getBooksQueryPerPageDefault = 20;
 export const getBooksQueryPerPageMax = 100;
 
-export const GetBooksQueryParams = zod.object({
-  page: zod.int().min(1).default(getBooksQueryPageDefault),
-  per_page: zod
+export const GetBooksQueryParams = zod.strictObject({
+  page: zod.coerce.number().int().min(1).default(getBooksQueryPageDefault),
+  per_page: zod.coerce
+    .number()
     .int()
     .min(1)
     .max(getBooksQueryPerPageMax)
     .default(getBooksQueryPerPageDefault),
-  author_id: zod.int().min(1).optional(),
-  year: zod.int().min(1).optional(),
-  search: zod.string().optional(),
+  author_id: zod.coerce.number().int().min(1).optional(),
+  year: zod.coerce.number().int().min(1).optional(),
+  search: zod.coerce.string().optional(),
 });
 
-export const getBooksResponseDataPaginationTotalMin = 0;
-
-export const getBooksResponseDataPaginationTotalPagesMin = 0;
-
-export const GetBooksResponse = zod.object({
-  success: zod.literal(true),
-  data: zod.object({
-    items: zod.array(
-      zod.object({
-        id: zod.int().min(1),
-        title: zod.string().min(1),
-        year: zod.int().min(1),
-        description: zod.string(),
-        isbn: zod.string(),
-        cover_url: zod.string().nullable(),
-        authors: zod.array(
-          zod.object({
-            id: zod.int().min(1),
-            full_name: zod.string().min(1),
-          }),
-        ),
-      }),
-    ),
-    pagination: zod.object({
-      total: zod.int().min(getBooksResponseDataPaginationTotalMin),
-      page: zod.int().min(1),
-      per_page: zod.int().min(1),
-      total_pages: zod.int().min(getBooksResponseDataPaginationTotalPagesMin),
-    }),
-  }),
-});
+export const GetBooksResponse = BookListResponse;
 
 /**
  * Доступно только авторизованным пользователям.
  * @summary Создание книги
  */
+export const PostBooksBody = BookForm;
 
-export const PostBooksBody = zod.object({
-  title: zod.string().min(1),
-  year: zod.int().min(1),
-  description: zod.string().optional(),
-  isbn: zod.string().optional(),
-  author_ids: zod.array(zod.int().min(1)).min(1),
-  cover: zod.instanceof(Blob),
-});
-
-export const PostBooksResponse = zod.object({
-  success: zod.literal(true),
-  data: zod.object({
-    id: zod.int().min(1),
-    title: zod.string().min(1),
-    year: zod.int().min(1),
-    description: zod.string(),
-    isbn: zod.string(),
-    cover_url: zod.string().nullable(),
-    authors: zod.array(
-      zod.object({
-        id: zod.int().min(1),
-        full_name: zod.string().min(1),
-      }),
-    ),
-  }),
-});
+export const PostBooksResponse = BookResponse;
 
 /**
  * @summary Получить книгу по ID
  */
 
-export const GetBooksIdParams = zod.object({
-  id: zod.int().min(1),
+export const GetBooksIdParams = zod.strictObject({
+  id: zod.coerce.number().int().min(1),
 });
 
-export const GetBooksIdResponse = zod.object({
-  success: zod.literal(true),
-  data: zod.object({
-    id: zod.int().min(1),
-    title: zod.string().min(1),
-    year: zod.int().min(1),
-    description: zod.string(),
-    isbn: zod.string(),
-    cover_url: zod.string().nullable(),
-    authors: zod.array(
-      zod.object({
-        id: zod.int().min(1),
-        full_name: zod.string().min(1),
-      }),
-    ),
-  }),
-});
+export const GetBooksIdResponse = BookResponse;
 
 /**
  * @summary Полное обновление книги
  */
 
-export const PutBooksIdParams = zod.object({
-  id: zod.int().min(1),
+export const PutBooksIdParams = zod.strictObject({
+  id: zod.coerce.number().int().min(1),
 });
 
-export const PutBooksIdBody = zod.object({
-  title: zod.string().min(1),
-  year: zod.int().min(1),
-  description: zod.string().optional(),
-  isbn: zod.string().optional(),
-  author_ids: zod.array(zod.int().min(1)).min(1),
-  cover: zod.instanceof(Blob),
-});
+export const PutBooksIdBody = BookForm;
 
-export const PutBooksIdResponse = zod.object({
-  success: zod.literal(true),
-  data: zod.object({
-    id: zod.int().min(1),
-    title: zod.string().min(1),
-    year: zod.int().min(1),
-    description: zod.string(),
-    isbn: zod.string(),
-    cover_url: zod.string().nullable(),
-    authors: zod.array(
-      zod.object({
-        id: zod.int().min(1),
-        full_name: zod.string().min(1),
-      }),
-    ),
-  }),
-});
+export const PutBooksIdResponse = BookResponse;
 
 /**
  * @summary Частичное обновление книги
  */
 
-export const PatchBooksIdParams = zod.object({
-  id: zod.int().min(1),
+export const PatchBooksIdParams = zod.strictObject({
+  id: zod.coerce.number().int().min(1),
 });
 
-export const PatchBooksIdBody = zod.object({
-  title: zod.string().min(1).optional(),
-  year: zod.int().min(1).optional(),
-  description: zod.string().optional(),
-  isbn: zod.string().optional(),
-  author_ids: zod.array(zod.int().min(1)).min(1).optional(),
-});
+export const PatchBooksIdBody = BookInput;
 
-export const PatchBooksIdResponse = zod.object({
-  success: zod.literal(true),
-  data: zod.object({
-    id: zod.int().min(1),
-    title: zod.string().min(1),
-    year: zod.int().min(1),
-    description: zod.string(),
-    isbn: zod.string(),
-    cover_url: zod.string().nullable(),
-    authors: zod.array(
-      zod.object({
-        id: zod.int().min(1),
-        full_name: zod.string().min(1),
-      }),
-    ),
-  }),
-});
+export const PatchBooksIdResponse = BookResponse;
 
 /**
  * @summary Удаление книги
  */
 
-export const DeleteBooksIdParams = zod.object({
-  id: zod.int().min(1),
+export const DeleteBooksIdParams = zod.strictObject({
+  id: zod.coerce.number().int().min(1),
 });
 
 export const DeleteBooksIdResponse = zod.void();
@@ -276,117 +345,54 @@ export const getAuthorsQueryPageDefault = 1;
 export const getAuthorsQueryPerPageDefault = 20;
 export const getAuthorsQueryPerPageMax = 100;
 
-export const GetAuthorsQueryParams = zod.object({
-  page: zod.int().min(1).default(getAuthorsQueryPageDefault),
-  per_page: zod
+export const GetAuthorsQueryParams = zod.strictObject({
+  page: zod.coerce.number().int().min(1).default(getAuthorsQueryPageDefault),
+  per_page: zod.coerce
+    .number()
     .int()
     .min(1)
     .max(getAuthorsQueryPerPageMax)
     .default(getAuthorsQueryPerPageDefault),
-  search: zod.string().optional(),
+  search: zod.coerce.string().optional(),
 });
 
-export const getAuthorsResponseDataPaginationTotalMin = 0;
-
-export const getAuthorsResponseDataPaginationTotalPagesMin = 0;
-
-export const GetAuthorsResponse = zod.object({
-  success: zod.literal(true),
-  data: zod.object({
-    items: zod.array(
-      zod.object({
-        id: zod.int().min(1),
-        full_name: zod.string().min(1),
-      }),
-    ),
-    pagination: zod.object({
-      total: zod.int().min(getAuthorsResponseDataPaginationTotalMin),
-      page: zod.int().min(1),
-      per_page: zod.int().min(1),
-      total_pages: zod.int().min(getAuthorsResponseDataPaginationTotalPagesMin),
-    }),
-  }),
-});
+export const GetAuthorsResponse = AuthorListResponse;
 
 /**
  * @summary Создание автора
  */
+export const PostAuthorsBody = AuthorInput;
 
-export const PostAuthorsBody = zod.object({
-  full_name: zod.string().min(1),
-});
-
-export const PostAuthorsResponse = zod.object({
-  success: zod.literal(true),
-  data: zod.object({
-    id: zod.int().min(1),
-    full_name: zod.string().min(1),
-    books: zod.array(
-      zod.object({
-        id: zod.int().min(1),
-        title: zod.string().min(1),
-        year: zod.int().min(1),
-      }),
-    ),
-  }),
-});
+export const PostAuthorsResponse = AuthorResponse;
 
 /**
  * @summary Информация об авторе и его книгах
  */
 
-export const GetAuthorsIdParams = zod.object({
-  id: zod.int().min(1),
+export const GetAuthorsIdParams = zod.strictObject({
+  id: zod.coerce.number().int().min(1),
 });
 
-export const GetAuthorsIdResponse = zod.object({
-  success: zod.literal(true),
-  data: zod.object({
-    id: zod.int().min(1),
-    full_name: zod.string().min(1),
-    books: zod.array(
-      zod.object({
-        id: zod.int().min(1),
-        title: zod.string().min(1),
-        year: zod.int().min(1),
-      }),
-    ),
-  }),
-});
+export const GetAuthorsIdResponse = AuthorResponse;
 
 /**
  * @summary Обновление автора
  */
 
-export const PutAuthorsIdParams = zod.object({
-  id: zod.int().min(1),
+export const PutAuthorsIdParams = zod.strictObject({
+  id: zod.coerce.number().int().min(1),
 });
 
-export const PutAuthorsIdBody = zod.object({
-  full_name: zod.string().min(1),
-});
+export const PutAuthorsIdBody = AuthorInput;
 
-export const PutAuthorsIdResponse = zod.object({
-  success: zod.literal(true),
-  data: zod.object({
-    id: zod.int().min(1),
-    full_name: zod.string().min(1),
-    books: zod.array(
-      zod.object({
-        id: zod.int().min(1),
-        title: zod.string().min(1),
-        year: zod.int().min(1),
-      }),
-    ),
-  }),
-});
+export const PutAuthorsIdResponse = AuthorResponse;
 
 /**
  * @summary Удаление автора
  */
 
-export const DeleteAuthorsIdParams = zod.object({
-  id: zod.int().min(1),
+export const DeleteAuthorsIdParams = zod.strictObject({
+  id: zod.coerce.number().int().min(1),
 });
 
 export const DeleteAuthorsIdResponse = zod.void();
@@ -396,25 +402,8 @@ export const DeleteAuthorsIdResponse = zod.void();
  * @summary ТОП-10 авторов по количеству книг за год
  */
 
-export const GetReportsTopAuthorsQueryParams = zod.object({
-  year: zod.int().min(1).describe("Год выпуска книг"),
+export const GetReportsTopAuthorsQueryParams = zod.strictObject({
+  year: zod.coerce.number().int().min(1).describe("Год выпуска книг"),
 });
 
-export const getReportsTopAuthorsResponseDataItemsItemBooksCountMin = 0;
-
-export const GetReportsTopAuthorsResponse = zod.object({
-  success: zod.literal(true),
-  data: zod.object({
-    year: zod.int().min(1),
-    items: zod.array(
-      zod.object({
-        rank: zod.int().min(1),
-        author_id: zod.int().min(1),
-        full_name: zod.string().min(1),
-        books_count: zod
-          .int()
-          .min(getReportsTopAuthorsResponseDataItemsItemBooksCountMin),
-      }),
-    ),
-  }),
-});
+export const GetReportsTopAuthorsResponse = TopAuthorsResponse;

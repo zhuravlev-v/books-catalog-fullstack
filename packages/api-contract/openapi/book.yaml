@@ -646,9 +646,13 @@ components:
                   type: string
                   format: email
                 role:
-                  type: string
-                  enum: [user]
-                  example: user
+                  $ref: '#/components/schemas/UserRole'
+
+    UserRole:
+      type: string
+      enum:
+        - user
+      example: user
 
     Book:
       type: object

@@ -8,6 +8,7 @@
  *
  * OpenAPI spec version: 1.0.0
  */
+import { UserRole } from '@books/api-contract/models';
 import type { LoginResponse, RegisterResponse } from '@books/api-contract/models';
 
 import { faker } from '@faker-js/faker/locale/ru';
@@ -39,7 +40,7 @@ export const getPostAuthLoginResponseMock = (
       id: faker.string.uuid(),
       username: faker.string.alpha({ length: { min: 10, max: 20 } }),
       email: faker.internet.email(),
-      role: faker.helpers.arrayElement(['user'] as const),
+      role: faker.helpers.arrayElement(Object.values(UserRole)),
     },
   },
   ...overrideResponse,
