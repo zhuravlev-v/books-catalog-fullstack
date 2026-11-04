@@ -1,19 +1,11 @@
 import type { GetBooksParams } from '@books/api-contract/models';
 
-import { db } from '../../db.ts';
-import type { Prisma } from '../../generated/prisma/client.ts';
-
-export const bookWithAuthors = {
-  book_authors: {
-    include: {
-      authors: true,
-    },
-  },
-} satisfies Prisma.booksInclude;
-
-export type BookWithAuthors = Prisma.booksGetPayload<{
-  include: typeof bookWithAuthors;
-}>;
+import { prisma } from '../../../prisma/prisma-client.ts';
+import type { Prisma } from '../../../generated/prisma/client.ts';
+import {
+  bookWithAuthors,
+  type BookWithAuthors,
+} from '../shared/prisma.ts';
 
 export interface BooksPage {
   items: BookWithAuthors[];
@@ -22,11 +14,34 @@ export interface BooksPage {
   perPage: number;
 }
 
-export async function getAllBooks(params: GetBooksParams): Promise<BooksPage> {
+export async function queryBooks(params: GetBooksParams): Promise<BooksPage> {
   const page = params.page ?? 1;
   const perPage = params.per_page ?? 20;
+  const where = createBooksWhere(params);
+
+  const [items, total] = await prisma.$transaction([
+    prisma.books.findMany({
+      where,
+      include: bookWithAuthors,
+      orderBy: { id: 'asc' },
+      skip: (page - 1) * perPage,
+      take: perPage,
+    }),
+    prisma.books.count({ where }),
+  ]);
+
+  return {
+    items,
+    total,
+    page,
+    perPage,
+  };
+}
+
+function createBooksWhere(params: GetBooksParams): Prisma.booksWhereInput {
   const search = params.search?.trim();
-  const where: Prisma.booksWhereInput = {
+
+  return {
     ...(params.author_id === undefined
       ? {}
       : {
@@ -46,23 +61,5 @@ export async function getAllBooks(params: GetBooksParams): Promise<BooksPage> {
           ],
         }
       : {}),
-  };
-
-  const [items, total] = await db.$transaction([
-    db.books.findMany({
-      where,
-      include: bookWithAuthors,
-      orderBy: { id: 'asc' },
-      skip: (page - 1) * perPage,
-      take: perPage,
-    }),
-    db.books.count({ where }),
-  ]);
-
-  return {
-    items,
-    total,
-    page,
-    perPage,
   };
 }

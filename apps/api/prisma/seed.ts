@@ -1,6 +1,6 @@
-import { db } from '../db.ts';
+import { prisma } from './prisma-client.ts';
 
-await db.$transaction(async (transaction) => {
+await prisma.$transaction(async (transaction) => {
   await transaction.$executeRaw`
     INSERT INTO "users" (
       "id",
@@ -78,4 +78,4 @@ await db.$transaction(async (transaction) => {
       (SELECT MAX("id") FROM "books")
     )
   `;
-}).finally(() => db.$disconnect());
+}).finally(() => prisma.$disconnect());

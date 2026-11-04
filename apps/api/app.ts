@@ -3,7 +3,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 
 import indexRouter from './modules/index.ts';
-import booksRouter from './modules/books/books.routes.ts';
+import booksRouter from './modules/books/routes.ts';
 import { isHttpError } from './http/errors.ts';
 
 const app = express();

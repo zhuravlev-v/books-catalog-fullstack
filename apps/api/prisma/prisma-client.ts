@@ -1,5 +1,5 @@
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from './generated/prisma/client.ts';
+import { PrismaClient } from '../generated/prisma/client.ts';
 
 const user = encodeURIComponent(process.env.DB_USER ?? '');
 const password = encodeURIComponent(process.env.DB_PASSWORD ?? '');
@@ -12,4 +12,4 @@ const connectionString =
 
 const adapter = new PrismaPg({ connectionString });
 
-export const db = new PrismaClient({ adapter });
+export const prisma = new PrismaClient({ adapter });
