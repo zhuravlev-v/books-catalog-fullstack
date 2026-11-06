@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import indexRouter from './modules/index.ts';
 import booksRouter from './modules/books/routes.ts';
 import { errorHandler } from './http/error-handler.ts';
+import { env } from './config/env.ts';
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 
-const basePathApi = process.env.API_BASE_PATH ?? '/api/v1';
+const basePathApi = env.API_BASE_PATH;
 
 app.use(basePathApi, indexRouter);
 app.use(basePathApi, booksRouter);
@@ -25,5 +26,5 @@ app.use(function (_, res) {
 
 app.use(errorHandler);
 
-const port = Number(process.env.API_PORT ?? 3001);
+const port = env.API_PORT;
 app.listen(port, '0.0.0.0');

@@ -1,11 +1,12 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../generated/prisma/client.ts';
+import { env } from '../config/env.ts';
 
-const user = encodeURIComponent(process.env.DB_USER ?? '');
-const password = encodeURIComponent(process.env.DB_PASSWORD ?? '');
-const host = process.env.DB_HOST ?? 'localhost';
-const port = process.env.DB_PORT ?? '5432';
-const database = encodeURIComponent(process.env.DB_NAME ?? '');
+const user = encodeURIComponent(env.DB_USER);
+const password = encodeURIComponent(env.DB_PASSWORD);
+const host = env.DB_HOST;
+const port = env.DB_PORT;
+const database = encodeURIComponent(env.DB_NAME);
 
 const connectionString = `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`;
 
