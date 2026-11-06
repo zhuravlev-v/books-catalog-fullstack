@@ -79,7 +79,9 @@ export const postAuthRegister = async (
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
@@ -87,12 +89,16 @@ export const postAuthRegister = async (
   return apiRequest<postAuthRegisterResponseSuccess>(getPostAuthRegisterUrl(), {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
     body: JSON.stringify(registerRequest),
   });
 };
 
-export const getPostAuthRegisterMutationKey = () => ['postAuthRegister'] as const;
+export const getPostAuthRegisterMutationKey = () =>
+  ['postAuthRegister'] as const;
 
 export const getPostAuthRegisterMutationOptions = <
   TError = ErrorType<ApiErrorResponse>,
@@ -113,7 +119,9 @@ export const getPostAuthRegisterMutationOptions = <
 > => {
   const mutationKey = getPostAuthRegisterMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey }, request: undefined };
@@ -135,12 +143,17 @@ export type PostAuthRegisterMutationResult = NonNullable<
 >;
 export type PostAuthRegisterMutationBody = BodyType<RegisterRequest>;
 export type PostAuthRegisterMutationError = ErrorType<ApiErrorResponse>;
-export type PostAuthRegisterMutationVariables = { data: BodyType<RegisterRequest> };
+export type PostAuthRegisterMutationVariables = {
+  data: BodyType<RegisterRequest>;
+};
 
 /**
  * @summary Регистрация нового пользователя
  */
-export const usePostAuthRegister = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
+export const usePostAuthRegister = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof postAuthRegister>>,
@@ -202,7 +215,9 @@ export const postAuthLogin = async (
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
@@ -210,7 +225,10 @@ export const postAuthLogin = async (
   return apiRequest<postAuthLoginResponseSuccess>(getPostAuthLoginUrl(), {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
     body: JSON.stringify(loginRequest),
   });
 };
@@ -236,7 +254,9 @@ export const getPostAuthLoginMutationOptions = <
 > => {
   const mutationKey = getPostAuthLoginMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey }, request: undefined };
@@ -253,7 +273,9 @@ export const getPostAuthLoginMutationOptions = <
   return { mutationFn, ...mutationOptions };
 };
 
-export type PostAuthLoginMutationResult = NonNullable<Awaited<ReturnType<typeof postAuthLogin>>>;
+export type PostAuthLoginMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAuthLogin>>
+>;
 export type PostAuthLoginMutationBody = BodyType<LoginRequest>;
 export type PostAuthLoginMutationError = ErrorType<ApiErrorResponse>;
 export type PostAuthLoginMutationVariables = { data: BodyType<LoginRequest> };
@@ -261,7 +283,10 @@ export type PostAuthLoginMutationVariables = { data: BodyType<LoginRequest> };
 /**
  * @summary Авторизация пользователя
  */
-export const usePostAuthLogin = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
+export const usePostAuthLogin = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof postAuthLogin>>,

@@ -8,7 +8,10 @@
  *
  * OpenAPI spec version: 1.0.0
  */
-import type { BookListResponse, BookResponse } from '@books/api-contract/models';
+import type {
+  BookListResponse,
+  BookResponse,
+} from '@books/api-contract/models';
 
 import { faker } from '@faker-js/faker/locale/ru';
 
@@ -17,25 +20,27 @@ export const getGetBooksResponseMock = (
 ): BookListResponse => ({
   success: faker.helpers.arrayElement([true] as const),
   data: {
-    items: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-      () => ({
+    items: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1
+    ).map(() => ({
+      id: faker.number.int({ min: 1 }),
+      title: faker.string.alpha({ length: { min: 1, max: 20 } }),
+      year: faker.number.int({ min: 1 }),
+      description: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      isbn: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      cover_url: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        null,
+      ]),
+      authors: Array.from(
+        { length: faker.number.int({ min: 1, max: 10 }) },
+        (_, i) => i + 1
+      ).map(() => ({
         id: faker.number.int({ min: 1 }),
-        title: faker.string.alpha({ length: { min: 1, max: 20 } }),
-        year: faker.number.int({ min: 1 }),
-        description: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        isbn: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        cover_url: faker.helpers.arrayElement([
-          faker.string.alpha({ length: { min: 10, max: 20 } }),
-          null,
-        ]),
-        authors: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-          () => ({
-            id: faker.number.int({ min: 1 }),
-            full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-          })
-        ),
-      })
-    ),
+        full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+      })),
+    })),
     pagination: {
       total: faker.number.int({ min: 0 }),
       page: faker.number.int({ min: 1 }),
@@ -60,12 +65,13 @@ export const getPostBooksResponseMock = (
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    authors: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-      () => ({
-        id: faker.number.int({ min: 1 }),
-        full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-      })
-    ),
+    authors: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1
+    ).map(() => ({
+      id: faker.number.int({ min: 1 }),
+      full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+    })),
   },
   ...overrideResponse,
 });
@@ -84,12 +90,13 @@ export const getGetBooksIdResponseMock = (
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    authors: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-      () => ({
-        id: faker.number.int({ min: 1 }),
-        full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-      })
-    ),
+    authors: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1
+    ).map(() => ({
+      id: faker.number.int({ min: 1 }),
+      full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+    })),
   },
   ...overrideResponse,
 });
@@ -108,12 +115,13 @@ export const getPutBooksIdResponseMock = (
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    authors: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-      () => ({
-        id: faker.number.int({ min: 1 }),
-        full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-      })
-    ),
+    authors: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1
+    ).map(() => ({
+      id: faker.number.int({ min: 1 }),
+      full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+    })),
   },
   ...overrideResponse,
 });
@@ -132,12 +140,13 @@ export const getPatchBooksIdResponseMock = (
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    authors: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-      () => ({
-        id: faker.number.int({ min: 1 }),
-        full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-      })
-    ),
+    authors: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1
+    ).map(() => ({
+      id: faker.number.int({ min: 1 }),
+      full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+    })),
   },
   ...overrideResponse,
 });

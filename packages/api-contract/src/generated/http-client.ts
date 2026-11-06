@@ -25,7 +25,7 @@ import type {
   RegisterRequest,
   RegisterResponse,
   TopAuthorsResponse,
-} from "./models";
+} from './models';
 
 export type postAuthRegisterResponse201 = {
   data: RegisterResponse;
@@ -64,10 +64,10 @@ export const getPostAuthRegisterUrl = () => {
  */
 export const postAuthRegister = async (
   registerRequest: RegisterRequest,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<postAuthRegisterResponse> => {
   const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
+    h?: NonNullable<RequestInit['headers']>
   ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
@@ -75,8 +75,8 @@ export const postAuthRegister = async (
       return Object.fromEntries(
         Array.from(
           h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+          (entry) => Array.from(entry) as [string, string]
+        )
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
@@ -89,9 +89,9 @@ export const postAuthRegister = async (
   };
   const res = await fetch(getPostAuthRegisterUrl(), {
     ...options,
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...getHeaders(options?.headers),
     },
     body: JSON.stringify(registerRequest),
@@ -99,7 +99,7 @@ export const postAuthRegister = async (
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postAuthRegisterResponse["data"] = body ? JSON.parse(body) : {};
+  const data: postAuthRegisterResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
@@ -137,10 +137,10 @@ export const getPostAuthLoginUrl = () => {
  */
 export const postAuthLogin = async (
   loginRequest: LoginRequest,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<postAuthLoginResponse> => {
   const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
+    h?: NonNullable<RequestInit['headers']>
   ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
@@ -148,8 +148,8 @@ export const postAuthLogin = async (
       return Object.fromEntries(
         Array.from(
           h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+          (entry) => Array.from(entry) as [string, string]
+        )
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
@@ -162,9 +162,9 @@ export const postAuthLogin = async (
   };
   const res = await fetch(getPostAuthLoginUrl(), {
     ...options,
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...getHeaders(options?.headers),
     },
     body: JSON.stringify(loginRequest),
@@ -172,7 +172,7 @@ export const postAuthLogin = async (
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postAuthLoginResponse["data"] = body ? JSON.parse(body) : {};
+  const data: postAuthLoginResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
@@ -195,7 +195,7 @@ export const getGetBooksUrl = (params?: GetBooksParams) => {
 
   Object.entries(params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
+      normalizedParams.append(key, value === null ? 'null' : String(value));
     }
   });
 
@@ -212,16 +212,16 @@ export const getGetBooksUrl = (params?: GetBooksParams) => {
  */
 export const getBooks = async (
   params?: GetBooksParams,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<getBooksResponse> => {
   const res = await fetch(getGetBooksUrl(params), {
     ...options,
-    method: "GET",
+    method: 'GET',
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getBooksResponse["data"] = body ? JSON.parse(body) : {};
+  const data: getBooksResponse['data'] = body ? JSON.parse(body) : {};
   return { data, status: res.status, headers: res.headers } as getBooksResponse;
 };
 
@@ -267,7 +267,7 @@ export const getPostBooksUrl = () => {
  */
 export const postBooks = async (
   bookForm: BookForm,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<postBooksResponse> => {
   const formData = new FormData();
   formData.append(`title`, bookForm.title);
@@ -279,19 +279,19 @@ export const postBooks = async (
     formData.append(`isbn`, bookForm.isbn);
   }
   bookForm.author_ids.forEach((value) =>
-    formData.append(`author_ids`, value.toString()),
+    formData.append(`author_ids`, value.toString())
   );
   formData.append(`cover`, bookForm.cover);
 
   const res = await fetch(getPostBooksUrl(), {
     ...options,
-    method: "POST",
+    method: 'POST',
     body: formData,
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postBooksResponse["data"] = body ? JSON.parse(body) : {};
+  const data: postBooksResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
@@ -328,16 +328,16 @@ export const getGetBooksIdUrl = (id: number) => {
  */
 export const getBooksId = async (
   id: number,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<getBooksIdResponse> => {
   const res = await fetch(getGetBooksIdUrl(id), {
     ...options,
-    method: "GET",
+    method: 'GET',
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getBooksIdResponse["data"] = body ? JSON.parse(body) : {};
+  const data: getBooksIdResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
@@ -395,7 +395,7 @@ export const getPutBooksIdUrl = (id: number) => {
 export const putBooksId = async (
   id: number,
   bookForm: BookForm,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<putBooksIdResponse> => {
   const formData = new FormData();
   formData.append(`title`, bookForm.title);
@@ -407,19 +407,19 @@ export const putBooksId = async (
     formData.append(`isbn`, bookForm.isbn);
   }
   bookForm.author_ids.forEach((value) =>
-    formData.append(`author_ids`, value.toString()),
+    formData.append(`author_ids`, value.toString())
   );
   formData.append(`cover`, bookForm.cover);
 
   const res = await fetch(getPutBooksIdUrl(id), {
     ...options,
-    method: "PUT",
+    method: 'PUT',
     body: formData,
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: putBooksIdResponse["data"] = body ? JSON.parse(body) : {};
+  const data: putBooksIdResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
@@ -477,10 +477,10 @@ export const getPatchBooksIdUrl = (id: number) => {
 export const patchBooksId = async (
   id: number,
   bookInput: BookInput,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<patchBooksIdResponse> => {
   const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
+    h?: NonNullable<RequestInit['headers']>
   ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
@@ -488,8 +488,8 @@ export const patchBooksId = async (
       return Object.fromEntries(
         Array.from(
           h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+          (entry) => Array.from(entry) as [string, string]
+        )
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
@@ -502,9 +502,9 @@ export const patchBooksId = async (
   };
   const res = await fetch(getPatchBooksIdUrl(id), {
     ...options,
-    method: "PATCH",
+    method: 'PATCH',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...getHeaders(options?.headers),
     },
     body: JSON.stringify(bookInput),
@@ -512,7 +512,7 @@ export const patchBooksId = async (
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: patchBooksIdResponse["data"] = body ? JSON.parse(body) : {};
+  const data: patchBooksIdResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
@@ -561,16 +561,16 @@ export const getDeleteBooksIdUrl = (id: number) => {
  */
 export const deleteBooksId = async (
   id: number,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<deleteBooksIdResponse> => {
   const res = await fetch(getDeleteBooksIdUrl(id), {
     ...options,
-    method: "DELETE",
+    method: 'DELETE',
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteBooksIdResponse["data"] = body
+  const data: deleteBooksIdResponse['data'] = body
     ? JSON.parse(body)
     : undefined;
   return {
@@ -595,7 +595,7 @@ export const getGetAuthorsUrl = (params?: GetAuthorsParams) => {
 
   Object.entries(params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
+      normalizedParams.append(key, value === null ? 'null' : String(value));
     }
   });
 
@@ -612,16 +612,16 @@ export const getGetAuthorsUrl = (params?: GetAuthorsParams) => {
  */
 export const getAuthors = async (
   params?: GetAuthorsParams,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<getAuthorsResponse> => {
   const res = await fetch(getGetAuthorsUrl(params), {
     ...options,
-    method: "GET",
+    method: 'GET',
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getAuthorsResponse["data"] = body ? JSON.parse(body) : {};
+  const data: getAuthorsResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
@@ -670,10 +670,10 @@ export const getPostAuthorsUrl = () => {
  */
 export const postAuthors = async (
   authorInput: AuthorInput,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<postAuthorsResponse> => {
   const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
+    h?: NonNullable<RequestInit['headers']>
   ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
@@ -681,8 +681,8 @@ export const postAuthors = async (
       return Object.fromEntries(
         Array.from(
           h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+          (entry) => Array.from(entry) as [string, string]
+        )
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
@@ -695,9 +695,9 @@ export const postAuthors = async (
   };
   const res = await fetch(getPostAuthorsUrl(), {
     ...options,
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...getHeaders(options?.headers),
     },
     body: JSON.stringify(authorInput),
@@ -705,7 +705,7 @@ export const postAuthors = async (
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postAuthorsResponse["data"] = body ? JSON.parse(body) : {};
+  const data: postAuthorsResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
@@ -742,16 +742,16 @@ export const getGetAuthorsIdUrl = (id: number) => {
  */
 export const getAuthorsId = async (
   id: number,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<getAuthorsIdResponse> => {
   const res = await fetch(getGetAuthorsIdUrl(id), {
     ...options,
-    method: "GET",
+    method: 'GET',
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getAuthorsIdResponse["data"] = body ? JSON.parse(body) : {};
+  const data: getAuthorsIdResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
@@ -809,10 +809,10 @@ export const getPutAuthorsIdUrl = (id: number) => {
 export const putAuthorsId = async (
   id: number,
   authorInput: AuthorInput,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<putAuthorsIdResponse> => {
   const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
+    h?: NonNullable<RequestInit['headers']>
   ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
@@ -820,8 +820,8 @@ export const putAuthorsId = async (
       return Object.fromEntries(
         Array.from(
           h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+          (entry) => Array.from(entry) as [string, string]
+        )
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
@@ -834,9 +834,9 @@ export const putAuthorsId = async (
   };
   const res = await fetch(getPutAuthorsIdUrl(id), {
     ...options,
-    method: "PUT",
+    method: 'PUT',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...getHeaders(options?.headers),
     },
     body: JSON.stringify(authorInput),
@@ -844,7 +844,7 @@ export const putAuthorsId = async (
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: putAuthorsIdResponse["data"] = body ? JSON.parse(body) : {};
+  const data: putAuthorsIdResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
@@ -895,16 +895,16 @@ export const getDeleteAuthorsIdUrl = (id: number) => {
  */
 export const deleteAuthorsId = async (
   id: number,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<deleteAuthorsIdResponse> => {
   const res = await fetch(getDeleteAuthorsIdUrl(id), {
     ...options,
-    method: "DELETE",
+    method: 'DELETE',
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteAuthorsIdResponse["data"] = body
+  const data: deleteAuthorsIdResponse['data'] = body
     ? JSON.parse(body)
     : undefined;
   return {
@@ -937,13 +937,13 @@ export type getReportsTopAuthorsResponse =
   getReportsTopAuthorsResponseSuccess | getReportsTopAuthorsResponseError;
 
 export const getGetReportsTopAuthorsUrl = (
-  params: GetReportsTopAuthorsParams,
+  params: GetReportsTopAuthorsParams
 ) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
+      normalizedParams.append(key, value === null ? 'null' : String(value));
     }
   });
 
@@ -960,16 +960,16 @@ export const getGetReportsTopAuthorsUrl = (
  */
 export const getReportsTopAuthors = async (
   params: GetReportsTopAuthorsParams,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<getReportsTopAuthorsResponse> => {
   const res = await fetch(getGetReportsTopAuthorsUrl(params), {
     ...options,
-    method: "GET",
+    method: 'GET',
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getReportsTopAuthorsResponse["data"] = body
+  const data: getReportsTopAuthorsResponse['data'] = body
     ? JSON.parse(body)
     : {};
   return {

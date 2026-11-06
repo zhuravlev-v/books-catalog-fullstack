@@ -57,7 +57,9 @@ export const getGetBooksUrl = (params?: GetBooksParams) => {
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/api/v1/books?${stringifiedParams}` : `/api/v1/books`;
+  return stringifiedParams.length > 0
+    ? `/api/v1/books?${stringifiedParams}`
+    : `/api/v1/books`;
 };
 
 /**
@@ -74,7 +76,9 @@ export const getBooks = async (
   });
 };
 
-export const getGetBooksQueryKey = (params?: MaybeRefOrGetter<GetBooksParams>) => {
+export const getGetBooksQueryKey = (
+  params?: MaybeRefOrGetter<GetBooksParams>
+) => {
   return ['api', 'v1', 'books', ...(params ? [params] : [])] as const;
 };
 
@@ -84,7 +88,9 @@ export const getGetBooksQueryOptions = <
 >(
   params?: MaybeRefOrGetter<GetBooksParams>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBooks>>, TError, TData>>;
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getBooks>>, TError, TData>
+    >;
     request?: SecondParameter<typeof apiRequest>;
   }
 ) => {
@@ -92,8 +98,9 @@ export const getGetBooksQueryOptions = <
 
   const queryKey = getGetBooksQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getBooks>>> = ({ signal }) =>
-    getBooks(toValue(params), { signal, ...requestOptions });
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getBooks>>> = ({
+    signal,
+  }) => getBooks(toValue(params), { signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getBooks>>,
@@ -102,7 +109,9 @@ export const getGetBooksQueryOptions = <
   >;
 };
 
-export type GetBooksQueryResult = NonNullable<Awaited<ReturnType<typeof getBooks>>>;
+export type GetBooksQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBooks>>
+>;
 export type GetBooksQueryError = ErrorType<unknown>;
 
 /**
@@ -115,18 +124,27 @@ export function useGetBooks<
 >(
   params?: MaybeRefOrGetter<GetBooksParams>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBooks>>, TError, TData>>;
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getBooks>>, TError, TData>
+    >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
-): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+): UseQueryReturnType<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
   const queryOptions = getGetBooksQueryOptions(params, options);
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+  query.queryKey = unref(queryOptions).queryKey as DataTag<
+    QueryKey,
+    TData,
+    TError
+  >;
 
   return query;
 }
@@ -181,7 +199,9 @@ export const postBooks = async (
   if (bookForm.isbn !== undefined) {
     formData.append(`isbn`, bookForm.isbn);
   }
-  bookForm.author_ids.forEach((value) => formData.append(`author_ids`, value.toString()));
+  bookForm.author_ids.forEach((value) =>
+    formData.append(`author_ids`, value.toString())
+  );
   formData.append(`cover`, bookForm.cover);
 
   return apiRequest<postBooksResponseSuccess>(getPostBooksUrl(), {
@@ -212,7 +232,9 @@ export const getPostBooksMutationOptions = <
 > => {
   const mutationKey = getPostBooksMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey }, request: undefined };
@@ -229,7 +251,9 @@ export const getPostBooksMutationOptions = <
   return { mutationFn, ...mutationOptions };
 };
 
-export type PostBooksMutationResult = NonNullable<Awaited<ReturnType<typeof postBooks>>>;
+export type PostBooksMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postBooks>>
+>;
 export type PostBooksMutationBody = BodyType<BookForm>;
 export type PostBooksMutationError = ErrorType<ApiErrorResponse>;
 export type PostBooksMutationVariables = { data: BodyType<BookForm> };
@@ -237,7 +261,10 @@ export type PostBooksMutationVariables = { data: BodyType<BookForm> };
 /**
  * @summary Создание книги
  */
-export const usePostBooks = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
+export const usePostBooks = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof postBooks>>,
@@ -300,7 +327,9 @@ export const getGetBooksIdQueryOptions = <
 >(
   id: MaybeRefOrGetter<number>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBooksId>>, TError, TData>>;
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getBooksId>>, TError, TData>
+    >;
     request?: SecondParameter<typeof apiRequest>;
   }
 ) => {
@@ -308,8 +337,9 @@ export const getGetBooksIdQueryOptions = <
 
   const queryKey = getGetBooksIdQueryKey(id);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getBooksId>>> = ({ signal }) =>
-    getBooksId(toValue(id), { signal, ...requestOptions });
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getBooksId>>> = ({
+    signal,
+  }) => getBooksId(toValue(id), { signal, ...requestOptions });
 
   return {
     queryKey,
@@ -319,7 +349,9 @@ export const getGetBooksIdQueryOptions = <
   } as UseQueryOptions<Awaited<ReturnType<typeof getBooksId>>, TError, TData>;
 };
 
-export type GetBooksIdQueryResult = NonNullable<Awaited<ReturnType<typeof getBooksId>>>;
+export type GetBooksIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBooksId>>
+>;
 export type GetBooksIdQueryError = ErrorType<ApiErrorResponse>;
 
 /**
@@ -332,18 +364,27 @@ export function useGetBooksId<
 >(
   id: MaybeRefOrGetter<number>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBooksId>>, TError, TData>>;
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getBooksId>>, TError, TData>
+    >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
-): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+): UseQueryReturnType<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
   const queryOptions = getGetBooksIdQueryOptions(id, options);
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+  query.queryKey = unref(queryOptions).queryKey as DataTag<
+    QueryKey,
+    TData,
+    TError
+  >;
 
   return query;
 }
@@ -377,7 +418,10 @@ export type putBooksIdResponseSuccess = putBooksIdResponse200 & {
   headers: Headers;
 };
 export type putBooksIdResponseError = (
-  putBooksIdResponse401 | putBooksIdResponse403 | putBooksIdResponse404 | putBooksIdResponse422
+  | putBooksIdResponse401
+  | putBooksIdResponse403
+  | putBooksIdResponse404
+  | putBooksIdResponse422
 ) & {
   headers: Headers;
 };
@@ -403,7 +447,9 @@ export const putBooksId = async (
   if (bookForm.isbn !== undefined) {
     formData.append(`isbn`, bookForm.isbn);
   }
-  bookForm.author_ids.forEach((value) => formData.append(`author_ids`, value.toString()));
+  bookForm.author_ids.forEach((value) =>
+    formData.append(`author_ids`, value.toString())
+  );
   formData.append(`cover`, bookForm.cover);
 
   return apiRequest<putBooksIdResponseSuccess>(getPutBooksIdUrl(id), {
@@ -434,7 +480,9 @@ export const getPutBooksIdMutationOptions = <
 > => {
   const mutationKey = getPutBooksIdMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey }, request: undefined };
@@ -451,15 +499,23 @@ export const getPutBooksIdMutationOptions = <
   return { mutationFn, ...mutationOptions };
 };
 
-export type PutBooksIdMutationResult = NonNullable<Awaited<ReturnType<typeof putBooksId>>>;
+export type PutBooksIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putBooksId>>
+>;
 export type PutBooksIdMutationBody = BodyType<BookForm>;
 export type PutBooksIdMutationError = ErrorType<ApiErrorResponse>;
-export type PutBooksIdMutationVariables = { id: number; data: BodyType<BookForm> };
+export type PutBooksIdMutationVariables = {
+  id: number;
+  data: BodyType<BookForm>;
+};
 
 /**
  * @summary Полное обновление книги
  */
-export const usePutBooksId = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
+export const usePutBooksId = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof putBooksId>>,
@@ -541,7 +597,9 @@ export const patchBooksId = async (
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
@@ -549,7 +607,10 @@ export const patchBooksId = async (
   return apiRequest<patchBooksIdResponseSuccess>(getPatchBooksIdUrl(id), {
     ...options,
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
     body: JSON.stringify(bookInput),
   });
 };
@@ -575,7 +636,9 @@ export const getPatchBooksIdMutationOptions = <
 > => {
   const mutationKey = getPatchBooksIdMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey }, request: undefined };
@@ -592,15 +655,23 @@ export const getPatchBooksIdMutationOptions = <
   return { mutationFn, ...mutationOptions };
 };
 
-export type PatchBooksIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchBooksId>>>;
+export type PatchBooksIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchBooksId>>
+>;
 export type PatchBooksIdMutationBody = BodyType<BookInput>;
 export type PatchBooksIdMutationError = ErrorType<ApiErrorResponse>;
-export type PatchBooksIdMutationVariables = { id: number; data: BodyType<BookInput> };
+export type PatchBooksIdMutationVariables = {
+  id: number;
+  data: BodyType<BookInput>;
+};
 
 /**
  * @summary Частичное обновление книги
  */
-export const usePatchBooksId = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
+export const usePatchBooksId = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof patchBooksId>>,
@@ -686,7 +757,9 @@ export const getDeleteBooksIdMutationOptions = <
 > => {
   const mutationKey = getDeleteBooksIdMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey }, request: undefined };
@@ -703,7 +776,9 @@ export const getDeleteBooksIdMutationOptions = <
   return { mutationFn, ...mutationOptions };
 };
 
-export type DeleteBooksIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteBooksId>>>;
+export type DeleteBooksIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteBooksId>>
+>;
 
 export type DeleteBooksIdMutationError = ErrorType<ApiErrorResponse>;
 export type DeleteBooksIdMutationVariables = { id: number };
@@ -711,7 +786,10 @@ export type DeleteBooksIdMutationVariables = { id: number };
 /**
  * @summary Удаление книги
  */
-export const useDeleteBooksId = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
+export const useDeleteBooksId = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof deleteBooksId>>,

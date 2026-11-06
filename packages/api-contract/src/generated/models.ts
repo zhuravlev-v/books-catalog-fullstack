@@ -55,7 +55,7 @@ export interface LoginRequest {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 export const UserRole = {
-  user: "user",
+  user: 'user',
 } as const;
 
 export type LoginResponseDataUser = {

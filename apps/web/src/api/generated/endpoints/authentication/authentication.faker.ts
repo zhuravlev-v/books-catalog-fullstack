@@ -9,7 +9,10 @@
  * OpenAPI spec version: 1.0.0
  */
 import { UserRole } from '@books/api-contract/models';
-import type { LoginResponse, RegisterResponse } from '@books/api-contract/models';
+import type {
+  LoginResponse,
+  RegisterResponse,
+} from '@books/api-contract/models';
 
 import { faker } from '@faker-js/faker/locale/ru';
 

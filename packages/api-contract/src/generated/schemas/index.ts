@@ -8,7 +8,7 @@
  *
  * OpenAPI spec version: 1.0.0
  */
-import * as zod from "zod";
+import * as zod from 'zod';
 
 export const registerRequestUsernameMin = 3;
 export const registerRequestUsernameMax = 30;
@@ -21,13 +21,13 @@ export const RegisterRequest = zod.strictObject({
     .string()
     .min(registerRequestUsernameMin)
     .max(registerRequestUsernameMax)
-    .describe("Уникальное имя пользователя (логин)"),
-  email: zod.email().describe("Электронная почта пользователя"),
+    .describe('Уникальное имя пользователя (логин)'),
+  email: zod.email().describe('Электронная почта пользователя'),
   password: zod
     .string()
     .min(registerRequestPasswordMin)
     .max(registerRequestPasswordMax)
-    .describe("Пароль пользователя"),
+    .describe('Пароль пользователя'),
 });
 
 export type RegisterRequest = zod.input<typeof RegisterRequest>;
@@ -38,16 +38,16 @@ export const RegisterResponse = zod.strictObject({
   data: zod.strictObject({
     token: zod
       .string()
-      .describe("JWT-токен авторизации, если выдаётся сразу после регистрации"),
+      .describe('JWT-токен авторизации, если выдаётся сразу после регистрации'),
     user: zod.strictObject({
       id: zod
         .uuid()
-        .describe("Уникальный идентификатор созданного пользователя"),
+        .describe('Уникальный идентификатор созданного пользователя'),
       username: zod.string(),
       email: zod.email(),
       created_at: zod.iso
         .datetime({ offset: true })
-        .describe("Дата и время создания аккаунта"),
+        .describe('Дата и время создания аккаунта'),
     }),
   }),
 });
@@ -63,7 +63,7 @@ export const LoginRequest = zod.strictObject({
 export type LoginRequest = zod.input<typeof LoginRequest>;
 export type LoginRequestOutput = zod.output<typeof LoginRequest>;
 
-export const UserRole = zod.enum(["user"]);
+export const UserRole = zod.enum(['user']);
 
 export type UserRole = zod.input<typeof UserRole>;
 export type UserRoleOutput = zod.output<typeof UserRole>;
@@ -141,7 +141,7 @@ export const BookForm = zod.strictObject({
   description: zod.string().optional(),
   isbn: zod.string().optional(),
   author_ids: zod.array(zod.int().min(1)).min(1),
-  cover: zod.instanceof(Blob).describe("Файл изображения обложки"),
+  cover: zod.instanceof(Blob).describe('Файл изображения обложки'),
 });
 
 export type BookForm = zod.input<typeof BookForm>;
@@ -403,7 +403,7 @@ export const DeleteAuthorsIdResponse = zod.void();
  */
 
 export const GetReportsTopAuthorsQueryParams = zod.strictObject({
-  year: zod.coerce.number().int().min(1).describe("Год выпуска книг"),
+  year: zod.coerce.number().int().min(1).describe('Год выпуска книг'),
 });
 
 export const GetReportsTopAuthorsResponse = TopAuthorsResponse;

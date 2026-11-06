@@ -16,7 +16,11 @@ import type {
 } from '@books/api-contract/models';
 
 import { HttpResponse, delay, http } from 'msw';
-import type { HttpResponseResolver, PathParams, RequestHandlerOptions } from 'msw';
+import type {
+  HttpResponseResolver,
+  PathParams,
+  RequestHandlerOptions,
+} from 'msw';
 
 import {
   getGetBooksIdResponseMock,
@@ -37,7 +41,9 @@ export {
 export const getGetBooksMockHandler = (
   overrideResponse?:
     | BookListResponse
-    | ((info: Parameters<HttpResponseResolver>[0]) => Promise<BookListResponse> | BookListResponse),
+    | ((
+        info: Parameters<HttpResponseResolver>[0]
+      ) => Promise<BookListResponse> | BookListResponse),
   options?: RequestHandlerOptions
 ) => {
   return http.get(
@@ -120,7 +126,9 @@ export const getPutBooksIdMockHandler = (
 ) => {
   return http.put<{ id: string }, BookForm>(
     '/api/v1/books/:id',
-    async (info: Parameters<HttpResponseResolver<{ id: string }, BookForm>>[0]) => {
+    async (
+      info: Parameters<HttpResponseResolver<{ id: string }, BookForm>>[0]
+    ) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -146,7 +154,9 @@ export const getPatchBooksIdMockHandler = (
 ) => {
   return http.patch<{ id: string }, BookInput>(
     '/api/v1/books/:id',
-    async (info: Parameters<HttpResponseResolver<{ id: string }, BookInput>>[0]) => {
+    async (
+      info: Parameters<HttpResponseResolver<{ id: string }, BookInput>>[0]
+    ) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -164,7 +174,10 @@ export const getPatchBooksIdMockHandler = (
 
 export const getDeleteBooksIdMockHandler = (
   overrideResponse?:
-    void | ((info: Parameters<HttpResponseResolver<{ id: string }>>[0]) => Promise<void> | void),
+    | void
+    | ((
+        info: Parameters<HttpResponseResolver<{ id: string }>>[0]
+      ) => Promise<void> | void),
   options?: RequestHandlerOptions
 ) => {
   return http.delete<{ id: string }>(

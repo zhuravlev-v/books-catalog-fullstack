@@ -42,14 +42,18 @@ export type getReportsTopAuthorsResponse400 = {
   status: 400;
 };
 
-export type getReportsTopAuthorsResponseSuccess = getReportsTopAuthorsResponse200 & {
-  headers: Headers;
-};
-export type getReportsTopAuthorsResponseError = getReportsTopAuthorsResponse400 & {
-  headers: Headers;
-};
+export type getReportsTopAuthorsResponseSuccess =
+  getReportsTopAuthorsResponse200 & {
+    headers: Headers;
+  };
+export type getReportsTopAuthorsResponseError =
+  getReportsTopAuthorsResponse400 & {
+    headers: Headers;
+  };
 
-export const getGetReportsTopAuthorsUrl = (params: GetReportsTopAuthorsParams) => {
+export const getGetReportsTopAuthorsUrl = (
+  params: GetReportsTopAuthorsParams
+) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -73,16 +77,25 @@ export const getReportsTopAuthors = async (
   params: GetReportsTopAuthorsParams,
   options?: Parameters<typeof apiRequest>[1]
 ): Promise<getReportsTopAuthorsResponseSuccess> => {
-  return apiRequest<getReportsTopAuthorsResponseSuccess>(getGetReportsTopAuthorsUrl(params), {
-    ...options,
-    method: 'GET',
-  });
+  return apiRequest<getReportsTopAuthorsResponseSuccess>(
+    getGetReportsTopAuthorsUrl(params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export const getGetReportsTopAuthorsQueryKey = (
   params?: MaybeRefOrGetter<GetReportsTopAuthorsParams>
 ) => {
-  return ['api', 'v1', 'reports', 'top-authors', ...(params ? [params] : [])] as const;
+  return [
+    'api',
+    'v1',
+    'reports',
+    'top-authors',
+    ...(params ? [params] : []),
+  ] as const;
 };
 
 export const getGetReportsTopAuthorsQueryOptions = <
@@ -92,7 +105,11 @@ export const getGetReportsTopAuthorsQueryOptions = <
   params: MaybeRefOrGetter<GetReportsTopAuthorsParams>,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getReportsTopAuthors>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getReportsTopAuthors>>,
+        TError,
+        TData
+      >
     >;
     request?: SecondParameter<typeof apiRequest>;
   }
@@ -101,7 +118,9 @@ export const getGetReportsTopAuthorsQueryOptions = <
 
   const queryKey = getGetReportsTopAuthorsQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getReportsTopAuthors>>> = ({ signal }) =>
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getReportsTopAuthors>>
+  > = ({ signal }) =>
     getReportsTopAuthors(toValue(params), { signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
@@ -127,19 +146,30 @@ export function useGetReportsTopAuthors<
   params: MaybeRefOrGetter<GetReportsTopAuthorsParams>,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getReportsTopAuthors>>, TError, TData>
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getReportsTopAuthors>>,
+        TError,
+        TData
+      >
     >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
-): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+): UseQueryReturnType<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
   const queryOptions = getGetReportsTopAuthorsQueryOptions(params, options);
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+  query.queryKey = unref(queryOptions).queryKey as DataTag<
+    QueryKey,
+    TData,
+    TError
+  >;
 
   return query;
 }

@@ -56,7 +56,9 @@ export const getGetAuthorsUrl = (params?: GetAuthorsParams) => {
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/api/v1/authors?${stringifiedParams}` : `/api/v1/authors`;
+  return stringifiedParams.length > 0
+    ? `/api/v1/authors?${stringifiedParams}`
+    : `/api/v1/authors`;
 };
 
 /**
@@ -73,7 +75,9 @@ export const getAuthors = async (
   });
 };
 
-export const getGetAuthorsQueryKey = (params?: MaybeRefOrGetter<GetAuthorsParams>) => {
+export const getGetAuthorsQueryKey = (
+  params?: MaybeRefOrGetter<GetAuthorsParams>
+) => {
   return ['api', 'v1', 'authors', ...(params ? [params] : [])] as const;
 };
 
@@ -83,7 +87,9 @@ export const getGetAuthorsQueryOptions = <
 >(
   params?: MaybeRefOrGetter<GetAuthorsParams>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthors>>, TError, TData>>;
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getAuthors>>, TError, TData>
+    >;
     request?: SecondParameter<typeof apiRequest>;
   }
 ) => {
@@ -91,8 +97,9 @@ export const getGetAuthorsQueryOptions = <
 
   const queryKey = getGetAuthorsQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthors>>> = ({ signal }) =>
-    getAuthors(toValue(params), { signal, ...requestOptions });
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthors>>> = ({
+    signal,
+  }) => getAuthors(toValue(params), { signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getAuthors>>,
@@ -101,7 +108,9 @@ export const getGetAuthorsQueryOptions = <
   >;
 };
 
-export type GetAuthorsQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthors>>>;
+export type GetAuthorsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAuthors>>
+>;
 export type GetAuthorsQueryError = ErrorType<unknown>;
 
 /**
@@ -114,18 +123,27 @@ export function useGetAuthors<
 >(
   params?: MaybeRefOrGetter<GetAuthorsParams>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthors>>, TError, TData>>;
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getAuthors>>, TError, TData>
+    >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
-): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+): UseQueryReturnType<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
   const queryOptions = getGetAuthorsQueryOptions(params, options);
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+  query.queryKey = unref(queryOptions).queryKey as DataTag<
+    QueryKey,
+    TData,
+    TError
+  >;
 
   return query;
 }
@@ -184,7 +202,9 @@ export const postAuthors = async (
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
@@ -192,7 +212,10 @@ export const postAuthors = async (
   return apiRequest<postAuthorsResponseSuccess>(getPostAuthorsUrl(), {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
     body: JSON.stringify(authorInput),
   });
 };
@@ -218,7 +241,9 @@ export const getPostAuthorsMutationOptions = <
 > => {
   const mutationKey = getPostAuthorsMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey }, request: undefined };
@@ -235,7 +260,9 @@ export const getPostAuthorsMutationOptions = <
   return { mutationFn, ...mutationOptions };
 };
 
-export type PostAuthorsMutationResult = NonNullable<Awaited<ReturnType<typeof postAuthors>>>;
+export type PostAuthorsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAuthors>>
+>;
 export type PostAuthorsMutationBody = BodyType<AuthorInput>;
 export type PostAuthorsMutationError = ErrorType<ApiErrorResponse>;
 export type PostAuthorsMutationVariables = { data: BodyType<AuthorInput> };
@@ -243,7 +270,10 @@ export type PostAuthorsMutationVariables = { data: BodyType<AuthorInput> };
 /**
  * @summary Создание автора
  */
-export const usePostAuthors = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
+export const usePostAuthors = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof postAuthors>>,
@@ -306,7 +336,9 @@ export const getGetAuthorsIdQueryOptions = <
 >(
   id: MaybeRefOrGetter<number>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthorsId>>, TError, TData>>;
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getAuthorsId>>, TError, TData>
+    >;
     request?: SecondParameter<typeof apiRequest>;
   }
 ) => {
@@ -314,8 +346,9 @@ export const getGetAuthorsIdQueryOptions = <
 
   const queryKey = getGetAuthorsIdQueryKey(id);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthorsId>>> = ({ signal }) =>
-    getAuthorsId(toValue(id), { signal, ...requestOptions });
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthorsId>>> = ({
+    signal,
+  }) => getAuthorsId(toValue(id), { signal, ...requestOptions });
 
   return {
     queryKey,
@@ -325,7 +358,9 @@ export const getGetAuthorsIdQueryOptions = <
   } as UseQueryOptions<Awaited<ReturnType<typeof getAuthorsId>>, TError, TData>;
 };
 
-export type GetAuthorsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthorsId>>>;
+export type GetAuthorsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAuthorsId>>
+>;
 export type GetAuthorsIdQueryError = ErrorType<ApiErrorResponse>;
 
 /**
@@ -338,18 +373,27 @@ export function useGetAuthorsId<
 >(
   id: MaybeRefOrGetter<number>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthorsId>>, TError, TData>>;
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getAuthorsId>>, TError, TData>
+    >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
-): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+): UseQueryReturnType<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
   const queryOptions = getGetAuthorsIdQueryOptions(id, options);
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+  query.queryKey = unref(queryOptions).queryKey as DataTag<
+    QueryKey,
+    TData,
+    TError
+  >;
 
   return query;
 }
@@ -417,7 +461,9 @@ export const putAuthorsId = async (
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
@@ -425,7 +471,10 @@ export const putAuthorsId = async (
   return apiRequest<putAuthorsIdResponseSuccess>(getPutAuthorsIdUrl(id), {
     ...options,
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
     body: JSON.stringify(authorInput),
   });
 };
@@ -451,7 +500,9 @@ export const getPutAuthorsIdMutationOptions = <
 > => {
   const mutationKey = getPutAuthorsIdMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey }, request: undefined };
@@ -468,15 +519,23 @@ export const getPutAuthorsIdMutationOptions = <
   return { mutationFn, ...mutationOptions };
 };
 
-export type PutAuthorsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putAuthorsId>>>;
+export type PutAuthorsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putAuthorsId>>
+>;
 export type PutAuthorsIdMutationBody = BodyType<AuthorInput>;
 export type PutAuthorsIdMutationError = ErrorType<ApiErrorResponse>;
-export type PutAuthorsIdMutationVariables = { id: number; data: BodyType<AuthorInput> };
+export type PutAuthorsIdMutationVariables = {
+  id: number;
+  data: BodyType<AuthorInput>;
+};
 
 /**
  * @summary Обновление автора
  */
-export const usePutAuthorsId = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
+export const usePutAuthorsId = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof putAuthorsId>>,
@@ -519,7 +578,9 @@ export type deleteAuthorsIdResponseSuccess = deleteAuthorsIdResponse204 & {
   headers: Headers;
 };
 export type deleteAuthorsIdResponseError = (
-  deleteAuthorsIdResponse401 | deleteAuthorsIdResponse403 | deleteAuthorsIdResponse404
+  | deleteAuthorsIdResponse401
+  | deleteAuthorsIdResponse403
+  | deleteAuthorsIdResponse404
 ) & {
   headers: Headers;
 };
@@ -562,7 +623,9 @@ export const getDeleteAuthorsIdMutationOptions = <
 > => {
   const mutationKey = getDeleteAuthorsIdMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey }, request: undefined };
@@ -589,7 +652,10 @@ export type DeleteAuthorsIdMutationVariables = { id: number };
 /**
  * @summary Удаление автора
  */
-export const useDeleteAuthorsId = <TError = ErrorType<ApiErrorResponse>, TContext = unknown>(
+export const useDeleteAuthorsId = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof deleteAuthorsId>>,

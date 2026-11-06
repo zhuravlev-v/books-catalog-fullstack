@@ -8,10 +8,18 @@
  *
  * OpenAPI spec version: 1.0.0
  */
-import type { AuthorInput, AuthorListResponse, AuthorResponse } from '@books/api-contract/models';
+import type {
+  AuthorInput,
+  AuthorListResponse,
+  AuthorResponse,
+} from '@books/api-contract/models';
 
 import { HttpResponse, delay, http } from 'msw';
-import type { HttpResponseResolver, PathParams, RequestHandlerOptions } from 'msw';
+import type {
+  HttpResponseResolver,
+  PathParams,
+  RequestHandlerOptions,
+} from 'msw';
 
 import {
   getGetAuthorsIdResponseMock,
@@ -63,7 +71,9 @@ export const getPostAuthorsMockHandler = (
 ) => {
   return http.post<PathParams, AuthorInput>(
     '/api/v1/authors',
-    async (info: Parameters<HttpResponseResolver<PathParams, AuthorInput>>[0]) => {
+    async (
+      info: Parameters<HttpResponseResolver<PathParams, AuthorInput>>[0]
+    ) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -115,7 +125,9 @@ export const getPutAuthorsIdMockHandler = (
 ) => {
   return http.put<{ id: string }, AuthorInput>(
     '/api/v1/authors/:id',
-    async (info: Parameters<HttpResponseResolver<{ id: string }, AuthorInput>>[0]) => {
+    async (
+      info: Parameters<HttpResponseResolver<{ id: string }, AuthorInput>>[0]
+    ) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -133,7 +145,10 @@ export const getPutAuthorsIdMockHandler = (
 
 export const getDeleteAuthorsIdMockHandler = (
   overrideResponse?:
-    void | ((info: Parameters<HttpResponseResolver<{ id: string }>>[0]) => Promise<void> | void),
+    | void
+    | ((
+        info: Parameters<HttpResponseResolver<{ id: string }>>[0]
+      ) => Promise<void> | void),
   options?: RequestHandlerOptions
 ) => {
   return http.delete<{ id: string }>(

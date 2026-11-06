@@ -18,14 +18,15 @@ export const getGetReportsTopAuthorsResponseMock = (
   success: faker.helpers.arrayElement([true] as const),
   data: {
     year: faker.number.int({ min: 1 }),
-    items: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-      () => ({
-        rank: faker.number.int({ min: 1 }),
-        author_id: faker.number.int({ min: 1 }),
-        full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-        books_count: faker.number.int({ min: 0 }),
-      })
-    ),
+    items: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1
+    ).map(() => ({
+      rank: faker.number.int({ min: 1 }),
+      author_id: faker.number.int({ min: 1 }),
+      full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+      books_count: faker.number.int({ min: 0 }),
+    })),
   },
   ...overrideResponse,
 });

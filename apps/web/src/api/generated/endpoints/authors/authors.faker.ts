@@ -8,7 +8,10 @@
  *
  * OpenAPI spec version: 1.0.0
  */
-import type { AuthorListResponse, AuthorResponse } from '@books/api-contract/models';
+import type {
+  AuthorListResponse,
+  AuthorResponse,
+} from '@books/api-contract/models';
 
 import { faker } from '@faker-js/faker/locale/ru';
 
@@ -17,12 +20,13 @@ export const getGetAuthorsResponseMock = (
 ): AuthorListResponse => ({
   success: faker.helpers.arrayElement([true] as const),
   data: {
-    items: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-      () => ({
-        id: faker.number.int({ min: 1 }),
-        full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-      })
-    ),
+    items: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1
+    ).map(() => ({
+      id: faker.number.int({ min: 1 }),
+      full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
+    })),
     pagination: {
       total: faker.number.int({ min: 0 }),
       page: faker.number.int({ min: 1 }),
@@ -40,13 +44,14 @@ export const getPostAuthorsResponseMock = (
   data: {
     id: faker.number.int({ min: 1 }),
     full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-    books: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-      () => ({
-        id: faker.number.int({ min: 1 }),
-        title: faker.string.alpha({ length: { min: 1, max: 20 } }),
-        year: faker.number.int({ min: 1 }),
-      })
-    ),
+    books: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1
+    ).map(() => ({
+      id: faker.number.int({ min: 1 }),
+      title: faker.string.alpha({ length: { min: 1, max: 20 } }),
+      year: faker.number.int({ min: 1 }),
+    })),
   },
   ...overrideResponse,
 });
@@ -58,13 +63,14 @@ export const getGetAuthorsIdResponseMock = (
   data: {
     id: faker.number.int({ min: 1 }),
     full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-    books: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-      () => ({
-        id: faker.number.int({ min: 1 }),
-        title: faker.string.alpha({ length: { min: 1, max: 20 } }),
-        year: faker.number.int({ min: 1 }),
-      })
-    ),
+    books: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1
+    ).map(() => ({
+      id: faker.number.int({ min: 1 }),
+      title: faker.string.alpha({ length: { min: 1, max: 20 } }),
+      year: faker.number.int({ min: 1 }),
+    })),
   },
   ...overrideResponse,
 });
@@ -76,13 +82,14 @@ export const getPutAuthorsIdResponseMock = (
   data: {
     id: faker.number.int({ min: 1 }),
     full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-    books: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
-      () => ({
-        id: faker.number.int({ min: 1 }),
-        title: faker.string.alpha({ length: { min: 1, max: 20 } }),
-        year: faker.number.int({ min: 1 }),
-      })
-    ),
+    books: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1
+    ).map(() => ({
+      id: faker.number.int({ min: 1 }),
+      title: faker.string.alpha({ length: { min: 1, max: 20 } }),
+      year: faker.number.int({ min: 1 }),
+    })),
   },
   ...overrideResponse,
 });
