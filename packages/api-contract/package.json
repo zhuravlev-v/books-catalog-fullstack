@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "api:generate": "orval --config orval.config.ts",
+    "check-types": "tsc --noEmit",
     "lint": "eslint .",
     "format:check": "prettier --check ."
   },

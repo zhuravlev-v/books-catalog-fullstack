@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UserRole } from '@books/api-contract/schemas';
 import type { AuthSession } from '@/domains/auth/model/auth.types';
 
 const AUTH_SESSION_STORAGE_KEY = 'infotek.auth.session';
@@ -9,7 +10,7 @@ const authSessionSchema = z.object({
     id: z.string().min(1),
     username: z.string().min(1),
     email: z.email(),
-    role: z.string().min(1),
+    role: UserRole,
   }),
   expiresAt: z.iso.datetime({ offset: true }),
 });

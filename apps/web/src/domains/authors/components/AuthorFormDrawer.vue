@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { Author } from '@books/api-contract/models';
+import type { AuthorShort } from '@books/api-contract/models';
 import { useCreateAuthor, useUpdateAuthor } from '@/api/generated/endpoints';
 import { FormDrawer } from '@/shared/components';
 import { notify } from '@/shared/lib/notifications';
@@ -11,7 +11,7 @@ import type { AuthorFormValues } from '../model/author-form.schema';
 interface Props {
   open: boolean;
   mode: 'create' | 'edit';
-  author?: Author | null;
+  author?: AuthorShort | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {

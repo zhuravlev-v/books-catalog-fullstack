@@ -6,7 +6,10 @@ import type { AuthUser } from '@/domains/auth/model/auth.types';
 
 type AuthUserDto = LoginResponseDataUser | RegisterResponseDataUser;
 
-export function normalizeAuthUser(user: AuthUserDto, role = 'user'): AuthUser {
+export function normalizeAuthUser(
+  user: AuthUserDto,
+  role: AuthUser['role'] = 'user'
+): AuthUser {
   if (!user.id || !user.username || !user.email) {
     throw new Error(
       'Ответ API авторизации не содержит обязательных данных пользователя'

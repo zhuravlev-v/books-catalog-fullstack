@@ -5,7 +5,10 @@
   "type": "module",
   "exports": {
     "./node": "./node.js",
-    "./vue": "./vue.js"
+    "./vue": {
+      "types": "./vue.d.ts",
+      "default": "./vue.js"
+    }
   },
   "dependencies": {
     "@vue/eslint-config-typescript": "^14.9.0",
