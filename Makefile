@@ -6,7 +6,7 @@ PNPM := pnpm
 .DEFAULT_GOAL := help
 
 .PHONY: help env check-env setup-local install generate build dev db-up db-migrate db-seed db-stop db-reset db-shell \
-	docker-build up deploy stop down restart logs logs-api logs-web logs-db ps config
+	storage-up storage-stop docker-build up deploy stop down restart logs logs-api logs-web logs-db logs-storage ps config
 
 help: ## Показать доступные команды
 	@awk 'BEGIN {FS = ":.*## "; printf "Usage: make <target>\n\n"} /^[a-zA-Z_-]+:.*## / {printf "  %-16s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -21,6 +21,7 @@ setup-local: ## Подготовить проект для локальной р
 	$(MAKE) env
 	$(MAKE) install
 	$(MAKE) db-up
+	$(MAKE) storage-up
 	$(MAKE) db-migrate
 	$(MAKE) db-seed
 	$(MAKE) build
@@ -34,7 +35,7 @@ generate: check-env ## Перегенерировать API-контракт и 
 build: check-env ## Собрать frontend и backend локально
 	$(PNPM) build
 
-dev: check-env db-up ## Запустить БД в Docker и приложения в dev-режиме
+dev: check-env db-up storage-up ## Запустить БД и MinIO в Docker, приложения — в dev-режиме
 	$(PNPM) dev
 
 db-up: check-env ## Запустить PostgreSQL для локальной разработки
@@ -50,13 +51,20 @@ db-stop: ## Остановить PostgreSQL
 	$(COMPOSE) stop db
 
 db-reset: check-env ## Пересоздать PostgreSQL, применить миграции и начальные данные
-	$(COMPOSE) down --volumes
 	$(MAKE) db-up
+	$(COMPOSE) exec -T db sh -lc 'dropdb --if-exists --force -U "$$POSTGRES_USER" "$$POSTGRES_DB" && createdb -U "$$POSTGRES_USER" "$$POSTGRES_DB"'
 	$(MAKE) db-migrate
 	$(MAKE) db-seed
 
 db-shell: ## Открыть psql внутри контейнера PostgreSQL
 	$(COMPOSE) exec db sh -lc 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"'
+
+storage-up: check-env ## Запустить MinIO и подготовить bucket
+	$(COMPOSE) up -d --wait minio
+	$(COMPOSE) run --rm minio-init
+
+storage-stop: ## Остановить MinIO
+	$(COMPOSE) stop minio
 
 docker-build: check-env ## Собрать Docker-образы приложения
 	$(COMPOSE) build
@@ -70,7 +78,7 @@ deploy: check-env ## Собрать и запустить приложение �
 stop: ## Остановить контейнеры без удаления
 	$(COMPOSE) stop
 
-down: ## Остановить и удалить контейнеры, сохранив данные БД
+down: ## Остановить и удалить контейнеры, сохранив данные PostgreSQL и MinIO
 	$(COMPOSE) down
 
 restart: ## Перезапустить контейнеры
@@ -87,6 +95,9 @@ logs-web: ## Показать логи frontend
 
 logs-db: ## Показать логи PostgreSQL
 	$(COMPOSE) logs -f db
+
+logs-storage: ## Показать логи MinIO
+	$(COMPOSE) logs -f minio
 
 ps: ## Показать состояние контейнеров
 	$(COMPOSE) ps

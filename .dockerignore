@@ -12,4 +12,5 @@ coverage
 **/coverage
 .env
 **/.env
+minio.license
 *.log
