@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 
 import indexRouter from './modules/index.ts';
 import booksRouter from './modules/books/routes.ts';
-import { errorHandler } from './http/error-handler.ts';
+import { errorHandler } from './middleware/error-handler.ts';
 import { env } from './config/env.ts';
 
 const app = express();
