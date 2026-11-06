@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import {
-  usePatchBooksId,
-  usePostBooks,
-  usePutBooksId,
-} from '@/api/generated/endpoints';
+import { useCreateBook, useUpdateBook } from '@/api/generated/endpoints';
 import type {
   Book,
-  BookForm as BookFormPayload,
-  BookInput,
+  BookCreateForm,
+  BookPatchForm,
 } from '@books/api-contract/models';
 import { FormDrawer } from '@/shared/components';
 import { notify } from '@/shared/lib/notifications';
@@ -33,16 +29,14 @@ const emit = defineEmits<{
 const form = ref<InstanceType<typeof BookForm> | null>(null);
 const dirty = ref(false);
 const synchronizing = ref(false);
-const createMutation = usePostBooks();
-const patchMutation = usePatchBooksId();
-const replaceMutation = usePutBooksId();
+const createMutation = useCreateBook();
+const updateMutation = useUpdateBook();
 const querySync = useBookQuerySync();
 
 const submitting = computed(
   () =>
     createMutation.isPending.value ||
-    patchMutation.isPending.value ||
-    replaceMutation.isPending.value ||
+    updateMutation.isPending.value ||
     synchronizing.value
 );
 const title = computed(() =>
@@ -54,23 +48,24 @@ const description = computed(() =>
     : 'Измените данные книги и при необходимости замените обложку.'
 );
 
-function toBookInput(values: BookFormValues): BookInput {
+function toBookPatchForm(values: BookFormValues): BookPatchForm {
   return {
     title: values.title.trim(),
     year: values.year,
-    description: values.description.trim() || undefined,
-    isbn: values.isbn.trim() || undefined,
+    description: values.description.trim(),
+    isbn: values.isbn.trim(),
     author_ids: values.author_ids,
+    cover: values.cover ?? undefined,
   };
 }
 
-function toBookForm(values: BookFormValues): BookFormPayload {
+function toBookCreateForm(values: BookFormValues): BookCreateForm {
   if (!values.cover) {
     throw new Error('Book cover is required');
   }
 
   return {
-    ...toBookInput(values),
+    ...toBookPatchForm(values),
     title: values.title.trim(),
     year: values.year,
     author_ids: values.author_ids,
@@ -88,7 +83,7 @@ async function handleSubmit(values: BookFormValues) {
 
     if (props.mode === 'create') {
       const response = await createMutation.mutateAsync({
-        data: toBookForm(values),
+        data: toBookCreateForm(values),
       });
       id = response.data.data?.id;
 
@@ -102,9 +97,10 @@ async function handleSubmit(values: BookFormValues) {
         throw new Error('Book id is required');
       }
 
-      const response = values.cover
-        ? await replaceMutation.mutateAsync({ id, data: toBookForm(values) })
-        : await patchMutation.mutateAsync({ id, data: toBookInput(values) });
+      const response = await updateMutation.mutateAsync({
+        id,
+        data: toBookPatchForm(values),
+      });
 
       if (!response.data.data) {
         throw new Error('Book mutation returned no data');
@@ -132,8 +128,7 @@ async function handleSubmit(values: BookFormValues) {
 function handleClosed() {
   dirty.value = false;
   createMutation.reset();
-  patchMutation.reset();
-  replaceMutation.reset();
+  updateMutation.reset();
   form.value?.reset();
 }
 </script>

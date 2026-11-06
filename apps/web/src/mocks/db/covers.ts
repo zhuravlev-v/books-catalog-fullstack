@@ -1,6 +1,13 @@
 const coverUrls = new Map<number, string>();
 
-export function getBookCoverUrl(bookId: number, cover: Blob): string {
+export function getBookCoverUrl(
+  bookId: number,
+  cover: Blob | null
+): string | null {
+  if (cover === null) {
+    return null;
+  }
+
   const existingUrl = coverUrls.get(bookId);
 
   if (existingUrl !== undefined) {

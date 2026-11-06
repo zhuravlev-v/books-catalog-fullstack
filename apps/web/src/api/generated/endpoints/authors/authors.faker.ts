@@ -37,7 +37,7 @@ export const getGetAuthorsResponseMock = (
   ...overrideResponse,
 });
 
-export const getPostAuthorsResponseMock = (
+export const getCreateAuthorResponseMock = (
   overrideResponse: Partial<Extract<AuthorResponse, object>> = {}
 ): AuthorResponse => ({
   success: faker.helpers.arrayElement([true] as const),
@@ -75,7 +75,7 @@ export const getGetAuthorsIdResponseMock = (
   ...overrideResponse,
 });
 
-export const getPutAuthorsIdResponseMock = (
+export const getUpdateAuthorResponseMock = (
   overrideResponse: Partial<Extract<AuthorResponse, object>> = {}
 ): AuthorResponse => ({
   success: faker.helpers.arrayElement([true] as const),

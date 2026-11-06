@@ -29,10 +29,7 @@ export const getGetBooksResponseMock = (
       year: faker.number.int({ min: 1 }),
       description: faker.string.alpha({ length: { min: 10, max: 20 } }),
       isbn: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      cover_url: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        null,
-      ]),
+      cover_url: faker.helpers.arrayElement([faker.internet.url(), null]),
       authors: Array.from(
         { length: faker.number.int({ min: 1, max: 10 }) },
         (_, i) => i + 1
@@ -51,7 +48,7 @@ export const getGetBooksResponseMock = (
   ...overrideResponse,
 });
 
-export const getPostBooksResponseMock = (
+export const getCreateBookResponseMock = (
   overrideResponse: Partial<Extract<BookResponse, object>> = {}
 ): BookResponse => ({
   success: faker.helpers.arrayElement([true] as const),
@@ -61,10 +58,7 @@ export const getPostBooksResponseMock = (
     year: faker.number.int({ min: 1 }),
     description: faker.string.alpha({ length: { min: 10, max: 20 } }),
     isbn: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    cover_url: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
+    cover_url: faker.helpers.arrayElement([faker.internet.url(), null]),
     authors: Array.from(
       { length: faker.number.int({ min: 1, max: 10 }) },
       (_, i) => i + 1
@@ -86,10 +80,7 @@ export const getGetBooksIdResponseMock = (
     year: faker.number.int({ min: 1 }),
     description: faker.string.alpha({ length: { min: 10, max: 20 } }),
     isbn: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    cover_url: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
+    cover_url: faker.helpers.arrayElement([faker.internet.url(), null]),
     authors: Array.from(
       { length: faker.number.int({ min: 1, max: 10 }) },
       (_, i) => i + 1
@@ -101,7 +92,7 @@ export const getGetBooksIdResponseMock = (
   ...overrideResponse,
 });
 
-export const getPutBooksIdResponseMock = (
+export const getUpdateBookResponseMock = (
   overrideResponse: Partial<Extract<BookResponse, object>> = {}
 ): BookResponse => ({
   success: faker.helpers.arrayElement([true] as const),
@@ -111,35 +102,7 @@ export const getPutBooksIdResponseMock = (
     year: faker.number.int({ min: 1 }),
     description: faker.string.alpha({ length: { min: 10, max: 20 } }),
     isbn: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    cover_url: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    authors: Array.from(
-      { length: faker.number.int({ min: 1, max: 10 }) },
-      (_, i) => i + 1
-    ).map(() => ({
-      id: faker.number.int({ min: 1 }),
-      full_name: faker.string.alpha({ length: { min: 1, max: 20 } }),
-    })),
-  },
-  ...overrideResponse,
-});
-
-export const getPatchBooksIdResponseMock = (
-  overrideResponse: Partial<Extract<BookResponse, object>> = {}
-): BookResponse => ({
-  success: faker.helpers.arrayElement([true] as const),
-  data: {
-    id: faker.number.int({ min: 1 }),
-    title: faker.string.alpha({ length: { min: 1, max: 20 } }),
-    year: faker.number.int({ min: 1 }),
-    description: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    isbn: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    cover_url: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
+    cover_url: faker.helpers.arrayElement([faker.internet.url(), null]),
     authors: Array.from(
       { length: faker.number.int({ min: 1, max: 10 }) },
       (_, i) => i + 1

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { Author } from '@books/api-contract/models';
-import { usePostAuthors, usePutAuthorsId } from '@/api/generated/endpoints';
+import { useCreateAuthor, useUpdateAuthor } from '@/api/generated/endpoints';
 import { FormDrawer } from '@/shared/components';
 import { notify } from '@/shared/lib/notifications';
 import AuthorForm from './AuthorForm.vue';
@@ -25,8 +25,8 @@ const emit = defineEmits<{
 const form = ref<InstanceType<typeof AuthorForm> | null>(null);
 const dirty = ref(false);
 const synchronizing = ref(false);
-const createMutation = usePostAuthors();
-const updateMutation = usePutAuthorsId();
+const createMutation = useCreateAuthor();
+const updateMutation = useUpdateAuthor();
 const querySync = useAuthorQuerySync();
 
 const submitting = computed(

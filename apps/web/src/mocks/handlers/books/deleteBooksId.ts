@@ -1,6 +1,6 @@
-import { getDeleteBooksIdMockHandler } from '@/api/generated/endpoints/books/books.msw';
+import { getDeleteBookMockHandler } from '@/api/generated/endpoints/books/books.msw';
 import { deleteBooksIdResolver } from '@/mocks/resolvers/books/deleteBooksId';
 
-export const deleteBooksIdHandler = getDeleteBooksIdMockHandler(
+export const deleteBooksIdHandler = getDeleteBookMockHandler(
   deleteBooksIdResolver
 );

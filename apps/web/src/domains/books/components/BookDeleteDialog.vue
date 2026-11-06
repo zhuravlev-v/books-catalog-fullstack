@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useDeleteBooksId } from '@/api/generated/endpoints';
+import { useDeleteBook } from '@/api/generated/endpoints';
 import type { Book } from '@books/api-contract/models';
 import { notify } from '@/shared/lib/notifications';
 import {
@@ -28,7 +28,7 @@ const emit = defineEmits<{
   deleted: [id: number];
 }>();
 
-const mutation = useDeleteBooksId();
+const mutation = useDeleteBook();
 const querySync = useBookQuerySync();
 const synchronizing = ref(false);
 const deleting = computed(

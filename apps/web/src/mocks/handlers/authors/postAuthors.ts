@@ -1,5 +1,5 @@
-import { getPostAuthorsMockHandler } from '@/api/generated/endpoints/authors/authors.msw';
+import { getCreateAuthorMockHandler } from '@/api/generated/endpoints/authors/authors.msw';
 import { postAuthorsResolver } from '@/mocks/resolvers/authors/postAuthors';
 
 export const postAuthorsHandler =
-  getPostAuthorsMockHandler(postAuthorsResolver);
+  getCreateAuthorMockHandler(postAuthorsResolver);

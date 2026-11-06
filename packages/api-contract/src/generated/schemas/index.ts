@@ -99,7 +99,7 @@ export const Book = zod.strictObject({
   year: zod.int().min(1),
   description: zod.string(),
   isbn: zod.string(),
-  cover_url: zod.string().nullable(),
+  cover_url: zod.url().nullable(),
   authors: zod.array(AuthorShort),
 });
 
@@ -124,35 +124,50 @@ export const Author = zod.strictObject({
 export type Author = zod.input<typeof Author>;
 export type AuthorOutput = zod.output<typeof Author>;
 
-export const BookInput = zod.strictObject({
-  title: zod.string().min(1).optional(),
-  year: zod.int().min(1).optional(),
-  description: zod.string().optional(),
-  isbn: zod.string().optional(),
-  author_ids: zod.array(zod.int().min(1)).min(1).optional(),
-});
-
-export type BookInput = zod.input<typeof BookInput>;
-export type BookInputOutput = zod.output<typeof BookInput>;
-
-export const BookForm = zod.strictObject({
+export const BookCreateForm = zod.strictObject({
   title: zod.string().min(1),
   year: zod.int().min(1),
   description: zod.string().optional(),
   isbn: zod.string().optional(),
   author_ids: zod.array(zod.int().min(1)).min(1),
-  cover: zod.instanceof(Blob).describe('Файл изображения обложки'),
+  cover: zod.instanceof(Blob).optional().describe('Файл изображения обложки'),
 });
 
-export type BookForm = zod.input<typeof BookForm>;
-export type BookFormOutput = zod.output<typeof BookForm>;
+export type BookCreateForm = zod.input<typeof BookCreateForm>;
+export type BookCreateFormOutput = zod.output<typeof BookCreateForm>;
 
-export const AuthorInput = zod.strictObject({
+export const BookPatchForm = zod.strictObject({
+  title: zod.string().min(1).optional(),
+  year: zod.int().min(1).optional(),
+  description: zod.string().optional(),
+  isbn: zod.string().optional(),
+  author_ids: zod.array(zod.int().min(1)).min(1).optional(),
+  cover: zod
+    .instanceof(Blob)
+    .optional()
+    .describe('Новый файл изображения обложки'),
+  remove_cover: zod
+    .boolean()
+    .optional()
+    .describe('Удалить существующую обложку'),
+});
+
+export type BookPatchForm = zod.input<typeof BookPatchForm>;
+export type BookPatchFormOutput = zod.output<typeof BookPatchForm>;
+
+export const AuthorCreateInput = zod.strictObject({
   full_name: zod.string().min(1),
 });
 
-export type AuthorInput = zod.input<typeof AuthorInput>;
-export type AuthorInputOutput = zod.output<typeof AuthorInput>;
+export type AuthorCreateInput = zod.input<typeof AuthorCreateInput>;
+export type AuthorCreateInputOutput = zod.output<typeof AuthorCreateInput>;
+
+export const AuthorPatchInput = zod.strictObject({
+  full_name: zod.string().min(1).optional(),
+});
+
+export type AuthorPatchInput = zod.input<typeof AuthorPatchInput>;
+export type AuthorPatchInputOutput = zod.output<typeof AuthorPatchInput>;
 
 export const BookResponse = zod.strictObject({
   success: zod.literal(true),
@@ -288,9 +303,9 @@ export const GetBooksResponse = BookListResponse;
  * Доступно только авторизованным пользователям.
  * @summary Создание книги
  */
-export const PostBooksBody = BookForm;
+export const CreateBookBody = BookCreateForm;
 
-export const PostBooksResponse = BookResponse;
+export const CreateBookResponse = BookResponse;
 
 /**
  * @summary Получить книгу по ID
@@ -303,38 +318,26 @@ export const GetBooksIdParams = zod.strictObject({
 export const GetBooksIdResponse = BookResponse;
 
 /**
- * @summary Полное обновление книги
- */
-
-export const PutBooksIdParams = zod.strictObject({
-  id: zod.coerce.number().int().min(1),
-});
-
-export const PutBooksIdBody = BookForm;
-
-export const PutBooksIdResponse = BookResponse;
-
-/**
  * @summary Частичное обновление книги
  */
 
-export const PatchBooksIdParams = zod.strictObject({
+export const UpdateBookParams = zod.strictObject({
   id: zod.coerce.number().int().min(1),
 });
 
-export const PatchBooksIdBody = BookInput;
+export const UpdateBookBody = BookPatchForm;
 
-export const PatchBooksIdResponse = BookResponse;
+export const UpdateBookResponse = BookResponse;
 
 /**
  * @summary Удаление книги
  */
 
-export const DeleteBooksIdParams = zod.strictObject({
+export const DeleteBookParams = zod.strictObject({
   id: zod.coerce.number().int().min(1),
 });
 
-export const DeleteBooksIdResponse = zod.void();
+export const DeleteBookResponse = zod.void();
 
 /**
  * Доступно гостям и пользователям.
@@ -361,9 +364,9 @@ export const GetAuthorsResponse = AuthorListResponse;
 /**
  * @summary Создание автора
  */
-export const PostAuthorsBody = AuthorInput;
+export const CreateAuthorBody = AuthorCreateInput;
 
-export const PostAuthorsResponse = AuthorResponse;
+export const CreateAuthorResponse = AuthorResponse;
 
 /**
  * @summary Информация об авторе и его книгах
@@ -376,26 +379,26 @@ export const GetAuthorsIdParams = zod.strictObject({
 export const GetAuthorsIdResponse = AuthorResponse;
 
 /**
- * @summary Обновление автора
+ * @summary Частичное обновление автора
  */
 
-export const PutAuthorsIdParams = zod.strictObject({
+export const UpdateAuthorParams = zod.strictObject({
   id: zod.coerce.number().int().min(1),
 });
 
-export const PutAuthorsIdBody = AuthorInput;
+export const UpdateAuthorBody = AuthorPatchInput;
 
-export const PutAuthorsIdResponse = AuthorResponse;
+export const UpdateAuthorResponse = AuthorResponse;
 
 /**
  * @summary Удаление автора
  */
 
-export const DeleteAuthorsIdParams = zod.strictObject({
+export const DeleteAuthorParams = zod.strictObject({
   id: zod.coerce.number().int().min(1),
 });
 
-export const DeleteAuthorsIdResponse = zod.void();
+export const DeleteAuthorResponse = zod.void();
 
 /**
  * Публичный отчёт. Доступен гостям и пользователям.

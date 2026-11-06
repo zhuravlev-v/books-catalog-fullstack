@@ -1,4 +1,5 @@
 import type { Book } from '@books/api-contract/models';
+import { revokeBookCoverUrl } from '@/mocks/db/covers';
 import { mockDatabase, type MockDatabase } from '@/mocks/db/database';
 import type { BookRecord } from '@/mocks/db/types';
 import type { PatchBookInput } from '@/mocks/http/books/patchBooksId';
@@ -39,6 +40,8 @@ export class DexiePatchBooksIdRepository implements PatchBooksIdRepository {
             ? {}
             : { description: input.description }),
           ...(input.isbn === undefined ? {} : { isbn: input.isbn }),
+          ...(input.cover === undefined ? {} : { cover: input.cover }),
+          ...(input.removeCover === true ? { cover: null } : {}),
         };
 
         await this.database.books.put(record);
@@ -54,9 +57,15 @@ export class DexiePatchBooksIdRepository implements PatchBooksIdRepository {
       }
     );
 
-    return result === 'not-found'
-      ? result
-      : createBookModel(result.record, result.authors);
+    if (result === 'not-found') {
+      return result;
+    }
+
+    if (input.cover !== undefined || input.removeCover === true) {
+      revokeBookCoverUrl(id);
+    }
+
+    return createBookModel(result.record, result.authors);
   }
 }
 

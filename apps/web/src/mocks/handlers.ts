@@ -10,7 +10,6 @@ import { getBooksHandler } from './handlers/books/getBooks';
 import { getBooksIdHandler } from './handlers/books/getBooksId';
 import { patchBooksIdHandler } from './handlers/books/patchBooksId';
 import { postBooksHandler } from './handlers/books/postBooks';
-import { putBooksIdHandler } from './handlers/books/putBooksId';
 import { getReportsTopAuthorsHandler } from './handlers/reports/getReportsTopAuthors';
 
 export const handlers = [
@@ -24,7 +23,6 @@ export const handlers = [
   getBooksHandler,
   getBooksIdHandler,
   postBooksHandler,
-  putBooksIdHandler,
   patchBooksIdHandler,
   deleteBooksIdHandler,
   getReportsTopAuthorsHandler,

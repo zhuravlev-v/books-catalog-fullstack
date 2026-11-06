@@ -114,21 +114,7 @@ export interface Author {
   books: BookShort[];
 }
 
-export interface BookInput {
-  /** @minLength 1 */
-  title?: string;
-  /** @minimum 1 */
-  year?: number;
-  description?: string;
-  isbn?: string;
-  /**
-   * @minItems 1
-   * @items.minimum 1
-   */
-  author_ids?: number[];
-}
-
-export interface BookForm {
+export interface BookCreateForm {
   /** @minLength 1 */
   title: string;
   /** @minimum 1 */
@@ -141,12 +127,35 @@ export interface BookForm {
    */
   author_ids: number[];
   /** Файл изображения обложки */
-  cover: Blob | File;
+  cover?: Blob | File;
 }
 
-export interface AuthorInput {
+export interface BookPatchForm {
+  /** @minLength 1 */
+  title?: string;
+  /** @minimum 1 */
+  year?: number;
+  description?: string;
+  isbn?: string;
+  /**
+   * @minItems 1
+   * @items.minimum 1
+   */
+  author_ids?: number[];
+  /** Новый файл изображения обложки */
+  cover?: Blob | File;
+  /** Удалить существующую обложку */
+  remove_cover?: boolean;
+}
+
+export interface AuthorCreateInput {
   /** @minLength 1 */
   full_name: string;
+}
+
+export interface AuthorPatchInput {
+  /** @minLength 1 */
+  full_name?: string;
 }
 
 export interface BookResponse {

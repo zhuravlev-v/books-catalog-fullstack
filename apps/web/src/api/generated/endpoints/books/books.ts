@@ -10,9 +10,9 @@
  */
 import type {
   ApiErrorResponse,
-  BookForm,
-  BookInput,
+  BookCreateForm,
   BookListResponse,
+  BookPatchForm,
   BookResponse,
   GetBooksParams,
 } from '@books/api-contract/models';
@@ -149,36 +149,50 @@ export function useGetBooks<
   return query;
 }
 
-export type postBooksResponse201 = {
+export type createBookResponse201 = {
   data: BookResponse;
   status: 201;
 };
 
-export type postBooksResponse401 = {
+export type createBookResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type postBooksResponse403 = {
+export type createBookResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type postBooksResponse422 = {
+export type createBookResponse413 = {
+  data: ApiErrorResponse;
+  status: 413;
+};
+
+export type createBookResponse415 = {
+  data: ApiErrorResponse;
+  status: 415;
+};
+
+export type createBookResponse422 = {
   data: ApiErrorResponse;
   status: 422;
 };
 
-export type postBooksResponseSuccess = postBooksResponse201 & {
+export type createBookResponseSuccess = createBookResponse201 & {
   headers: Headers;
 };
-export type postBooksResponseError = (
-  postBooksResponse401 | postBooksResponse403 | postBooksResponse422
+export type createBookResponseError = (
+  | createBookResponse401
+  | createBookResponse403
+  | createBookResponse413
+  | createBookResponse415
+  | createBookResponse422
 ) & {
   headers: Headers;
 };
 
-export const getPostBooksUrl = () => {
+export const getCreateBookUrl = () => {
   return `/api/v1/books`;
 };
 
@@ -186,51 +200,53 @@ export const getPostBooksUrl = () => {
  * Доступно только авторизованным пользователям.
  * @summary Создание книги
  */
-export const postBooks = async (
-  bookForm: BookForm,
+export const createBook = async (
+  bookCreateForm: BookCreateForm,
   options?: Parameters<typeof apiRequest>[1]
-): Promise<postBooksResponseSuccess> => {
+): Promise<createBookResponseSuccess> => {
   const formData = new FormData();
-  formData.append(`title`, bookForm.title);
-  formData.append(`year`, bookForm.year.toString());
-  if (bookForm.description !== undefined) {
-    formData.append(`description`, bookForm.description);
+  formData.append(`title`, bookCreateForm.title);
+  formData.append(`year`, bookCreateForm.year.toString());
+  if (bookCreateForm.description !== undefined) {
+    formData.append(`description`, bookCreateForm.description);
   }
-  if (bookForm.isbn !== undefined) {
-    formData.append(`isbn`, bookForm.isbn);
+  if (bookCreateForm.isbn !== undefined) {
+    formData.append(`isbn`, bookCreateForm.isbn);
   }
-  bookForm.author_ids.forEach((value) =>
+  bookCreateForm.author_ids.forEach((value) =>
     formData.append(`author_ids`, value.toString())
   );
-  formData.append(`cover`, bookForm.cover);
+  if (bookCreateForm.cover !== undefined) {
+    formData.append(`cover`, bookCreateForm.cover);
+  }
 
-  return apiRequest<postBooksResponseSuccess>(getPostBooksUrl(), {
+  return apiRequest<createBookResponseSuccess>(getCreateBookUrl(), {
     ...options,
     method: 'POST',
     body: formData,
   });
 };
 
-export const getPostBooksMutationKey = () => ['postBooks'] as const;
+export const getCreateBookMutationKey = () => ['createBook'] as const;
 
-export const getPostBooksMutationOptions = <
+export const getCreateBookMutationOptions = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postBooks>>,
+    Awaited<ReturnType<typeof createBook>>,
     TError,
-    PostBooksMutationVariables,
+    CreateBookMutationVariables,
     TContext
   >;
   request?: SecondParameter<typeof apiRequest>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof postBooks>>,
+  Awaited<ReturnType<typeof createBook>>,
   TError,
-  PostBooksMutationVariables,
+  CreateBookMutationVariables,
   TContext
 > => {
-  const mutationKey = getPostBooksMutationKey();
+  const mutationKey = getCreateBookMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
@@ -240,48 +256,48 @@ export const getPostBooksMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof postBooks>>,
-    PostBooksMutationVariables
+    Awaited<ReturnType<typeof createBook>>,
+    CreateBookMutationVariables
   > = (props) => {
     const { data } = props ?? {};
 
-    return postBooks(data, requestOptions);
+    return createBook(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type PostBooksMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postBooks>>
+export type CreateBookMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createBook>>
 >;
-export type PostBooksMutationBody = BodyType<BookForm>;
-export type PostBooksMutationError = ErrorType<ApiErrorResponse>;
-export type PostBooksMutationVariables = { data: BodyType<BookForm> };
+export type CreateBookMutationBody = BodyType<BookCreateForm>;
+export type CreateBookMutationError = ErrorType<ApiErrorResponse>;
+export type CreateBookMutationVariables = { data: BodyType<BookCreateForm> };
 
 /**
  * @summary Создание книги
  */
-export const usePostBooks = <
+export const useCreateBook = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof postBooks>>,
+      Awaited<ReturnType<typeof createBook>>,
       TError,
-      PostBooksMutationVariables,
+      CreateBookMutationVariables,
       TContext
     >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
 ): UseMutationReturnType<
-  Awaited<ReturnType<typeof postBooks>>,
+  Awaited<ReturnType<typeof createBook>>,
   TError,
-  PostBooksMutationVariables,
+  CreateBookMutationVariables,
   TContext
 > => {
-  return useMutation(getPostBooksMutationOptions(options), queryClient);
+  return useMutation(getCreateBookMutationOptions(options), queryClient);
 };
 export type getBooksIdResponse200 = {
   data: BookResponse;
@@ -389,96 +405,119 @@ export function useGetBooksId<
   return query;
 }
 
-export type putBooksIdResponse200 = {
+export type updateBookResponse200 = {
   data: BookResponse;
   status: 200;
 };
 
-export type putBooksIdResponse401 = {
+export type updateBookResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type putBooksIdResponse403 = {
+export type updateBookResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type putBooksIdResponse404 = {
+export type updateBookResponse404 = {
   data: ApiErrorResponse;
   status: 404;
 };
 
-export type putBooksIdResponse422 = {
+export type updateBookResponse413 = {
+  data: ApiErrorResponse;
+  status: 413;
+};
+
+export type updateBookResponse415 = {
+  data: ApiErrorResponse;
+  status: 415;
+};
+
+export type updateBookResponse422 = {
   data: ApiErrorResponse;
   status: 422;
 };
 
-export type putBooksIdResponseSuccess = putBooksIdResponse200 & {
+export type updateBookResponseSuccess = updateBookResponse200 & {
   headers: Headers;
 };
-export type putBooksIdResponseError = (
-  | putBooksIdResponse401
-  | putBooksIdResponse403
-  | putBooksIdResponse404
-  | putBooksIdResponse422
+export type updateBookResponseError = (
+  | updateBookResponse401
+  | updateBookResponse403
+  | updateBookResponse404
+  | updateBookResponse413
+  | updateBookResponse415
+  | updateBookResponse422
 ) & {
   headers: Headers;
 };
 
-export const getPutBooksIdUrl = (id: number) => {
+export const getUpdateBookUrl = (id: number) => {
   return `/api/v1/books/${id}`;
 };
 
 /**
- * @summary Полное обновление книги
+ * @summary Частичное обновление книги
  */
-export const putBooksId = async (
+export const updateBook = async (
   id: number,
-  bookForm: BookForm,
+  bookPatchForm: BookPatchForm,
   options?: Parameters<typeof apiRequest>[1]
-): Promise<putBooksIdResponseSuccess> => {
+): Promise<updateBookResponseSuccess> => {
   const formData = new FormData();
-  formData.append(`title`, bookForm.title);
-  formData.append(`year`, bookForm.year.toString());
-  if (bookForm.description !== undefined) {
-    formData.append(`description`, bookForm.description);
+  if (bookPatchForm.title !== undefined) {
+    formData.append(`title`, bookPatchForm.title);
   }
-  if (bookForm.isbn !== undefined) {
-    formData.append(`isbn`, bookForm.isbn);
+  if (bookPatchForm.year !== undefined) {
+    formData.append(`year`, bookPatchForm.year.toString());
   }
-  bookForm.author_ids.forEach((value) =>
-    formData.append(`author_ids`, value.toString())
-  );
-  formData.append(`cover`, bookForm.cover);
+  if (bookPatchForm.description !== undefined) {
+    formData.append(`description`, bookPatchForm.description);
+  }
+  if (bookPatchForm.isbn !== undefined) {
+    formData.append(`isbn`, bookPatchForm.isbn);
+  }
+  if (bookPatchForm.author_ids !== undefined) {
+    bookPatchForm.author_ids.forEach((value) =>
+      formData.append(`author_ids`, value.toString())
+    );
+  }
+  if (bookPatchForm.cover !== undefined) {
+    formData.append(`cover`, bookPatchForm.cover);
+  }
+  if (bookPatchForm.remove_cover !== undefined) {
+    formData.append(`remove_cover`, bookPatchForm.remove_cover.toString());
+  }
 
-  return apiRequest<putBooksIdResponseSuccess>(getPutBooksIdUrl(id), {
+  return apiRequest<updateBookResponseSuccess>(getUpdateBookUrl(id), {
     ...options,
-    method: 'PUT',
+    method: 'PATCH',
     body: formData,
   });
 };
 
-export const getPutBooksIdMutationKey = () => ['putBooksId'] as const;
+export const getUpdateBookMutationKey = () => ['updateBook'] as const;
 
-export const getPutBooksIdMutationOptions = <
+export const getUpdateBookMutationOptions = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof putBooksId>>,
+    Awaited<ReturnType<typeof updateBook>>,
     TError,
-    PutBooksIdMutationVariables,
+    UpdateBookMutationVariables,
     TContext
   >;
   request?: SecondParameter<typeof apiRequest>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof putBooksId>>,
+  Awaited<ReturnType<typeof updateBook>>,
   TError,
-  PutBooksIdMutationVariables,
+  UpdateBookMutationVariables,
   TContext
 > => {
-  const mutationKey = getPutBooksIdMutationKey();
+  const mutationKey = getUpdateBookMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
@@ -488,274 +527,118 @@ export const getPutBooksIdMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof putBooksId>>,
-    PutBooksIdMutationVariables
+    Awaited<ReturnType<typeof updateBook>>,
+    UpdateBookMutationVariables
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return putBooksId(id, data, requestOptions);
+    return updateBook(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type PutBooksIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putBooksId>>
+export type UpdateBookMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateBook>>
 >;
-export type PutBooksIdMutationBody = BodyType<BookForm>;
-export type PutBooksIdMutationError = ErrorType<ApiErrorResponse>;
-export type PutBooksIdMutationVariables = {
+export type UpdateBookMutationBody = BodyType<BookPatchForm>;
+export type UpdateBookMutationError = ErrorType<ApiErrorResponse>;
+export type UpdateBookMutationVariables = {
   id: number;
-  data: BodyType<BookForm>;
+  data: BodyType<BookPatchForm>;
 };
 
 /**
- * @summary Полное обновление книги
+ * @summary Частичное обновление книги
  */
-export const usePutBooksId = <
+export const useUpdateBook = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof putBooksId>>,
+      Awaited<ReturnType<typeof updateBook>>,
       TError,
-      PutBooksIdMutationVariables,
+      UpdateBookMutationVariables,
       TContext
     >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
 ): UseMutationReturnType<
-  Awaited<ReturnType<typeof putBooksId>>,
+  Awaited<ReturnType<typeof updateBook>>,
   TError,
-  PutBooksIdMutationVariables,
+  UpdateBookMutationVariables,
   TContext
 > => {
-  return useMutation(getPutBooksIdMutationOptions(options), queryClient);
+  return useMutation(getUpdateBookMutationOptions(options), queryClient);
 };
-export type patchBooksIdResponse200 = {
-  data: BookResponse;
-  status: 200;
-};
-
-export type patchBooksIdResponse401 = {
-  data: ApiErrorResponse;
-  status: 401;
-};
-
-export type patchBooksIdResponse403 = {
-  data: ApiErrorResponse;
-  status: 403;
-};
-
-export type patchBooksIdResponse404 = {
-  data: ApiErrorResponse;
-  status: 404;
-};
-
-export type patchBooksIdResponse422 = {
-  data: ApiErrorResponse;
-  status: 422;
-};
-
-export type patchBooksIdResponseSuccess = patchBooksIdResponse200 & {
-  headers: Headers;
-};
-export type patchBooksIdResponseError = (
-  | patchBooksIdResponse401
-  | patchBooksIdResponse403
-  | patchBooksIdResponse404
-  | patchBooksIdResponse422
-) & {
-  headers: Headers;
-};
-
-export const getPatchBooksIdUrl = (id: number) => {
-  return `/api/v1/books/${id}`;
-};
-
-/**
- * @summary Частичное обновление книги
- */
-export const patchBooksId = async (
-  id: number,
-  bookInput: BookInput,
-  options?: Parameters<typeof apiRequest>[1]
-): Promise<patchBooksIdResponseSuccess> => {
-  const getHeaders = (
-    h?: NonNullable<RequestInit['headers']>
-  ): Record<string, string | readonly string[]> => {
-    if (!h) return {};
-    if (h instanceof Headers) return Object.fromEntries(h.entries());
-    if (Symbol.iterator in h) {
-      return Object.fromEntries(
-        Array.from(
-          h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string]
-        )
-      );
-    }
-    const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<
-      string | readonly string[] | undefined
-    >(h)) {
-      if (value !== undefined) headers[name] = value;
-    }
-    return headers;
-  };
-  return apiRequest<patchBooksIdResponseSuccess>(getPatchBooksIdUrl(id), {
-    ...options,
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getHeaders(options?.headers),
-    },
-    body: JSON.stringify(bookInput),
-  });
-};
-
-export const getPatchBooksIdMutationKey = () => ['patchBooksId'] as const;
-
-export const getPatchBooksIdMutationOptions = <
-  TError = ErrorType<ApiErrorResponse>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof patchBooksId>>,
-    TError,
-    PatchBooksIdMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiRequest>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof patchBooksId>>,
-  TError,
-  PatchBooksIdMutationVariables,
-  TContext
-> => {
-  const mutationKey = getPatchBooksIdMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof patchBooksId>>,
-    PatchBooksIdMutationVariables
-  > = (props) => {
-    const { id, data } = props ?? {};
-
-    return patchBooksId(id, data, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type PatchBooksIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof patchBooksId>>
->;
-export type PatchBooksIdMutationBody = BodyType<BookInput>;
-export type PatchBooksIdMutationError = ErrorType<ApiErrorResponse>;
-export type PatchBooksIdMutationVariables = {
-  id: number;
-  data: BodyType<BookInput>;
-};
-
-/**
- * @summary Частичное обновление книги
- */
-export const usePatchBooksId = <
-  TError = ErrorType<ApiErrorResponse>,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof patchBooksId>>,
-      TError,
-      PatchBooksIdMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiRequest>;
-  },
-  queryClient?: QueryClient
-): UseMutationReturnType<
-  Awaited<ReturnType<typeof patchBooksId>>,
-  TError,
-  PatchBooksIdMutationVariables,
-  TContext
-> => {
-  return useMutation(getPatchBooksIdMutationOptions(options), queryClient);
-};
-export type deleteBooksIdResponse204 = {
+export type deleteBookResponse204 = {
   data: void;
   status: 204;
 };
 
-export type deleteBooksIdResponse401 = {
+export type deleteBookResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type deleteBooksIdResponse403 = {
+export type deleteBookResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type deleteBooksIdResponse404 = {
+export type deleteBookResponse404 = {
   data: ApiErrorResponse;
   status: 404;
 };
 
-export type deleteBooksIdResponseSuccess = deleteBooksIdResponse204 & {
+export type deleteBookResponseSuccess = deleteBookResponse204 & {
   headers: Headers;
 };
-export type deleteBooksIdResponseError = (
-  deleteBooksIdResponse401 | deleteBooksIdResponse403 | deleteBooksIdResponse404
+export type deleteBookResponseError = (
+  deleteBookResponse401 | deleteBookResponse403 | deleteBookResponse404
 ) & {
   headers: Headers;
 };
 
-export const getDeleteBooksIdUrl = (id: number) => {
+export const getDeleteBookUrl = (id: number) => {
   return `/api/v1/books/${id}`;
 };
 
 /**
  * @summary Удаление книги
  */
-export const deleteBooksId = async (
+export const deleteBook = async (
   id: number,
   options?: Parameters<typeof apiRequest>[1]
-): Promise<deleteBooksIdResponseSuccess> => {
-  return apiRequest<deleteBooksIdResponseSuccess>(getDeleteBooksIdUrl(id), {
+): Promise<deleteBookResponseSuccess> => {
+  return apiRequest<deleteBookResponseSuccess>(getDeleteBookUrl(id), {
     ...options,
     method: 'DELETE',
   });
 };
 
-export const getDeleteBooksIdMutationKey = () => ['deleteBooksId'] as const;
+export const getDeleteBookMutationKey = () => ['deleteBook'] as const;
 
-export const getDeleteBooksIdMutationOptions = <
+export const getDeleteBookMutationOptions = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteBooksId>>,
+    Awaited<ReturnType<typeof deleteBook>>,
     TError,
-    DeleteBooksIdMutationVariables,
+    DeleteBookMutationVariables,
     TContext
   >;
   request?: SecondParameter<typeof apiRequest>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteBooksId>>,
+  Awaited<ReturnType<typeof deleteBook>>,
   TError,
-  DeleteBooksIdMutationVariables,
+  DeleteBookMutationVariables,
   TContext
 > => {
-  const mutationKey = getDeleteBooksIdMutationKey();
+  const mutationKey = getDeleteBookMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
@@ -765,46 +648,46 @@ export const getDeleteBooksIdMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteBooksId>>,
-    DeleteBooksIdMutationVariables
+    Awaited<ReturnType<typeof deleteBook>>,
+    DeleteBookMutationVariables
   > = (props) => {
     const { id } = props ?? {};
 
-    return deleteBooksId(id, requestOptions);
+    return deleteBook(id, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type DeleteBooksIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteBooksId>>
+export type DeleteBookMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteBook>>
 >;
 
-export type DeleteBooksIdMutationError = ErrorType<ApiErrorResponse>;
-export type DeleteBooksIdMutationVariables = { id: number };
+export type DeleteBookMutationError = ErrorType<ApiErrorResponse>;
+export type DeleteBookMutationVariables = { id: number };
 
 /**
  * @summary Удаление книги
  */
-export const useDeleteBooksId = <
+export const useDeleteBook = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof deleteBooksId>>,
+      Awaited<ReturnType<typeof deleteBook>>,
       TError,
-      DeleteBooksIdMutationVariables,
+      DeleteBookMutationVariables,
       TContext
     >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
 ): UseMutationReturnType<
-  Awaited<ReturnType<typeof deleteBooksId>>,
+  Awaited<ReturnType<typeof deleteBook>>,
   TError,
-  DeleteBooksIdMutationVariables,
+  DeleteBookMutationVariables,
   TContext
 > => {
-  return useMutation(getDeleteBooksIdMutationOptions(options), queryClient);
+  return useMutation(getDeleteBookMutationOptions(options), queryClient);
 };

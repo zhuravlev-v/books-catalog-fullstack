@@ -28,8 +28,8 @@ setup-local: ## Подготовить проект для локальной р
 install: ## Установить зависимости проекта
 	$(PNPM) install --frozen-lockfile
 
-generate: check-env ## Перегенерировать API-клиент фронтенда
-	$(PNPM) --filter web api:generate
+generate: check-env ## Перегенерировать API-контракт и клиент фронтенда
+	$(PNPM) api:generate
 
 build: check-env ## Собрать frontend и backend локально
 	$(PNPM) build

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useDeleteAuthorsId } from '@/api/generated/endpoints';
+import { useDeleteAuthor } from '@/api/generated/endpoints';
 import type { AuthorShort } from '@books/api-contract/models';
 import { notify } from '@/shared/lib/notifications';
 import { useAuthorQuerySync } from '../composables/use-author-query-sync';
@@ -28,7 +28,7 @@ const emit = defineEmits<{
   deleted: [id: number];
 }>();
 
-const mutation = useDeleteAuthorsId();
+const mutation = useDeleteAuthor();
 const querySync = useAuthorQuerySync();
 const synchronizing = ref(false);
 const deleting = computed(

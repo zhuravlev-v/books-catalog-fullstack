@@ -9,8 +9,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import type {
-  AuthorInput,
+  AuthorCreateInput,
   AuthorListResponse,
+  AuthorPatchInput,
   AuthorResponse,
 } from '@books/api-contract/models';
 
@@ -22,17 +23,17 @@ import type {
 } from 'msw';
 
 import {
+  getCreateAuthorResponseMock,
   getGetAuthorsIdResponseMock,
   getGetAuthorsResponseMock,
-  getPostAuthorsResponseMock,
-  getPutAuthorsIdResponseMock,
+  getUpdateAuthorResponseMock,
 } from './authors.faker';
 
 export {
   getGetAuthorsResponseMock,
-  getPostAuthorsResponseMock,
+  getCreateAuthorResponseMock,
   getGetAuthorsIdResponseMock,
-  getPutAuthorsIdResponseMock,
+  getUpdateAuthorResponseMock,
 } from './authors.faker';
 
 export const getGetAuthorsMockHandler = (
@@ -61,18 +62,18 @@ export const getGetAuthorsMockHandler = (
   );
 };
 
-export const getPostAuthorsMockHandler = (
+export const getCreateAuthorMockHandler = (
   overrideResponse?:
     | AuthorResponse
     | ((
-        info: Parameters<HttpResponseResolver<PathParams, AuthorInput>>[0]
+        info: Parameters<HttpResponseResolver<PathParams, AuthorCreateInput>>[0]
       ) => Promise<AuthorResponse> | AuthorResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.post<PathParams, AuthorInput>(
+  return http.post<PathParams, AuthorCreateInput>(
     '/api/v1/authors',
     async (
-      info: Parameters<HttpResponseResolver<PathParams, AuthorInput>>[0]
+      info: Parameters<HttpResponseResolver<PathParams, AuthorCreateInput>>[0]
     ) => {
       await delay(200);
 
@@ -81,7 +82,7 @@ export const getPostAuthorsMockHandler = (
           ? typeof overrideResponse === 'function'
             ? await overrideResponse(info)
             : overrideResponse
-          : getPostAuthorsResponseMock(),
+          : getCreateAuthorResponseMock(),
         { status: 201 }
       );
     },
@@ -115,18 +116,22 @@ export const getGetAuthorsIdMockHandler = (
   );
 };
 
-export const getPutAuthorsIdMockHandler = (
+export const getUpdateAuthorMockHandler = (
   overrideResponse?:
     | AuthorResponse
     | ((
-        info: Parameters<HttpResponseResolver<{ id: string }, AuthorInput>>[0]
+        info: Parameters<
+          HttpResponseResolver<{ id: string }, AuthorPatchInput>
+        >[0]
       ) => Promise<AuthorResponse> | AuthorResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.put<{ id: string }, AuthorInput>(
+  return http.patch<{ id: string }, AuthorPatchInput>(
     '/api/v1/authors/:id',
     async (
-      info: Parameters<HttpResponseResolver<{ id: string }, AuthorInput>>[0]
+      info: Parameters<
+        HttpResponseResolver<{ id: string }, AuthorPatchInput>
+      >[0]
     ) => {
       await delay(200);
 
@@ -135,7 +140,7 @@ export const getPutAuthorsIdMockHandler = (
           ? typeof overrideResponse === 'function'
             ? await overrideResponse(info)
             : overrideResponse
-          : getPutAuthorsIdResponseMock(),
+          : getUpdateAuthorResponseMock(),
         { status: 200 }
       );
     },
@@ -143,7 +148,7 @@ export const getPutAuthorsIdMockHandler = (
   );
 };
 
-export const getDeleteAuthorsIdMockHandler = (
+export const getDeleteAuthorMockHandler = (
   overrideResponse?:
     | void
     | ((
@@ -166,8 +171,8 @@ export const getDeleteAuthorsIdMockHandler = (
 };
 export const getAuthorsMock = () => [
   getGetAuthorsMockHandler(),
-  getPostAuthorsMockHandler(),
+  getCreateAuthorMockHandler(),
   getGetAuthorsIdMockHandler(),
-  getPutAuthorsIdMockHandler(),
-  getDeleteAuthorsIdMockHandler(),
+  getUpdateAuthorMockHandler(),
+  getDeleteAuthorMockHandler(),
 ];

@@ -1,4 +1,4 @@
-import type { BookInput, ErrorItem } from '@books/api-contract/models';
+import type { BookPatchForm, ErrorItem } from '@books/api-contract/models';
 import { parsePositiveIntegerPathParam } from '@/mocks/shared/http/pathParams';
 
 export interface PatchBooksIdPathParams {
@@ -15,18 +15,36 @@ export interface PatchBookInput {
   description?: string;
   isbn?: string;
   authorIds?: number[];
+  cover?: Blob;
+  removeCover?: boolean;
 }
 
 export type ParsePatchBookResult =
   | { data: PatchBookInput; errors?: never }
   | { data?: never; errors: ErrorItem[] };
 
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+function parseInteger(value: FormDataEntryValue | null): number | undefined {
+  if (typeof value !== 'string' || !/^-?\d+$/.test(value.trim())) {
+    return undefined;
+  }
+
+  const parsedValue = Number(value);
+
+  return Number.isSafeInteger(parsedValue) ? parsedValue : undefined;
 }
 
-function hasOwn(value: object, key: keyof BookInput): boolean {
-  return Object.prototype.hasOwnProperty.call(value, key);
+function parseAuthorIds(values: FormDataEntryValue[]): number[] | undefined {
+  if (values.length === 0) {
+    return undefined;
+  }
+
+  const authorIds = values.map(parseInteger);
+
+  if (authorIds.some((authorId) => authorId === undefined || authorId <= 0)) {
+    return undefined;
+  }
+
+  return [...new Set(authorIds as number[])];
 }
 
 export function parsePatchBooksIdParams(
@@ -40,78 +58,114 @@ export function parsePatchBooksIdParams(
 export async function parsePatchBooksIdRequest(
   request: Request
 ): Promise<ParsePatchBookResult> {
-  let body: unknown;
+  let formData: FormData;
 
   try {
-    body = await request.json();
+    formData = await request.formData();
   } catch {
-    return { errors: [{ message: 'Тело запроса должно быть в формате JSON' }] };
-  }
-
-  if (!isObject(body)) {
-    return { errors: [{ message: 'Тело запроса должно быть JSON-объектом' }] };
+    return {
+      errors: [
+        { message: 'Тело запроса должно быть в формате multipart/form-data' },
+      ],
+    };
   }
 
   const data: PatchBookInput = {};
   const errors: ErrorItem[] = [];
+  const hasField = (key: keyof BookPatchForm) => formData.has(key);
 
-  if (hasOwn(body, 'title')) {
-    if (typeof body.title !== 'string' || body.title.trim().length === 0) {
+  if ([...formData.keys()].length === 0) {
+    errors.push({ message: 'Укажите хотя бы одно поле для обновления' });
+  }
+
+  if (hasField('title')) {
+    const title = formData.get('title');
+
+    if (typeof title !== 'string' || title.trim().length === 0) {
       errors.push({
         field: 'title',
         message: 'Название должно быть непустой строкой',
       });
     } else {
-      data.title = body.title.trim();
+      data.title = title.trim();
     }
   }
 
-  if (hasOwn(body, 'year')) {
-    if (typeof body.year !== 'number' || !Number.isSafeInteger(body.year)) {
+  if (hasField('year')) {
+    const year = parseInteger(formData.get('year'));
+
+    if (year === undefined || year <= 0) {
       errors.push({ field: 'year', message: 'Год должен быть целым числом' });
     } else {
-      data.year = body.year;
+      data.year = year;
     }
   }
 
-  if (hasOwn(body, 'description')) {
-    if (typeof body.description !== 'string') {
+  if (hasField('description')) {
+    const description = formData.get('description');
+
+    if (typeof description !== 'string') {
       errors.push({
         field: 'description',
         message: 'Описание должно быть строкой',
       });
     } else {
-      data.description = body.description;
+      data.description = description;
     }
   }
 
-  if (hasOwn(body, 'isbn')) {
-    if (typeof body.isbn !== 'string') {
+  if (hasField('isbn')) {
+    const isbn = formData.get('isbn');
+
+    if (typeof isbn !== 'string') {
       errors.push({ field: 'isbn', message: 'ISBN должен быть строкой' });
     } else {
-      data.isbn = body.isbn;
+      data.isbn = isbn;
     }
   }
 
-  if (hasOwn(body, 'author_ids')) {
-    if (
-      !Array.isArray(body.author_ids) ||
-      body.author_ids.length === 0 ||
-      body.author_ids.some(
-        (authorId) =>
-          typeof authorId !== 'number' ||
-          !Number.isSafeInteger(authorId) ||
-          authorId <= 0
-      )
-    ) {
+  if (hasField('author_ids')) {
+    const authorIds = parseAuthorIds(formData.getAll('author_ids'));
+
+    if (authorIds === undefined) {
       errors.push({
         field: 'author_ids',
         message:
           'Укажите хотя бы одного автора с положительным целочисленным ID',
       });
     } else {
-      data.authorIds = [...new Set(body.author_ids as number[])];
+      data.authorIds = authorIds;
     }
+  }
+
+  if (hasField('cover')) {
+    const cover = formData.get('cover');
+
+    if (!(cover instanceof Blob) || cover.size === 0) {
+      errors.push({ field: 'cover', message: 'Файл обложки обязателен' });
+    } else {
+      data.cover = cover;
+    }
+  }
+
+  if (hasField('remove_cover')) {
+    const removeCover = formData.get('remove_cover');
+
+    if (removeCover !== 'true' && removeCover !== 'false') {
+      errors.push({
+        field: 'remove_cover',
+        message: 'Значение remove_cover должно быть логическим',
+      });
+    } else {
+      data.removeCover = removeCover === 'true';
+    }
+  }
+
+  if (data.cover !== undefined && data.removeCover === true) {
+    errors.push({
+      field: 'remove_cover',
+      message: 'Нельзя одновременно заменить и удалить обложку',
+    });
   }
 
   return errors.length > 0 ? { errors } : { data };

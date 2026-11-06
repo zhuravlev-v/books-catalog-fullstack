@@ -9,9 +9,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import type {
-  BookForm,
-  BookInput,
+  BookCreateForm,
   BookListResponse,
+  BookPatchForm,
   BookResponse,
 } from '@books/api-contract/models';
 
@@ -23,19 +23,17 @@ import type {
 } from 'msw';
 
 import {
+  getCreateBookResponseMock,
   getGetBooksIdResponseMock,
   getGetBooksResponseMock,
-  getPatchBooksIdResponseMock,
-  getPostBooksResponseMock,
-  getPutBooksIdResponseMock,
+  getUpdateBookResponseMock,
 } from './books.faker';
 
 export {
   getGetBooksResponseMock,
-  getPostBooksResponseMock,
+  getCreateBookResponseMock,
   getGetBooksIdResponseMock,
-  getPutBooksIdResponseMock,
-  getPatchBooksIdResponseMock,
+  getUpdateBookResponseMock,
 } from './books.faker';
 
 export const getGetBooksMockHandler = (
@@ -64,17 +62,19 @@ export const getGetBooksMockHandler = (
   );
 };
 
-export const getPostBooksMockHandler = (
+export const getCreateBookMockHandler = (
   overrideResponse?:
     | BookResponse
     | ((
-        info: Parameters<HttpResponseResolver<PathParams, BookForm>>[0]
+        info: Parameters<HttpResponseResolver<PathParams, BookCreateForm>>[0]
       ) => Promise<BookResponse> | BookResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.post<PathParams, BookForm>(
+  return http.post<PathParams, BookCreateForm>(
     '/api/v1/books',
-    async (info: Parameters<HttpResponseResolver<PathParams, BookForm>>[0]) => {
+    async (
+      info: Parameters<HttpResponseResolver<PathParams, BookCreateForm>>[0]
+    ) => {
       await delay(200);
 
       return HttpResponse.json(
@@ -82,7 +82,7 @@ export const getPostBooksMockHandler = (
           ? typeof overrideResponse === 'function'
             ? await overrideResponse(info)
             : overrideResponse
-          : getPostBooksResponseMock(),
+          : getCreateBookResponseMock(),
         { status: 201 }
       );
     },
@@ -116,18 +116,18 @@ export const getGetBooksIdMockHandler = (
   );
 };
 
-export const getPutBooksIdMockHandler = (
+export const getUpdateBookMockHandler = (
   overrideResponse?:
     | BookResponse
     | ((
-        info: Parameters<HttpResponseResolver<{ id: string }, BookForm>>[0]
+        info: Parameters<HttpResponseResolver<{ id: string }, BookPatchForm>>[0]
       ) => Promise<BookResponse> | BookResponse),
   options?: RequestHandlerOptions
 ) => {
-  return http.put<{ id: string }, BookForm>(
+  return http.patch<{ id: string }, BookPatchForm>(
     '/api/v1/books/:id',
     async (
-      info: Parameters<HttpResponseResolver<{ id: string }, BookForm>>[0]
+      info: Parameters<HttpResponseResolver<{ id: string }, BookPatchForm>>[0]
     ) => {
       await delay(200);
 
@@ -136,7 +136,7 @@ export const getPutBooksIdMockHandler = (
           ? typeof overrideResponse === 'function'
             ? await overrideResponse(info)
             : overrideResponse
-          : getPutBooksIdResponseMock(),
+          : getUpdateBookResponseMock(),
         { status: 200 }
       );
     },
@@ -144,35 +144,7 @@ export const getPutBooksIdMockHandler = (
   );
 };
 
-export const getPatchBooksIdMockHandler = (
-  overrideResponse?:
-    | BookResponse
-    | ((
-        info: Parameters<HttpResponseResolver<{ id: string }, BookInput>>[0]
-      ) => Promise<BookResponse> | BookResponse),
-  options?: RequestHandlerOptions
-) => {
-  return http.patch<{ id: string }, BookInput>(
-    '/api/v1/books/:id',
-    async (
-      info: Parameters<HttpResponseResolver<{ id: string }, BookInput>>[0]
-    ) => {
-      await delay(200);
-
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getPatchBooksIdResponseMock(),
-        { status: 200 }
-      );
-    },
-    options
-  );
-};
-
-export const getDeleteBooksIdMockHandler = (
+export const getDeleteBookMockHandler = (
   overrideResponse?:
     | void
     | ((
@@ -195,9 +167,8 @@ export const getDeleteBooksIdMockHandler = (
 };
 export const getBooksMock = () => [
   getGetBooksMockHandler(),
-  getPostBooksMockHandler(),
+  getCreateBookMockHandler(),
   getGetBooksIdMockHandler(),
-  getPutBooksIdMockHandler(),
-  getPatchBooksIdMockHandler(),
-  getDeleteBooksIdMockHandler(),
+  getUpdateBookMockHandler(),
+  getDeleteBookMockHandler(),
 ];

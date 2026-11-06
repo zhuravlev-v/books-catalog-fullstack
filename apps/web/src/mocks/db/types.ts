@@ -18,7 +18,7 @@ export interface BookRecord {
   year: number;
   description: string;
   isbn: string;
-  cover: Blob;
+  cover: Blob | null;
 }
 
 export interface BookAuthorRecord {

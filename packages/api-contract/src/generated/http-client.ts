@@ -10,12 +10,13 @@
  */
 import type {
   ApiErrorResponse,
-  AuthorInput,
+  AuthorCreateInput,
   AuthorListResponse,
+  AuthorPatchInput,
   AuthorResponse,
-  BookForm,
-  BookInput,
+  BookCreateForm,
   BookListResponse,
+  BookPatchForm,
   BookResponse,
   GetAuthorsParams,
   GetBooksParams,
@@ -225,39 +226,53 @@ export const getBooks = async (
   return { data, status: res.status, headers: res.headers } as getBooksResponse;
 };
 
-export type postBooksResponse201 = {
+export type createBookResponse201 = {
   data: BookResponse;
   status: 201;
 };
 
-export type postBooksResponse401 = {
+export type createBookResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type postBooksResponse403 = {
+export type createBookResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type postBooksResponse422 = {
+export type createBookResponse413 = {
+  data: ApiErrorResponse;
+  status: 413;
+};
+
+export type createBookResponse415 = {
+  data: ApiErrorResponse;
+  status: 415;
+};
+
+export type createBookResponse422 = {
   data: ApiErrorResponse;
   status: 422;
 };
 
-export type postBooksResponseSuccess = postBooksResponse201 & {
+export type createBookResponseSuccess = createBookResponse201 & {
   headers: Headers;
 };
-export type postBooksResponseError = (
-  postBooksResponse401 | postBooksResponse403 | postBooksResponse422
+export type createBookResponseError = (
+  | createBookResponse401
+  | createBookResponse403
+  | createBookResponse413
+  | createBookResponse415
+  | createBookResponse422
 ) & {
   headers: Headers;
 };
 
-export type postBooksResponse =
-  postBooksResponseSuccess | postBooksResponseError;
+export type createBookResponse =
+  createBookResponseSuccess | createBookResponseError;
 
-export const getPostBooksUrl = () => {
+export const getCreateBookUrl = () => {
   return `/books`;
 };
 
@@ -265,25 +280,27 @@ export const getPostBooksUrl = () => {
  * Доступно только авторизованным пользователям.
  * @summary Создание книги
  */
-export const postBooks = async (
-  bookForm: BookForm,
+export const createBook = async (
+  bookCreateForm: BookCreateForm,
   options?: RequestInit
-): Promise<postBooksResponse> => {
+): Promise<createBookResponse> => {
   const formData = new FormData();
-  formData.append(`title`, bookForm.title);
-  formData.append(`year`, bookForm.year.toString());
-  if (bookForm.description !== undefined) {
-    formData.append(`description`, bookForm.description);
+  formData.append(`title`, bookCreateForm.title);
+  formData.append(`year`, bookCreateForm.year.toString());
+  if (bookCreateForm.description !== undefined) {
+    formData.append(`description`, bookCreateForm.description);
   }
-  if (bookForm.isbn !== undefined) {
-    formData.append(`isbn`, bookForm.isbn);
+  if (bookCreateForm.isbn !== undefined) {
+    formData.append(`isbn`, bookCreateForm.isbn);
   }
-  bookForm.author_ids.forEach((value) =>
+  bookCreateForm.author_ids.forEach((value) =>
     formData.append(`author_ids`, value.toString())
   );
-  formData.append(`cover`, bookForm.cover);
+  if (bookCreateForm.cover !== undefined) {
+    formData.append(`cover`, bookCreateForm.cover);
+  }
 
-  const res = await fetch(getPostBooksUrl(), {
+  const res = await fetch(getCreateBookUrl(), {
     ...options,
     method: 'POST',
     body: formData,
@@ -291,12 +308,12 @@ export const postBooks = async (
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postBooksResponse['data'] = body ? JSON.parse(body) : {};
+  const data: createBookResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
     headers: res.headers,
-  } as postBooksResponse;
+  } as createBookResponse;
 };
 
 export type getBooksIdResponse200 = {
@@ -345,239 +362,167 @@ export const getBooksId = async (
   } as getBooksIdResponse;
 };
 
-export type putBooksIdResponse200 = {
+export type updateBookResponse200 = {
   data: BookResponse;
   status: 200;
 };
 
-export type putBooksIdResponse401 = {
+export type updateBookResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type putBooksIdResponse403 = {
+export type updateBookResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type putBooksIdResponse404 = {
+export type updateBookResponse404 = {
   data: ApiErrorResponse;
   status: 404;
 };
 
-export type putBooksIdResponse422 = {
+export type updateBookResponse413 = {
+  data: ApiErrorResponse;
+  status: 413;
+};
+
+export type updateBookResponse415 = {
+  data: ApiErrorResponse;
+  status: 415;
+};
+
+export type updateBookResponse422 = {
   data: ApiErrorResponse;
   status: 422;
 };
 
-export type putBooksIdResponseSuccess = putBooksIdResponse200 & {
+export type updateBookResponseSuccess = updateBookResponse200 & {
   headers: Headers;
 };
-export type putBooksIdResponseError = (
-  | putBooksIdResponse401
-  | putBooksIdResponse403
-  | putBooksIdResponse404
-  | putBooksIdResponse422
+export type updateBookResponseError = (
+  | updateBookResponse401
+  | updateBookResponse403
+  | updateBookResponse404
+  | updateBookResponse413
+  | updateBookResponse415
+  | updateBookResponse422
 ) & {
   headers: Headers;
 };
 
-export type putBooksIdResponse =
-  putBooksIdResponseSuccess | putBooksIdResponseError;
+export type updateBookResponse =
+  updateBookResponseSuccess | updateBookResponseError;
 
-export const getPutBooksIdUrl = (id: number) => {
-  return `/books/${id}`;
-};
-
-/**
- * @summary Полное обновление книги
- */
-export const putBooksId = async (
-  id: number,
-  bookForm: BookForm,
-  options?: RequestInit
-): Promise<putBooksIdResponse> => {
-  const formData = new FormData();
-  formData.append(`title`, bookForm.title);
-  formData.append(`year`, bookForm.year.toString());
-  if (bookForm.description !== undefined) {
-    formData.append(`description`, bookForm.description);
-  }
-  if (bookForm.isbn !== undefined) {
-    formData.append(`isbn`, bookForm.isbn);
-  }
-  bookForm.author_ids.forEach((value) =>
-    formData.append(`author_ids`, value.toString())
-  );
-  formData.append(`cover`, bookForm.cover);
-
-  const res = await fetch(getPutBooksIdUrl(id), {
-    ...options,
-    method: 'PUT',
-    body: formData,
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: putBooksIdResponse['data'] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as putBooksIdResponse;
-};
-
-export type patchBooksIdResponse200 = {
-  data: BookResponse;
-  status: 200;
-};
-
-export type patchBooksIdResponse401 = {
-  data: ApiErrorResponse;
-  status: 401;
-};
-
-export type patchBooksIdResponse403 = {
-  data: ApiErrorResponse;
-  status: 403;
-};
-
-export type patchBooksIdResponse404 = {
-  data: ApiErrorResponse;
-  status: 404;
-};
-
-export type patchBooksIdResponse422 = {
-  data: ApiErrorResponse;
-  status: 422;
-};
-
-export type patchBooksIdResponseSuccess = patchBooksIdResponse200 & {
-  headers: Headers;
-};
-export type patchBooksIdResponseError = (
-  | patchBooksIdResponse401
-  | patchBooksIdResponse403
-  | patchBooksIdResponse404
-  | patchBooksIdResponse422
-) & {
-  headers: Headers;
-};
-
-export type patchBooksIdResponse =
-  patchBooksIdResponseSuccess | patchBooksIdResponseError;
-
-export const getPatchBooksIdUrl = (id: number) => {
+export const getUpdateBookUrl = (id: number) => {
   return `/books/${id}`;
 };
 
 /**
  * @summary Частичное обновление книги
  */
-export const patchBooksId = async (
+export const updateBook = async (
   id: number,
-  bookInput: BookInput,
+  bookPatchForm: BookPatchForm,
   options?: RequestInit
-): Promise<patchBooksIdResponse> => {
-  const getHeaders = (
-    h?: NonNullable<RequestInit['headers']>
-  ): Record<string, string | readonly string[]> => {
-    if (!h) return {};
-    if (h instanceof Headers) return Object.fromEntries(h.entries());
-    if (Symbol.iterator in h) {
-      return Object.fromEntries(
-        Array.from(
-          h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string]
-        )
-      );
-    }
-    const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<
-      string | readonly string[] | undefined
-    >(h)) {
-      if (value !== undefined) headers[name] = value;
-    }
-    return headers;
-  };
-  const res = await fetch(getPatchBooksIdUrl(id), {
+): Promise<updateBookResponse> => {
+  const formData = new FormData();
+  if (bookPatchForm.title !== undefined) {
+    formData.append(`title`, bookPatchForm.title);
+  }
+  if (bookPatchForm.year !== undefined) {
+    formData.append(`year`, bookPatchForm.year.toString());
+  }
+  if (bookPatchForm.description !== undefined) {
+    formData.append(`description`, bookPatchForm.description);
+  }
+  if (bookPatchForm.isbn !== undefined) {
+    formData.append(`isbn`, bookPatchForm.isbn);
+  }
+  if (bookPatchForm.author_ids !== undefined) {
+    bookPatchForm.author_ids.forEach((value) =>
+      formData.append(`author_ids`, value.toString())
+    );
+  }
+  if (bookPatchForm.cover !== undefined) {
+    formData.append(`cover`, bookPatchForm.cover);
+  }
+  if (bookPatchForm.remove_cover !== undefined) {
+    formData.append(`remove_cover`, bookPatchForm.remove_cover.toString());
+  }
+
+  const res = await fetch(getUpdateBookUrl(id), {
     ...options,
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getHeaders(options?.headers),
-    },
-    body: JSON.stringify(bookInput),
+    body: formData,
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: patchBooksIdResponse['data'] = body ? JSON.parse(body) : {};
+  const data: updateBookResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
     headers: res.headers,
-  } as patchBooksIdResponse;
+  } as updateBookResponse;
 };
 
-export type deleteBooksIdResponse204 = {
+export type deleteBookResponse204 = {
   data: void;
   status: 204;
 };
 
-export type deleteBooksIdResponse401 = {
+export type deleteBookResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type deleteBooksIdResponse403 = {
+export type deleteBookResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type deleteBooksIdResponse404 = {
+export type deleteBookResponse404 = {
   data: ApiErrorResponse;
   status: 404;
 };
 
-export type deleteBooksIdResponseSuccess = deleteBooksIdResponse204 & {
+export type deleteBookResponseSuccess = deleteBookResponse204 & {
   headers: Headers;
 };
-export type deleteBooksIdResponseError = (
-  deleteBooksIdResponse401 | deleteBooksIdResponse403 | deleteBooksIdResponse404
+export type deleteBookResponseError = (
+  deleteBookResponse401 | deleteBookResponse403 | deleteBookResponse404
 ) & {
   headers: Headers;
 };
 
-export type deleteBooksIdResponse =
-  deleteBooksIdResponseSuccess | deleteBooksIdResponseError;
+export type deleteBookResponse =
+  deleteBookResponseSuccess | deleteBookResponseError;
 
-export const getDeleteBooksIdUrl = (id: number) => {
+export const getDeleteBookUrl = (id: number) => {
   return `/books/${id}`;
 };
 
 /**
  * @summary Удаление книги
  */
-export const deleteBooksId = async (
+export const deleteBook = async (
   id: number,
   options?: RequestInit
-): Promise<deleteBooksIdResponse> => {
-  const res = await fetch(getDeleteBooksIdUrl(id), {
+): Promise<deleteBookResponse> => {
+  const res = await fetch(getDeleteBookUrl(id), {
     ...options,
     method: 'DELETE',
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteBooksIdResponse['data'] = body
-    ? JSON.parse(body)
-    : undefined;
+  const data: deleteBookResponse['data'] = body ? JSON.parse(body) : undefined;
   return {
     data,
     status: res.status,
     headers: res.headers,
-  } as deleteBooksIdResponse;
+  } as deleteBookResponse;
 };
 
 export type getAuthorsResponse200 = {
@@ -629,49 +574,49 @@ export const getAuthors = async (
   } as getAuthorsResponse;
 };
 
-export type postAuthorsResponse201 = {
+export type createAuthorResponse201 = {
   data: AuthorResponse;
   status: 201;
 };
 
-export type postAuthorsResponse401 = {
+export type createAuthorResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type postAuthorsResponse403 = {
+export type createAuthorResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type postAuthorsResponse422 = {
+export type createAuthorResponse422 = {
   data: ApiErrorResponse;
   status: 422;
 };
 
-export type postAuthorsResponseSuccess = postAuthorsResponse201 & {
+export type createAuthorResponseSuccess = createAuthorResponse201 & {
   headers: Headers;
 };
-export type postAuthorsResponseError = (
-  postAuthorsResponse401 | postAuthorsResponse403 | postAuthorsResponse422
+export type createAuthorResponseError = (
+  createAuthorResponse401 | createAuthorResponse403 | createAuthorResponse422
 ) & {
   headers: Headers;
 };
 
-export type postAuthorsResponse =
-  postAuthorsResponseSuccess | postAuthorsResponseError;
+export type createAuthorResponse =
+  createAuthorResponseSuccess | createAuthorResponseError;
 
-export const getPostAuthorsUrl = () => {
+export const getCreateAuthorUrl = () => {
   return `/authors`;
 };
 
 /**
  * @summary Создание автора
  */
-export const postAuthors = async (
-  authorInput: AuthorInput,
+export const createAuthor = async (
+  authorCreateInput: AuthorCreateInput,
   options?: RequestInit
-): Promise<postAuthorsResponse> => {
+): Promise<createAuthorResponse> => {
   const getHeaders = (
     h?: NonNullable<RequestInit['headers']>
   ): Record<string, string | readonly string[]> => {
@@ -693,24 +638,24 @@ export const postAuthors = async (
     }
     return headers;
   };
-  const res = await fetch(getPostAuthorsUrl(), {
+  const res = await fetch(getCreateAuthorUrl(), {
     ...options,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       ...getHeaders(options?.headers),
     },
-    body: JSON.stringify(authorInput),
+    body: JSON.stringify(authorCreateInput),
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postAuthorsResponse['data'] = body ? JSON.parse(body) : {};
+  const data: createAuthorResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
     headers: res.headers,
-  } as postAuthorsResponse;
+  } as createAuthorResponse;
 };
 
 export type getAuthorsIdResponse200 = {
@@ -759,58 +704,58 @@ export const getAuthorsId = async (
   } as getAuthorsIdResponse;
 };
 
-export type putAuthorsIdResponse200 = {
+export type updateAuthorResponse200 = {
   data: AuthorResponse;
   status: 200;
 };
 
-export type putAuthorsIdResponse401 = {
+export type updateAuthorResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type putAuthorsIdResponse403 = {
+export type updateAuthorResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type putAuthorsIdResponse404 = {
+export type updateAuthorResponse404 = {
   data: ApiErrorResponse;
   status: 404;
 };
 
-export type putAuthorsIdResponse422 = {
+export type updateAuthorResponse422 = {
   data: ApiErrorResponse;
   status: 422;
 };
 
-export type putAuthorsIdResponseSuccess = putAuthorsIdResponse200 & {
+export type updateAuthorResponseSuccess = updateAuthorResponse200 & {
   headers: Headers;
 };
-export type putAuthorsIdResponseError = (
-  | putAuthorsIdResponse401
-  | putAuthorsIdResponse403
-  | putAuthorsIdResponse404
-  | putAuthorsIdResponse422
+export type updateAuthorResponseError = (
+  | updateAuthorResponse401
+  | updateAuthorResponse403
+  | updateAuthorResponse404
+  | updateAuthorResponse422
 ) & {
   headers: Headers;
 };
 
-export type putAuthorsIdResponse =
-  putAuthorsIdResponseSuccess | putAuthorsIdResponseError;
+export type updateAuthorResponse =
+  updateAuthorResponseSuccess | updateAuthorResponseError;
 
-export const getPutAuthorsIdUrl = (id: number) => {
+export const getUpdateAuthorUrl = (id: number) => {
   return `/authors/${id}`;
 };
 
 /**
- * @summary Обновление автора
+ * @summary Частичное обновление автора
  */
-export const putAuthorsId = async (
+export const updateAuthor = async (
   id: number,
-  authorInput: AuthorInput,
+  authorPatchInput: AuthorPatchInput,
   options?: RequestInit
-): Promise<putAuthorsIdResponse> => {
+): Promise<updateAuthorResponse> => {
   const getHeaders = (
     h?: NonNullable<RequestInit['headers']>
   ): Record<string, string | readonly string[]> => {
@@ -832,86 +777,84 @@ export const putAuthorsId = async (
     }
     return headers;
   };
-  const res = await fetch(getPutAuthorsIdUrl(id), {
+  const res = await fetch(getUpdateAuthorUrl(id), {
     ...options,
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       ...getHeaders(options?.headers),
     },
-    body: JSON.stringify(authorInput),
+    body: JSON.stringify(authorPatchInput),
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: putAuthorsIdResponse['data'] = body ? JSON.parse(body) : {};
+  const data: updateAuthorResponse['data'] = body ? JSON.parse(body) : {};
   return {
     data,
     status: res.status,
     headers: res.headers,
-  } as putAuthorsIdResponse;
+  } as updateAuthorResponse;
 };
 
-export type deleteAuthorsIdResponse204 = {
+export type deleteAuthorResponse204 = {
   data: void;
   status: 204;
 };
 
-export type deleteAuthorsIdResponse401 = {
+export type deleteAuthorResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type deleteAuthorsIdResponse403 = {
+export type deleteAuthorResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type deleteAuthorsIdResponse404 = {
+export type deleteAuthorResponse404 = {
   data: ApiErrorResponse;
   status: 404;
 };
 
-export type deleteAuthorsIdResponseSuccess = deleteAuthorsIdResponse204 & {
+export type deleteAuthorResponseSuccess = deleteAuthorResponse204 & {
   headers: Headers;
 };
-export type deleteAuthorsIdResponseError = (
-  | deleteAuthorsIdResponse401
-  | deleteAuthorsIdResponse403
-  | deleteAuthorsIdResponse404
+export type deleteAuthorResponseError = (
+  deleteAuthorResponse401 | deleteAuthorResponse403 | deleteAuthorResponse404
 ) & {
   headers: Headers;
 };
 
-export type deleteAuthorsIdResponse =
-  deleteAuthorsIdResponseSuccess | deleteAuthorsIdResponseError;
+export type deleteAuthorResponse =
+  deleteAuthorResponseSuccess | deleteAuthorResponseError;
 
-export const getDeleteAuthorsIdUrl = (id: number) => {
+export const getDeleteAuthorUrl = (id: number) => {
   return `/authors/${id}`;
 };
 
 /**
  * @summary Удаление автора
  */
-export const deleteAuthorsId = async (
+export const deleteAuthor = async (
   id: number,
   options?: RequestInit
-): Promise<deleteAuthorsIdResponse> => {
-  const res = await fetch(getDeleteAuthorsIdUrl(id), {
+): Promise<deleteAuthorResponse> => {
+  const res = await fetch(getDeleteAuthorUrl(id), {
     ...options,
     method: 'DELETE',
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteAuthorsIdResponse['data'] = body
+  const data: deleteAuthorResponse['data'] = body
     ? JSON.parse(body)
     : undefined;
   return {
     data,
     status: res.status,
     headers: res.headers,
-  } as deleteAuthorsIdResponse;
+  } as deleteAuthorResponse;
 };
 
 export type getReportsTopAuthorsResponse200 = {

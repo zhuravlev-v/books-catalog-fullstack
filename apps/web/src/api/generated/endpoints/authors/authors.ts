@@ -10,8 +10,9 @@
  */
 import type {
   ApiErrorResponse,
-  AuthorInput,
+  AuthorCreateInput,
   AuthorListResponse,
+  AuthorPatchInput,
   AuthorResponse,
   GetAuthorsParams,
 } from '@books/api-contract/models';
@@ -148,46 +149,46 @@ export function useGetAuthors<
   return query;
 }
 
-export type postAuthorsResponse201 = {
+export type createAuthorResponse201 = {
   data: AuthorResponse;
   status: 201;
 };
 
-export type postAuthorsResponse401 = {
+export type createAuthorResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type postAuthorsResponse403 = {
+export type createAuthorResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type postAuthorsResponse422 = {
+export type createAuthorResponse422 = {
   data: ApiErrorResponse;
   status: 422;
 };
 
-export type postAuthorsResponseSuccess = postAuthorsResponse201 & {
+export type createAuthorResponseSuccess = createAuthorResponse201 & {
   headers: Headers;
 };
-export type postAuthorsResponseError = (
-  postAuthorsResponse401 | postAuthorsResponse403 | postAuthorsResponse422
+export type createAuthorResponseError = (
+  createAuthorResponse401 | createAuthorResponse403 | createAuthorResponse422
 ) & {
   headers: Headers;
 };
 
-export const getPostAuthorsUrl = () => {
+export const getCreateAuthorUrl = () => {
   return `/api/v1/authors`;
 };
 
 /**
  * @summary Создание автора
  */
-export const postAuthors = async (
-  authorInput: AuthorInput,
+export const createAuthor = async (
+  authorCreateInput: AuthorCreateInput,
   options?: Parameters<typeof apiRequest>[1]
-): Promise<postAuthorsResponseSuccess> => {
+): Promise<createAuthorResponseSuccess> => {
   const getHeaders = (
     h?: NonNullable<RequestInit['headers']>
   ): Record<string, string | readonly string[]> => {
@@ -209,37 +210,37 @@ export const postAuthors = async (
     }
     return headers;
   };
-  return apiRequest<postAuthorsResponseSuccess>(getPostAuthorsUrl(), {
+  return apiRequest<createAuthorResponseSuccess>(getCreateAuthorUrl(), {
     ...options,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       ...getHeaders(options?.headers),
     },
-    body: JSON.stringify(authorInput),
+    body: JSON.stringify(authorCreateInput),
   });
 };
 
-export const getPostAuthorsMutationKey = () => ['postAuthors'] as const;
+export const getCreateAuthorMutationKey = () => ['createAuthor'] as const;
 
-export const getPostAuthorsMutationOptions = <
+export const getCreateAuthorMutationOptions = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postAuthors>>,
+    Awaited<ReturnType<typeof createAuthor>>,
     TError,
-    PostAuthorsMutationVariables,
+    CreateAuthorMutationVariables,
     TContext
   >;
   request?: SecondParameter<typeof apiRequest>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof postAuthors>>,
+  Awaited<ReturnType<typeof createAuthor>>,
   TError,
-  PostAuthorsMutationVariables,
+  CreateAuthorMutationVariables,
   TContext
 > => {
-  const mutationKey = getPostAuthorsMutationKey();
+  const mutationKey = getCreateAuthorMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
@@ -249,48 +250,50 @@ export const getPostAuthorsMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof postAuthors>>,
-    PostAuthorsMutationVariables
+    Awaited<ReturnType<typeof createAuthor>>,
+    CreateAuthorMutationVariables
   > = (props) => {
     const { data } = props ?? {};
 
-    return postAuthors(data, requestOptions);
+    return createAuthor(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type PostAuthorsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postAuthors>>
+export type CreateAuthorMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createAuthor>>
 >;
-export type PostAuthorsMutationBody = BodyType<AuthorInput>;
-export type PostAuthorsMutationError = ErrorType<ApiErrorResponse>;
-export type PostAuthorsMutationVariables = { data: BodyType<AuthorInput> };
+export type CreateAuthorMutationBody = BodyType<AuthorCreateInput>;
+export type CreateAuthorMutationError = ErrorType<ApiErrorResponse>;
+export type CreateAuthorMutationVariables = {
+  data: BodyType<AuthorCreateInput>;
+};
 
 /**
  * @summary Создание автора
  */
-export const usePostAuthors = <
+export const useCreateAuthor = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof postAuthors>>,
+      Awaited<ReturnType<typeof createAuthor>>,
       TError,
-      PostAuthorsMutationVariables,
+      CreateAuthorMutationVariables,
       TContext
     >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
 ): UseMutationReturnType<
-  Awaited<ReturnType<typeof postAuthors>>,
+  Awaited<ReturnType<typeof createAuthor>>,
   TError,
-  PostAuthorsMutationVariables,
+  CreateAuthorMutationVariables,
   TContext
 > => {
-  return useMutation(getPostAuthorsMutationOptions(options), queryClient);
+  return useMutation(getCreateAuthorMutationOptions(options), queryClient);
 };
 export type getAuthorsIdResponse200 = {
   data: AuthorResponse;
@@ -398,55 +401,55 @@ export function useGetAuthorsId<
   return query;
 }
 
-export type putAuthorsIdResponse200 = {
+export type updateAuthorResponse200 = {
   data: AuthorResponse;
   status: 200;
 };
 
-export type putAuthorsIdResponse401 = {
+export type updateAuthorResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type putAuthorsIdResponse403 = {
+export type updateAuthorResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type putAuthorsIdResponse404 = {
+export type updateAuthorResponse404 = {
   data: ApiErrorResponse;
   status: 404;
 };
 
-export type putAuthorsIdResponse422 = {
+export type updateAuthorResponse422 = {
   data: ApiErrorResponse;
   status: 422;
 };
 
-export type putAuthorsIdResponseSuccess = putAuthorsIdResponse200 & {
+export type updateAuthorResponseSuccess = updateAuthorResponse200 & {
   headers: Headers;
 };
-export type putAuthorsIdResponseError = (
-  | putAuthorsIdResponse401
-  | putAuthorsIdResponse403
-  | putAuthorsIdResponse404
-  | putAuthorsIdResponse422
+export type updateAuthorResponseError = (
+  | updateAuthorResponse401
+  | updateAuthorResponse403
+  | updateAuthorResponse404
+  | updateAuthorResponse422
 ) & {
   headers: Headers;
 };
 
-export const getPutAuthorsIdUrl = (id: number) => {
+export const getUpdateAuthorUrl = (id: number) => {
   return `/api/v1/authors/${id}`;
 };
 
 /**
- * @summary Обновление автора
+ * @summary Частичное обновление автора
  */
-export const putAuthorsId = async (
+export const updateAuthor = async (
   id: number,
-  authorInput: AuthorInput,
+  authorPatchInput: AuthorPatchInput,
   options?: Parameters<typeof apiRequest>[1]
-): Promise<putAuthorsIdResponseSuccess> => {
+): Promise<updateAuthorResponseSuccess> => {
   const getHeaders = (
     h?: NonNullable<RequestInit['headers']>
   ): Record<string, string | readonly string[]> => {
@@ -468,37 +471,37 @@ export const putAuthorsId = async (
     }
     return headers;
   };
-  return apiRequest<putAuthorsIdResponseSuccess>(getPutAuthorsIdUrl(id), {
+  return apiRequest<updateAuthorResponseSuccess>(getUpdateAuthorUrl(id), {
     ...options,
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       ...getHeaders(options?.headers),
     },
-    body: JSON.stringify(authorInput),
+    body: JSON.stringify(authorPatchInput),
   });
 };
 
-export const getPutAuthorsIdMutationKey = () => ['putAuthorsId'] as const;
+export const getUpdateAuthorMutationKey = () => ['updateAuthor'] as const;
 
-export const getPutAuthorsIdMutationOptions = <
+export const getUpdateAuthorMutationOptions = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof putAuthorsId>>,
+    Awaited<ReturnType<typeof updateAuthor>>,
     TError,
-    PutAuthorsIdMutationVariables,
+    UpdateAuthorMutationVariables,
     TContext
   >;
   request?: SecondParameter<typeof apiRequest>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof putAuthorsId>>,
+  Awaited<ReturnType<typeof updateAuthor>>,
   TError,
-  PutAuthorsIdMutationVariables,
+  UpdateAuthorMutationVariables,
   TContext
 > => {
-  const mutationKey = getPutAuthorsIdMutationKey();
+  const mutationKey = getUpdateAuthorMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
@@ -508,120 +511,118 @@ export const getPutAuthorsIdMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof putAuthorsId>>,
-    PutAuthorsIdMutationVariables
+    Awaited<ReturnType<typeof updateAuthor>>,
+    UpdateAuthorMutationVariables
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return putAuthorsId(id, data, requestOptions);
+    return updateAuthor(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type PutAuthorsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof putAuthorsId>>
+export type UpdateAuthorMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateAuthor>>
 >;
-export type PutAuthorsIdMutationBody = BodyType<AuthorInput>;
-export type PutAuthorsIdMutationError = ErrorType<ApiErrorResponse>;
-export type PutAuthorsIdMutationVariables = {
+export type UpdateAuthorMutationBody = BodyType<AuthorPatchInput>;
+export type UpdateAuthorMutationError = ErrorType<ApiErrorResponse>;
+export type UpdateAuthorMutationVariables = {
   id: number;
-  data: BodyType<AuthorInput>;
+  data: BodyType<AuthorPatchInput>;
 };
 
 /**
- * @summary Обновление автора
+ * @summary Частичное обновление автора
  */
-export const usePutAuthorsId = <
+export const useUpdateAuthor = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof putAuthorsId>>,
+      Awaited<ReturnType<typeof updateAuthor>>,
       TError,
-      PutAuthorsIdMutationVariables,
+      UpdateAuthorMutationVariables,
       TContext
     >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
 ): UseMutationReturnType<
-  Awaited<ReturnType<typeof putAuthorsId>>,
+  Awaited<ReturnType<typeof updateAuthor>>,
   TError,
-  PutAuthorsIdMutationVariables,
+  UpdateAuthorMutationVariables,
   TContext
 > => {
-  return useMutation(getPutAuthorsIdMutationOptions(options), queryClient);
+  return useMutation(getUpdateAuthorMutationOptions(options), queryClient);
 };
-export type deleteAuthorsIdResponse204 = {
+export type deleteAuthorResponse204 = {
   data: void;
   status: 204;
 };
 
-export type deleteAuthorsIdResponse401 = {
+export type deleteAuthorResponse401 = {
   data: ApiErrorResponse;
   status: 401;
 };
 
-export type deleteAuthorsIdResponse403 = {
+export type deleteAuthorResponse403 = {
   data: ApiErrorResponse;
   status: 403;
 };
 
-export type deleteAuthorsIdResponse404 = {
+export type deleteAuthorResponse404 = {
   data: ApiErrorResponse;
   status: 404;
 };
 
-export type deleteAuthorsIdResponseSuccess = deleteAuthorsIdResponse204 & {
+export type deleteAuthorResponseSuccess = deleteAuthorResponse204 & {
   headers: Headers;
 };
-export type deleteAuthorsIdResponseError = (
-  | deleteAuthorsIdResponse401
-  | deleteAuthorsIdResponse403
-  | deleteAuthorsIdResponse404
+export type deleteAuthorResponseError = (
+  deleteAuthorResponse401 | deleteAuthorResponse403 | deleteAuthorResponse404
 ) & {
   headers: Headers;
 };
 
-export const getDeleteAuthorsIdUrl = (id: number) => {
+export const getDeleteAuthorUrl = (id: number) => {
   return `/api/v1/authors/${id}`;
 };
 
 /**
  * @summary Удаление автора
  */
-export const deleteAuthorsId = async (
+export const deleteAuthor = async (
   id: number,
   options?: Parameters<typeof apiRequest>[1]
-): Promise<deleteAuthorsIdResponseSuccess> => {
-  return apiRequest<deleteAuthorsIdResponseSuccess>(getDeleteAuthorsIdUrl(id), {
+): Promise<deleteAuthorResponseSuccess> => {
+  return apiRequest<deleteAuthorResponseSuccess>(getDeleteAuthorUrl(id), {
     ...options,
     method: 'DELETE',
   });
 };
 
-export const getDeleteAuthorsIdMutationKey = () => ['deleteAuthorsId'] as const;
+export const getDeleteAuthorMutationKey = () => ['deleteAuthor'] as const;
 
-export const getDeleteAuthorsIdMutationOptions = <
+export const getDeleteAuthorMutationOptions = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteAuthorsId>>,
+    Awaited<ReturnType<typeof deleteAuthor>>,
     TError,
-    DeleteAuthorsIdMutationVariables,
+    DeleteAuthorMutationVariables,
     TContext
   >;
   request?: SecondParameter<typeof apiRequest>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteAuthorsId>>,
+  Awaited<ReturnType<typeof deleteAuthor>>,
   TError,
-  DeleteAuthorsIdMutationVariables,
+  DeleteAuthorMutationVariables,
   TContext
 > => {
-  const mutationKey = getDeleteAuthorsIdMutationKey();
+  const mutationKey = getDeleteAuthorMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
@@ -631,46 +632,46 @@ export const getDeleteAuthorsIdMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteAuthorsId>>,
-    DeleteAuthorsIdMutationVariables
+    Awaited<ReturnType<typeof deleteAuthor>>,
+    DeleteAuthorMutationVariables
   > = (props) => {
     const { id } = props ?? {};
 
-    return deleteAuthorsId(id, requestOptions);
+    return deleteAuthor(id, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type DeleteAuthorsIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteAuthorsId>>
+export type DeleteAuthorMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteAuthor>>
 >;
 
-export type DeleteAuthorsIdMutationError = ErrorType<ApiErrorResponse>;
-export type DeleteAuthorsIdMutationVariables = { id: number };
+export type DeleteAuthorMutationError = ErrorType<ApiErrorResponse>;
+export type DeleteAuthorMutationVariables = { id: number };
 
 /**
  * @summary Удаление автора
  */
-export const useDeleteAuthorsId = <
+export const useDeleteAuthor = <
   TError = ErrorType<ApiErrorResponse>,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof deleteAuthorsId>>,
+      Awaited<ReturnType<typeof deleteAuthor>>,
       TError,
-      DeleteAuthorsIdMutationVariables,
+      DeleteAuthorMutationVariables,
       TContext
     >;
     request?: SecondParameter<typeof apiRequest>;
   },
   queryClient?: QueryClient
 ): UseMutationReturnType<
-  Awaited<ReturnType<typeof deleteAuthorsId>>,
+  Awaited<ReturnType<typeof deleteAuthor>>,
   TError,
-  DeleteAuthorsIdMutationVariables,
+  DeleteAuthorMutationVariables,
   TContext
 > => {
-  return useMutation(getDeleteAuthorsIdMutationOptions(options), queryClient);
+  return useMutation(getDeleteAuthorMutationOptions(options), queryClient);
 };
