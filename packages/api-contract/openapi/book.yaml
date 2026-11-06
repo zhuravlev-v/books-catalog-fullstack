@@ -124,7 +124,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookListResponse'
     post:
-      operationId: postBooks
+      operationId: createBook
       summary: Создание книги
       description: Доступно только авторизованным пользователям.
       tags:
@@ -136,7 +136,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BookForm'
+              $ref: '#/components/schemas/BookCreateForm'
       responses:
         '201':
           description: Книга создана
@@ -156,8 +156,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
+        '413':
+          description: Размер файла обложки превышает допустимый предел
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '415':
+          description: Неподдерживаемый формат файла обложки
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
         '422':
-          description: Ошибки валидации
+          description: Ошибка валидации полей или файла обложки
           content:
             application/json:
               schema:
@@ -189,9 +201,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-    put:
-      operationId: putBooksId
-      summary: Полное обновление книги
+    patch:
+      operationId: updateBook
+      summary: Частичное обновление книги
       tags:
         - Books
       security:
@@ -201,7 +213,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BookForm'
+              $ref: '#/components/schemas/BookPatchForm'
       responses:
         '200':
           description: Книга обновлена
@@ -227,58 +239,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-        '422':
-          description: Ошибки валидации
+        '413':
+          description: Размер файла обложки превышает допустимый предел
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-    patch:
-      operationId: patchBooksId
-      summary: Частичное обновление книги
-      tags:
-        - Books
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BookInput'
-      responses:
-        '200':
-          description: Книга обновлена
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BookResponse'
-        '401':
-          description: Неавторизован
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiErrorResponse'
-        '403':
-          description: Недостаточно прав
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiErrorResponse'
-        '404':
-          description: Книга не найдена
+        '415':
+          description: Неподдерживаемый формат файла обложки
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
         '422':
-          description: Ошибки валидации
+          description: Ошибка валидации полей или файла обложки
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
     delete:
-      operationId: deleteBooksId
+      operationId: deleteBook
       summary: Удаление книги
       tags:
         - Books
@@ -339,7 +319,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthorListResponse'
     post:
-      operationId: postAuthors
+      operationId: createAuthor
       summary: Создание автора
       tags:
         - Authors
@@ -350,7 +330,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthorInput'
+              $ref: '#/components/schemas/AuthorCreateInput'
       responses:
         '201':
           description: Автор создан
@@ -403,9 +383,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-    put:
-      operationId: putAuthorsId
-      summary: Обновление автора
+    patch:
+      operationId: updateAuthor
+      summary: Частичное обновление автора
       tags:
         - Authors
       security:
@@ -415,7 +395,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthorInput'
+              $ref: '#/components/schemas/AuthorPatchInput'
       responses:
         '200':
           description: Автор обновлён
@@ -448,7 +428,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
     delete:
-      operationId: deleteAuthorsId
+      operationId: deleteAuthor
       summary: Удаление автора
       tags:
         - Authors
@@ -681,6 +661,7 @@ components:
           type: string
         cover_url:
           type: string
+          format: uri
           nullable: true
         authors:
           type: array
@@ -738,37 +719,13 @@ components:
           type: integer
           minimum: 1
 
-    BookInput:
-      type: object
-      additionalProperties: false
-      minProperties: 1
-      properties:
-        title:
-          type: string
-          minLength: 1
-        year:
-          type: integer
-          minimum: 1
-        description:
-          type: string
-        isbn:
-          type: string
-        author_ids:
-          type: array
-          minItems: 1
-          uniqueItems: true
-          items:
-            type: integer
-            minimum: 1
-
-    BookForm:
+    BookCreateForm:
       type: object
       additionalProperties: false
       required:
         - title
         - year
         - author_ids
-        - cover
       properties:
         title:
           type: string
@@ -792,11 +749,58 @@ components:
           format: binary
           description: Файл изображения обложки
 
-    AuthorInput:
+    BookPatchForm:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      not:
+        description: Нельзя одновременно загрузить новую обложку и удалить существующую
+        required:
+          - cover
+          - remove_cover
+        properties:
+          remove_cover:
+            enum: [true]
+      properties:
+        title:
+          type: string
+          minLength: 1
+        year:
+          type: integer
+          minimum: 1
+        description:
+          type: string
+        isbn:
+          type: string
+        author_ids:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: integer
+            minimum: 1
+        cover:
+          type: string
+          format: binary
+          description: Новый файл изображения обложки
+        remove_cover:
+          type: boolean
+          description: Удалить существующую обложку
+
+    AuthorCreateInput:
       type: object
       additionalProperties: false
       required:
         - full_name
+      properties:
+        full_name:
+          type: string
+          minLength: 1
+
+    AuthorPatchInput:
+      type: object
+      additionalProperties: false
+      minProperties: 1
       properties:
         full_name:
           type: string
