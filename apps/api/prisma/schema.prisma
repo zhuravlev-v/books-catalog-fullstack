@@ -32,8 +32,10 @@ model books {
   year            Int
   description     String
   isbn            String
-  cover           Bytes?
+  cover_key       String?
   cover_mime_type String?
+  cover_size      Int?
+  cover_etag      String?
   book_authors    book_authors[]
 
   @@index([isbn])

@@ -1,5 +1,7 @@
 import type { RequestHandler } from 'express';
 import { GetBooksIdParams } from '@books/api-contract/schemas';
+
+import { objectStorage } from '../../../infrastructure/storage/s3-storage.ts';
 import { parseRequest } from '../../../http/validation.ts';
 import { queryBook } from './model.ts';
 import { bookDto } from './view.ts';
@@ -11,11 +13,10 @@ export const getBook: RequestHandler = async (req, res, next) => {
     });
 
     const book = await queryBook(params);
-    const basePath = req.baseUrl.replace(/\/+$/, '');
 
     res
       .status(200)
-      .json(bookDto(book, (bookId) => `${basePath}/books/${bookId}/cover`));
+      .json(bookDto(book, (coverKey) => objectStorage.getPublicUrl(coverKey)));
   } catch (error) {
     next(error);
   }

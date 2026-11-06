@@ -8,13 +8,13 @@ import type { BookWithAuthors } from './prisma.ts';
 
 export const presentBook = defineMapper(
   BookSchema,
-  (book: BookWithAuthors, getCoverUrl: (bookId: number) => string) => ({
+  (book: BookWithAuthors, getCoverUrl: (coverKey: string) => string) => ({
     id: book.id,
     title: book.title,
     year: book.year,
     description: book.description,
     isbn: book.isbn,
-    cover_url: book.cover === null ? null : getCoverUrl(book.id),
+    cover_url: book.cover_key === null ? null : getCoverUrl(book.cover_key),
     authors: book.book_authors.map(({ authors }) => ({
       id: authors.id,
       full_name: authors.full_name,

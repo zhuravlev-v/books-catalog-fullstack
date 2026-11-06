@@ -6,7 +6,7 @@ import type { BooksPage } from './model.ts';
 
 export const booksListDto = defineMapper(
   BookListResponseSchema,
-  (booksPage: BooksPage, getCoverUrl: (bookId: number) => string) => ({
+  (booksPage: BooksPage, getCoverUrl: (coverKey: string) => string) => ({
     success: true as const,
     data: {
       items: booksPage.items.map((book) => presentBook(book, getCoverUrl)),

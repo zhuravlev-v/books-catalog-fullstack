@@ -44,17 +44,25 @@ await prisma
       "title",
       "year",
       "description",
-      "isbn"
+      "isbn",
+      "cover_key",
+      "cover_mime_type",
+      "cover_size",
+      "cover_etag"
     )
     OVERRIDING SYSTEM VALUE
     VALUES
-      (1, 'Война и мир', 2022, 'Исторический роман.', '9785170901234'),
-      (2, 'Преступление и наказание', 2023, 'Роман.', '9785170905676')
+      (1, 'Война и мир', 2022, 'Исторический роман.', '9785170901234', NULL, NULL, NULL, NULL),
+      (2, 'Преступление и наказание', 2023, 'Роман.', '9785170905676', NULL, NULL, NULL, NULL)
     ON CONFLICT ("id") DO UPDATE SET
       "title" = EXCLUDED."title",
       "year" = EXCLUDED."year",
       "description" = EXCLUDED."description",
-      "isbn" = EXCLUDED."isbn"
+      "isbn" = EXCLUDED."isbn",
+      "cover_key" = EXCLUDED."cover_key",
+      "cover_mime_type" = EXCLUDED."cover_mime_type",
+      "cover_size" = EXCLUDED."cover_size",
+      "cover_etag" = EXCLUDED."cover_etag"
   `;
 
     await transaction.$executeRaw`
