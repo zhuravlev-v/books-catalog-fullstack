@@ -1,8 +1,8 @@
 import * as z from 'zod';
 import { GetBooksIdParams } from '@books/api-contract/schemas';
-import { HttpError } from '../../../http/errors.ts';
-import { prisma } from '../../../prisma/prisma-client.ts';
-import { bookWithAuthors, type BookWithAuthors } from '../shared/prisma.ts';
+import { HttpError } from '../../../../http/errors.ts';
+import { prisma } from '../../../../prisma/prisma-client.ts';
+import { bookWithAuthors, type BookWithAuthors } from '../../shared/prisma.ts';
 
 export async function queryBook(
   params: z.infer<typeof GetBooksIdParams>

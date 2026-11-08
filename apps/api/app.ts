@@ -3,7 +3,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 
 import indexRouter from './modules/index.ts';
-import booksRouter from './modules/books/routes.ts';
+import booksRouter from './modules/books/routes/routes.ts';
 import { errorHandler } from './middleware/error-handler.ts';
 import { env } from './config/env.ts';
 

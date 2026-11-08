@@ -1,8 +1,8 @@
 import { GetBooksQueryParams } from '@books/api-contract/schemas';
 import type { RequestHandler } from 'express';
 
-import { objectStorage } from '../../../infrastructure/storage/s3-storage.ts';
-import { parseRequest } from '../../../http/validation.ts';
+import { objectStorage } from '../../../../infrastructure/storage/s3-storage.ts';
+import { parseRequest } from '../../../../http/validation.ts';
 import { queryBooks } from './model.ts';
 import { booksListDto } from './view.ts';
 

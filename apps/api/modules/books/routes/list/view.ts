@@ -1,7 +1,7 @@
 import { BookListResponse as BookListResponseSchema } from '@books/api-contract/schemas';
 
-import { defineMapper } from '../../../http/mapper.ts';
-import { presentBook } from '../shared/view.ts';
+import { defineMapper } from '../../../../http/mapper.ts';
+import { presentBook } from '../../shared/view.ts';
 import type { BooksPage } from './model.ts';
 
 export const booksListDto = defineMapper(
