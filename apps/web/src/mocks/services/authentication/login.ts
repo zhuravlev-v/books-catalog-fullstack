@@ -1,6 +1,4 @@
-import { env } from '@/shared/config/env';
-import type { LoginResponse } from '@books/api-contract/models';
-import { createUserAccessToken } from '@/mocks/auth/jwt';
+import type { AuthSessionResponse } from '@books/api-contract/models';
 import type { UserRecord } from '@/mocks/db/types';
 
 export function hasValidPassword(
@@ -10,23 +8,17 @@ export function hasValidPassword(
   return user !== undefined && user.password === password;
 }
 
-export async function createLoginResponse(
-  user: UserRecord,
-  secret: string = env.MOCK_JWT_SECRET
-): Promise<LoginResponse> {
-  const { token, expiresAt } = await createUserAccessToken(user, secret);
-
+export function createLoginResponse(user: UserRecord): AuthSessionResponse {
   return {
     success: true,
     data: {
-      token,
-      expires_at: expiresAt,
       user: {
         id: user.id,
         username: user.username,
         email: user.email,
         role: user.role,
       },
+      access_expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
     },
   };
 }

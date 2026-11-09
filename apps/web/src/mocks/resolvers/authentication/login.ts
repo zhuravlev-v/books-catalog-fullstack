@@ -2,7 +2,7 @@ import { HttpResponse } from 'msw';
 
 import type {
   ApiErrorResponse as ApiError,
-  LoginResponse,
+  AuthSessionResponse,
 } from '@books/api-contract/models';
 import { parseLoginRequest } from '@/mocks/http/authentication/login';
 import { usersRepository } from '@/mocks/repositories/authentication/login';
@@ -27,7 +27,7 @@ function unauthorized(): never {
 
 export async function loginResolver({
   request,
-}: LoginRequestInfo): Promise<LoginResponse> {
+}: LoginRequestInfo): Promise<AuthSessionResponse> {
   const credentials = await parseLoginRequest(request);
 
   if (credentials === undefined) {

@@ -4,7 +4,7 @@
  * API каталога книг
  * REST API для управления каталогом книг и авторов.
  * Поддерживает роли: гость (просмотр) и пользователь (CRUD).
- * Аутентификация через Bearer-токен (JWT).
+ * Аутентификация через JWT Access Token и opaque Refresh Token в HttpOnly Cookie.
  *
  * OpenAPI spec version: 1.0.0
  */

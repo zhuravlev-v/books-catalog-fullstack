@@ -1,4 +1,7 @@
 import { prisma } from './prisma-client.ts';
+import { hashPassword } from '../modules/auth/shared/password.ts';
+
+const demoPasswordHash = await hashPassword('demo12345');
 
 await prisma
   .$transaction(async (transaction) => {
@@ -15,14 +18,18 @@ await prisma
       '00000000-0000-4000-8000-000000000001'::uuid,
       'demo',
       'demo@example.com',
-      'demo123',
+      ${demoPasswordHash},
       'user',
       '2026-09-18T00:00:00Z'::timestamptz
     )
     ON CONFLICT ("id") DO UPDATE SET
       "username" = EXCLUDED."username",
       "email" = EXCLUDED."email",
-      "password" = EXCLUDED."password",
+      "password" = CASE
+        WHEN "users"."password" LIKE '$argon2id$%'
+          THEN "users"."password"
+        ELSE EXCLUDED."password"
+      END,
       "role" = EXCLUDED."role",
       "created_at" = EXCLUDED."created_at"
   `;

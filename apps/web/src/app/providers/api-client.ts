@@ -23,7 +23,6 @@ export function configureApplicationApiClient(
   let unauthorizedRedirect: Promise<void> | null = null;
 
   configureApiClient({
-    getAccessToken: () => authStore.token,
     onUnauthorized: async (_error, url) => {
       authStore.logout();
 

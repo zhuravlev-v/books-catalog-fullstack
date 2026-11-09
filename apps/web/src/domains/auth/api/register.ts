@@ -1,17 +1,10 @@
 import { postAuthRegister } from '@/api/generated/endpoints';
 import type { RegisterRequest } from '@books/api-contract/models';
 import { PostAuthRegisterResponse } from '@books/api-contract/schemas';
-import { getJwtExpiresAt } from '@/domains/auth/lib/jwt';
 import { normalizeAuthUser } from '@/domains/auth/lib/normalize-auth-user';
-import type { AuthSession, AuthUser } from '@/domains/auth/model/auth.types';
+import type { AuthSession } from '@/domains/auth/model/auth.types';
 
-export type RegisterResult =
-  | { status: 'authenticated'; session: AuthSession }
-  | { status: 'login-required'; user: AuthUser };
-
-export async function register(
-  request: RegisterRequest
-): Promise<RegisterResult> {
+export async function register(request: RegisterRequest): Promise<AuthSession> {
   const response = await postAuthRegister(request);
   const result = PostAuthRegisterResponse.safeParse(response.data);
 
@@ -27,18 +20,12 @@ export async function register(
     );
   }
 
-  const user = normalizeAuthUser(data.user);
-
-  if (!data.token) {
-    return { status: 'login-required', user };
+  if (!data.access_expires_at) {
+    throw new Error('Ответ API регистрации не содержит срока действия сессии');
   }
 
   return {
-    status: 'authenticated',
-    session: {
-      token: data.token,
-      user,
-      expiresAt: getJwtExpiresAt(data.token),
-    },
+    user: normalizeAuthUser(data.user),
+    expiresAt: data.access_expires_at,
   };
 }

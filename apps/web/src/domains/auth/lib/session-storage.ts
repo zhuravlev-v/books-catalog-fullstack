@@ -5,7 +5,6 @@ import type { AuthSession } from '@/domains/auth/model/auth.types';
 const AUTH_SESSION_STORAGE_KEY = 'infotek.auth.session';
 
 const authSessionSchema = z.object({
-  token: z.string().trim().min(1),
   user: z.object({
     id: z.string().min(1),
     username: z.string().min(1),

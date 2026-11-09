@@ -4,7 +4,7 @@
  * API каталога книг
  * REST API для управления каталогом книг и авторов.
  * Поддерживает роли: гость (просмотр) и пользователь (CRUD).
- * Аутентификация через Bearer-токен (JWT).
+ * Аутентификация через JWT Access Token и opaque Refresh Token в HttpOnly Cookie.
  *
  * OpenAPI spec version: 1.0.0
  */
@@ -25,24 +25,17 @@ export interface RegisterRequest {
   password: string;
 }
 
-export type RegisterResponseDataUser = {
-  /** Уникальный идентификатор созданного пользователя */
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+
+export const UserRole = {
+  user: 'user',
+} as const;
+
+export interface AuthUser {
   id: string;
   username: string;
   email: string;
-  /** Дата и время создания аккаунта */
-  created_at: string;
-};
-
-export type RegisterResponseData = {
-  /** JWT-токен авторизации, если выдаётся сразу после регистрации */
-  token: string;
-  user: RegisterResponseDataUser;
-};
-
-export interface RegisterResponse {
-  success: true;
-  data: RegisterResponseData;
+  role: UserRole;
 }
 
 export interface LoginRequest {
@@ -52,28 +45,14 @@ export interface LoginRequest {
   password: string;
 }
 
-export type UserRole = (typeof UserRole)[keyof typeof UserRole];
-
-export const UserRole = {
-  user: 'user',
-} as const;
-
-export type LoginResponseDataUser = {
-  id: string;
-  username: string;
-  email: string;
-  role: UserRole;
+export type AuthSessionResponseData = {
+  user: AuthUser;
+  access_expires_at: string;
 };
 
-export type LoginResponseData = {
-  token: string;
-  expires_at: string;
-  user: LoginResponseDataUser;
-};
-
-export interface LoginResponse {
+export interface AuthSessionResponse {
   success: true;
-  data: LoginResponseData;
+  data: AuthSessionResponseData;
 }
 
 export interface AuthorShort {

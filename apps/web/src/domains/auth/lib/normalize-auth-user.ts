@@ -1,15 +1,7 @@
-import type {
-  LoginResponseDataUser,
-  RegisterResponseDataUser,
-} from '@books/api-contract/models';
+import type { AuthUser as AuthUserDto } from '@books/api-contract/models';
 import type { AuthUser } from '@/domains/auth/model/auth.types';
 
-type AuthUserDto = LoginResponseDataUser | RegisterResponseDataUser;
-
-export function normalizeAuthUser(
-  user: AuthUserDto,
-  role: AuthUser['role'] = 'user'
-): AuthUser {
+export function normalizeAuthUser(user: AuthUserDto): AuthUser {
   if (!user.id || !user.username || !user.email) {
     throw new Error(
       'Ответ API авторизации не содержит обязательных данных пользователя'
@@ -20,6 +12,6 @@ export function normalizeAuthUser(
     id: user.id,
     username: user.username,
     email: user.email,
-    role: 'role' in user && user.role ? user.role : role,
+    role: user.role,
   };
 }

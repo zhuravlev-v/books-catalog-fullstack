@@ -45,10 +45,30 @@ model books {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model users {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username   String   @unique
-  email      String   @unique
-  password   String
-  role       String   @default("user")
-  created_at DateTime @default(now()) @db.Timestamptz(6)
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username       String           @unique
+  email          String           @unique
+  password       String
+  role           String           @default("user")
+  created_at     DateTime         @default(now()) @db.Timestamptz(6)
+  refresh_tokens refresh_tokens[]
+}
+
+model refresh_tokens {
+  id             String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id     String          @db.Uuid
+  user_id        String          @db.Uuid
+  token_hash     String          @unique
+  expires_at     DateTime        @db.Timestamptz(6)
+  created_at     DateTime        @default(now()) @db.Timestamptz(6)
+  used_at        DateTime?       @db.Timestamptz(6)
+  revoked_at     DateTime?       @db.Timestamptz(6)
+  replaced_by_id String?         @unique @db.Uuid
+  users          users           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  replaced_by    refresh_tokens? @relation("refresh_rotation", fields: [replaced_by_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  replaces       refresh_tokens? @relation("refresh_rotation")
+
+  @@index([session_id])
+  @@index([user_id])
+  @@index([expires_at])
 }

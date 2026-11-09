@@ -4,7 +4,7 @@
  * API каталога книг
  * REST API для управления каталогом книг и авторов.
  * Поддерживает роли: гость (просмотр) и пользователь (CRUD).
- * Аутентификация через Bearer-токен (JWT).
+ * Аутентификация через JWT Access Token и opaque Refresh Token в HttpOnly Cookie.
  *
  * OpenAPI spec version: 1.0.0
  */
@@ -33,27 +33,20 @@ export const RegisterRequest = zod.strictObject({
 export type RegisterRequest = zod.input<typeof RegisterRequest>;
 export type RegisterRequestOutput = zod.output<typeof RegisterRequest>;
 
-export const RegisterResponse = zod.strictObject({
-  success: zod.literal(true),
-  data: zod.strictObject({
-    token: zod
-      .string()
-      .describe('JWT-токен авторизации, если выдаётся сразу после регистрации'),
-    user: zod.strictObject({
-      id: zod
-        .uuid()
-        .describe('Уникальный идентификатор созданного пользователя'),
-      username: zod.string(),
-      email: zod.email(),
-      created_at: zod.iso
-        .datetime({ offset: true })
-        .describe('Дата и время создания аккаунта'),
-    }),
-  }),
+export const UserRole = zod.enum(['user']);
+
+export type UserRole = zod.input<typeof UserRole>;
+export type UserRoleOutput = zod.output<typeof UserRole>;
+
+export const AuthUser = zod.strictObject({
+  id: zod.uuid(),
+  username: zod.string(),
+  email: zod.email(),
+  role: UserRole,
 });
 
-export type RegisterResponse = zod.input<typeof RegisterResponse>;
-export type RegisterResponseOutput = zod.output<typeof RegisterResponse>;
+export type AuthUser = zod.input<typeof AuthUser>;
+export type AuthUserOutput = zod.output<typeof AuthUser>;
 
 export const LoginRequest = zod.strictObject({
   username: zod.string().min(1),
@@ -63,27 +56,16 @@ export const LoginRequest = zod.strictObject({
 export type LoginRequest = zod.input<typeof LoginRequest>;
 export type LoginRequestOutput = zod.output<typeof LoginRequest>;
 
-export const UserRole = zod.enum(['user']);
-
-export type UserRole = zod.input<typeof UserRole>;
-export type UserRoleOutput = zod.output<typeof UserRole>;
-
-export const LoginResponse = zod.strictObject({
+export const AuthSessionResponse = zod.strictObject({
   success: zod.literal(true),
   data: zod.strictObject({
-    token: zod.string(),
-    expires_at: zod.iso.datetime({ offset: true }),
-    user: zod.strictObject({
-      id: zod.uuid(),
-      username: zod.string(),
-      email: zod.email(),
-      role: UserRole,
-    }),
+    user: AuthUser,
+    access_expires_at: zod.iso.datetime({ offset: true }),
   }),
 });
 
-export type LoginResponse = zod.input<typeof LoginResponse>;
-export type LoginResponseOutput = zod.output<typeof LoginResponse>;
+export type AuthSessionResponse = zod.input<typeof AuthSessionResponse>;
+export type AuthSessionResponseOutput = zod.output<typeof AuthSessionResponse>;
 
 export const AuthorShort = zod.strictObject({
   id: zod.int().min(1),
@@ -260,20 +242,37 @@ export const ApiErrorResponse = zod.strictObject({
 export type ApiErrorResponse = zod.input<typeof ApiErrorResponse>;
 export type ApiErrorResponseOutput = zod.output<typeof ApiErrorResponse>;
 /**
- * Создаёт новый аккаунт пользователя на основе логина, email и пароля.
+ * Создаёт аккаунт, открывает сессию и устанавливает Access и Refresh Cookie.
  * @summary Регистрация нового пользователя
  */
 export const PostAuthRegisterBody = RegisterRequest;
 
-export const PostAuthRegisterResponse = RegisterResponse;
+export const PostAuthRegisterResponse = AuthSessionResponse;
 
 /**
- * Возвращает access-токен для роли `user`.
+ * Открывает новую сессию и устанавливает Access и Refresh Cookie.
  * @summary Авторизация пользователя
  */
 export const PostAuthLoginBody = LoginRequest;
 
-export const PostAuthLoginResponse = LoginResponse;
+export const PostAuthLoginResponse = AuthSessionResponse;
+
+/**
+ * Атомарно ротирует Refresh Token и выдаёт новый Access Token.
+ * @summary Обновление сессии
+ */
+export const PostAuthRefreshResponse = AuthSessionResponse;
+
+/**
+ * @summary Текущая сессия
+ */
+export const GetAuthSessionResponse = AuthSessionResponse;
+
+/**
+ * Отзывает текущее семейство Refresh Token и очищает Cookie. Операция идемпотентна.
+ * @summary Завершение текущей сессии
+ */
+export const PostAuthLogoutResponse = zod.void();
 
 /**
  * Доступно гостям и пользователям. Поддерживает пагинацию, фильтрацию и поиск.

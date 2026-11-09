@@ -5,7 +5,7 @@ info:
   description: |
     REST API для управления каталогом книг и авторов.
     Поддерживает роли: гость (просмотр) и пользователь (CRUD).
-    Аутентификация через Bearer-токен (JWT).
+    Аутентификация через JWT Access Token и opaque Refresh Token в HttpOnly Cookie.
 servers:
   - url: /api/v1
     description: Основной сервер API
@@ -15,7 +15,7 @@ paths:
     post:
       operationId: postAuthRegister
       summary: Регистрация нового пользователя
-      description: Создаёт новый аккаунт пользователя на основе логина, email и пароля.
+      description: Создаёт аккаунт, открывает сессию и устанавливает Access и Refresh Cookie.
       tags:
         - Authentication
       requestBody:
@@ -30,7 +30,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RegisterResponse'
+                $ref: '#/components/schemas/AuthSessionResponse'
         '409':
           description: Пользователь с таким логином или email уже существует
           content:
@@ -58,7 +58,7 @@ paths:
     post:
       operationId: postAuthLogin
       summary: Авторизация пользователя
-      description: Возвращает access-токен для роли `user`.
+      description: Открывает новую сессию и устанавливает Access и Refresh Cookie.
       tags:
         - Authentication
       requestBody:
@@ -73,13 +73,78 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: '#/components/schemas/AuthSessionResponse'
         '401':
           description: Неверные учётные данные
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /auth/refresh:
+    post:
+      operationId: postAuthRefresh
+      summary: Обновление сессии
+      description: Атомарно ротирует Refresh Token и выдаёт новый Access Token.
+      tags:
+        - Authentication
+      security:
+        - refreshCookie: []
+      responses:
+        '200':
+          description: Сессия обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSessionResponse'
+        '401':
+          description: Refresh Token отсутствует, недействителен, отозван или истёк
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /auth/session:
+    get:
+      operationId: getAuthSession
+      summary: Текущая сессия
+      tags:
+        - Authentication
+      security:
+        - accessCookie: []
+      responses:
+        '200':
+          description: Текущий пользователь
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSessionResponse'
+        '401':
+          description: Access Token отсутствует или недействителен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /auth/logout:
+    post:
+      operationId: postAuthLogout
+      summary: Завершение текущей сессии
+      description: Отзывает текущее семейство Refresh Token и очищает Cookie. Операция идемпотентна.
+      tags:
+        - Authentication
+      security:
+        - refreshCookie: []
+        - {}
+      responses:
+        '204':
+          description: Сессия завершена
 
   /books:
     get:
@@ -130,7 +195,7 @@ paths:
       tags:
         - Books
       security:
-        - bearerAuth: []
+        - accessCookie: []
       requestBody:
         required: true
         content:
@@ -207,7 +272,7 @@ paths:
       tags:
         - Books
       security:
-        - bearerAuth: []
+        - accessCookie: []
       requestBody:
         required: true
         content:
@@ -263,7 +328,7 @@ paths:
       tags:
         - Books
       security:
-        - bearerAuth: []
+        - accessCookie: []
       responses:
         '204':
           description: Книга удалена
@@ -324,7 +389,7 @@ paths:
       tags:
         - Authors
       security:
-        - bearerAuth: []
+        - accessCookie: []
       requestBody:
         required: true
         content:
@@ -389,7 +454,7 @@ paths:
       tags:
         - Authors
       security:
-        - bearerAuth: []
+        - accessCookie: []
       requestBody:
         required: true
         content:
@@ -433,7 +498,7 @@ paths:
       tags:
         - Authors
       security:
-        - bearerAuth: []
+        - accessCookie: []
       responses:
         '204':
           description: Автор удалён
@@ -487,10 +552,14 @@ paths:
 
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    accessCookie:
+      type: apiKey
+      in: cookie
+      name: access_token
+    refreshCookie:
+      type: apiKey
+      in: cookie
+      name: refresh_token
 
   schemas:
     RegisterRequest:
@@ -520,54 +589,25 @@ components:
           maxLength: 100
           example: StrongP@ssw0rd!
 
-    RegisterResponse:
+    AuthUser:
       type: object
       additionalProperties: false
       required:
-        - success
-        - data
+        - id
+        - username
+        - email
+        - role
       properties:
-        success:
-          type: boolean
-          enum: [true]
-          example: true
-        data:
-          type: object
-          additionalProperties: false
-          required:
-            - token
-            - user
-          properties:
-            token:
-              type: string
-              description: JWT-токен авторизации, если выдаётся сразу после регистрации
-              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-            user:
-              type: object
-              additionalProperties: false
-              required:
-                - id
-                - username
-                - email
-                - created_at
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  description: Уникальный идентификатор созданного пользователя
-                  example: a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d
-                username:
-                  type: string
-                  example: johndoe
-                email:
-                  type: string
-                  format: email
-                  example: john.doe@example.com
-                created_at:
-                  type: string
-                  format: date-time
-                  description: Дата и время создания аккаунта
-                  example: '2026-09-21T12:00:00Z'
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          $ref: '#/components/schemas/UserRole'
 
     LoginRequest:
       type: object
@@ -584,7 +624,7 @@ components:
           format: password
           minLength: 1
 
-    LoginResponse:
+    AuthSessionResponse:
       type: object
       additionalProperties: false
       required:
@@ -599,34 +639,14 @@ components:
           type: object
           additionalProperties: false
           required:
-            - token
-            - expires_at
             - user
+            - access_expires_at
           properties:
-            token:
-              type: string
-            expires_at:
+            user:
+              $ref: '#/components/schemas/AuthUser'
+            access_expires_at:
               type: string
               format: date-time
-            user:
-              type: object
-              additionalProperties: false
-              required:
-                - id
-                - username
-                - email
-                - role
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                username:
-                  type: string
-                email:
-                  type: string
-                  format: email
-                role:
-                  $ref: '#/components/schemas/UserRole'
 
     UserRole:
       type: string

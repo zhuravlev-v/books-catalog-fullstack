@@ -1,24 +1,17 @@
-import { env } from '@/shared/config/env';
-import type { RegisterResponse } from '@books/api-contract/models';
-import { createUserAccessToken } from '@/mocks/auth/jwt';
+import type { AuthSessionResponse } from '@books/api-contract/models';
 import type { UserRecord } from '@/mocks/db/types';
 
-export async function createRegisterResponse(
-  user: UserRecord,
-  secret: string = env.MOCK_JWT_SECRET
-): Promise<RegisterResponse> {
-  const { token } = await createUserAccessToken(user, secret);
-
+export function createRegisterResponse(user: UserRecord): AuthSessionResponse {
   return {
     success: true,
     data: {
-      token,
       user: {
         id: user.id,
         username: user.username,
         email: user.email,
-        created_at: user.createdAt,
+        role: user.role,
       },
+      access_expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
     },
   };
 }

@@ -5,8 +5,24 @@ dotenv.config({ path: '../../.env', quiet: true });
 
 const createEnv = () => {
   const EnvSchema = z.object({
+    NODE_ENV: z
+      .enum(['development', 'test', 'production'])
+      .default('development'),
     API_PORT: z.coerce.number().int().positive().default(3001),
     API_BASE_PATH: z.string().startsWith('/').default('/api/v1'),
+    JWT_SECRET: z.string().min(32),
+    JWT_ISSUER: z.string().min(1).default('books-api'),
+    JWT_AUDIENCE: z.string().min(1).default('books-web'),
+    JWT_ACCESS_TOKEN_TTL_SECONDS: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(900),
+    AUTH_REFRESH_TOKEN_TTL_SECONDS: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(2_592_000),
     DB_NAME: z.string().min(1),
     DB_USER: z.string().min(1),
     DB_PASSWORD: z.string().min(1),

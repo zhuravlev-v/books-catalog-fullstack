@@ -6,7 +6,6 @@ export type ErrorType<T> = ApiError<ResponseData<T>>;
 export type BodyType<T> = T;
 
 interface ApiClientConfiguration {
-  getAccessToken?: () => string | null | undefined;
   onUnauthorized?: (error: ApiError, url: string) => void | Promise<void>;
 }
 
@@ -21,16 +20,14 @@ export async function apiRequest<T>(
   options: RequestInit
 ): Promise<T> {
   const headers = new Headers(options.headers);
-  const accessToken = configuration.getAccessToken?.();
-
-  if (accessToken && !headers.has('Authorization')) {
-    headers.set('Authorization', `Bearer ${accessToken}`);
-  }
-
   let response: Response;
 
   try {
-    response = await fetch(url, { ...options, headers });
+    response = await fetch(url, {
+      ...options,
+      headers,
+      credentials: 'same-origin',
+    });
   } catch (cause) {
     throw new ApiError('Нет соединения с сервером', {
       status: 0,

@@ -4,25 +4,31 @@
  * API каталога книг
  * REST API для управления каталогом книг и авторов.
  * Поддерживает роли: гость (просмотр) и пользователь (CRUD).
- * Аутентификация через Bearer-токен (JWT).
+ * Аутентификация через JWT Access Token и opaque Refresh Token в HttpOnly Cookie.
  *
  * OpenAPI spec version: 1.0.0
  */
 import type {
   ApiErrorResponse,
+  AuthSessionResponse,
   LoginRequest,
-  LoginResponse,
   RegisterRequest,
-  RegisterResponse,
 } from '@books/api-contract/models';
 
-import { useMutation } from '@tanstack/vue-query';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 import type {
+  DataTag,
   MutationFunction,
   QueryClient,
+  QueryFunction,
+  QueryKey,
   UseMutationOptions,
   UseMutationReturnType,
+  UseQueryOptions,
+  UseQueryReturnType,
 } from '@tanstack/vue-query';
+
+import { unref } from 'vue';
 
 import { apiRequest } from '../../../client/request';
 import type { ErrorType, BodyType } from '../../../client/request';
@@ -30,7 +36,7 @@ import type { ErrorType, BodyType } from '../../../client/request';
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type postAuthRegisterResponse201 = {
-  data: RegisterResponse;
+  data: AuthSessionResponse;
   status: 201;
 };
 
@@ -58,7 +64,7 @@ export const getPostAuthRegisterUrl = () => {
 };
 
 /**
- * Создаёт новый аккаунт пользователя на основе логина, email и пароля.
+ * Создаёт аккаунт, открывает сессию и устанавливает Access и Refresh Cookie.
  * @summary Регистрация нового пользователя
  */
 export const postAuthRegister = async (
@@ -173,7 +179,7 @@ export const usePostAuthRegister = <
   return useMutation(getPostAuthRegisterMutationOptions(options), queryClient);
 };
 export type postAuthLoginResponse200 = {
-  data: LoginResponse;
+  data: AuthSessionResponse;
   status: 200;
 };
 
@@ -182,10 +188,17 @@ export type postAuthLoginResponse401 = {
   status: 401;
 };
 
+export type postAuthLoginResponse422 = {
+  data: ApiErrorResponse;
+  status: 422;
+};
+
 export type postAuthLoginResponseSuccess = postAuthLoginResponse200 & {
   headers: Headers;
 };
-export type postAuthLoginResponseError = postAuthLoginResponse401 & {
+export type postAuthLoginResponseError = (
+  postAuthLoginResponse401 | postAuthLoginResponse422
+) & {
   headers: Headers;
 };
 
@@ -194,7 +207,7 @@ export const getPostAuthLoginUrl = () => {
 };
 
 /**
- * Возвращает access-токен для роли `user`.
+ * Открывает новую сессию и устанавливает Access и Refresh Cookie.
  * @summary Авторизация пользователя
  */
 export const postAuthLogin = async (
@@ -304,4 +317,301 @@ export const usePostAuthLogin = <
   TContext
 > => {
   return useMutation(getPostAuthLoginMutationOptions(options), queryClient);
+};
+export type postAuthRefreshResponse200 = {
+  data: AuthSessionResponse;
+  status: 200;
+};
+
+export type postAuthRefreshResponse401 = {
+  data: ApiErrorResponse;
+  status: 401;
+};
+
+export type postAuthRefreshResponseSuccess = postAuthRefreshResponse200 & {
+  headers: Headers;
+};
+export type postAuthRefreshResponseError = postAuthRefreshResponse401 & {
+  headers: Headers;
+};
+
+export const getPostAuthRefreshUrl = () => {
+  return `/api/v1/auth/refresh`;
+};
+
+/**
+ * Атомарно ротирует Refresh Token и выдаёт новый Access Token.
+ * @summary Обновление сессии
+ */
+export const postAuthRefresh = async (
+  options?: Parameters<typeof apiRequest>[1]
+): Promise<postAuthRefreshResponseSuccess> => {
+  return apiRequest<postAuthRefreshResponseSuccess>(getPostAuthRefreshUrl(), {
+    ...options,
+    method: 'POST',
+  });
+};
+
+export const getPostAuthRefreshMutationKey = () => ['postAuthRefresh'] as const;
+
+export const getPostAuthRefreshMutationOptions = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postAuthRefresh>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof apiRequest>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postAuthRefresh>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = getPostAuthRefreshMutationKey();
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postAuthRefresh>>,
+    void
+  > = () => {
+    return postAuthRefresh(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostAuthRefreshMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAuthRefresh>>
+>;
+
+export type PostAuthRefreshMutationError = ErrorType<ApiErrorResponse>;
+
+/**
+ * @summary Обновление сессии
+ */
+export const usePostAuthRefresh = <
+  TError = ErrorType<ApiErrorResponse>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postAuthRefresh>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof apiRequest>;
+  },
+  queryClient?: QueryClient
+): UseMutationReturnType<
+  Awaited<ReturnType<typeof postAuthRefresh>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getPostAuthRefreshMutationOptions(options), queryClient);
+};
+export type getAuthSessionResponse200 = {
+  data: AuthSessionResponse;
+  status: 200;
+};
+
+export type getAuthSessionResponse401 = {
+  data: ApiErrorResponse;
+  status: 401;
+};
+
+export type getAuthSessionResponseSuccess = getAuthSessionResponse200 & {
+  headers: Headers;
+};
+export type getAuthSessionResponseError = getAuthSessionResponse401 & {
+  headers: Headers;
+};
+
+export const getGetAuthSessionUrl = () => {
+  return `/api/v1/auth/session`;
+};
+
+/**
+ * @summary Текущая сессия
+ */
+export const getAuthSession = async (
+  options?: Parameters<typeof apiRequest>[1]
+): Promise<getAuthSessionResponseSuccess> => {
+  return apiRequest<getAuthSessionResponseSuccess>(getGetAuthSessionUrl(), {
+    ...options,
+    method: 'GET',
+  });
+};
+
+export const getGetAuthSessionQueryKey = () => {
+  return ['api', 'v1', 'auth', 'session'] as const;
+};
+
+export const getGetAuthSessionQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAuthSession>>,
+  TError = ErrorType<ApiErrorResponse>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getAuthSession>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof apiRequest>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = getGetAuthSessionQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthSession>>> = ({
+    signal,
+  }) => getAuthSession({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getAuthSession>>,
+    TError,
+    TData
+  >;
+};
+
+export type GetAuthSessionQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAuthSession>>
+>;
+export type GetAuthSessionQueryError = ErrorType<ApiErrorResponse>;
+
+/**
+ * @summary Текущая сессия
+ */
+
+export function useGetAuthSession<
+  TData = Awaited<ReturnType<typeof getAuthSession>>,
+  TError = ErrorType<ApiErrorResponse>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getAuthSession>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiRequest>;
+  },
+  queryClient?: QueryClient
+): UseQueryReturnType<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetAuthSessionQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<
+    QueryKey,
+    TData,
+    TError
+  >;
+
+  return query;
+}
+
+export type postAuthLogoutResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type postAuthLogoutResponseSuccess = postAuthLogoutResponse204 & {
+  headers: Headers;
+};
+export const getPostAuthLogoutUrl = () => {
+  return `/api/v1/auth/logout`;
+};
+
+/**
+ * Отзывает текущее семейство Refresh Token и очищает Cookie. Операция идемпотентна.
+ * @summary Завершение текущей сессии
+ */
+export const postAuthLogout = async (
+  options?: Parameters<typeof apiRequest>[1]
+): Promise<postAuthLogoutResponseSuccess> => {
+  return apiRequest<postAuthLogoutResponseSuccess>(getPostAuthLogoutUrl(), {
+    ...options,
+    method: 'POST',
+  });
+};
+
+export const getPostAuthLogoutMutationKey = () => ['postAuthLogout'] as const;
+
+export const getPostAuthLogoutMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postAuthLogout>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof apiRequest>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postAuthLogout>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = getPostAuthLogoutMutationKey();
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postAuthLogout>>,
+    void
+  > = () => {
+    return postAuthLogout(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostAuthLogoutMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAuthLogout>>
+>;
+
+export type PostAuthLogoutMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Завершение текущей сессии
+ */
+export const usePostAuthLogout = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postAuthLogout>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof apiRequest>;
+  },
+  queryClient?: QueryClient
+): UseMutationReturnType<
+  Awaited<ReturnType<typeof postAuthLogout>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getPostAuthLogoutMutationOptions(options), queryClient);
 };

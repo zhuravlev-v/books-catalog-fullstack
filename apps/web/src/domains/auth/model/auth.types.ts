@@ -1,16 +1,8 @@
-import type {
-  LoginResponseData,
-  LoginResponseDataUser,
-} from '@books/api-contract/models';
+import type { AuthUser as AuthUserDto } from '@books/api-contract/models';
 
-type LoginUser = NonNullable<LoginResponseDataUser>;
-
-export type AuthUser = Required<
-  Pick<LoginUser, 'id' | 'username' | 'email' | 'role'>
->;
+export type AuthUser = AuthUserDto;
 
 export interface AuthSession {
-  token: NonNullable<LoginResponseData['token']>;
   user: AuthUser;
-  expiresAt: LoginResponseData['expires_at'];
+  expiresAt: string;
 }

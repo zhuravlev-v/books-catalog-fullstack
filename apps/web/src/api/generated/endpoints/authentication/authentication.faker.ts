@@ -4,47 +4,75 @@
  * API каталога книг
  * REST API для управления каталогом книг и авторов.
  * Поддерживает роли: гость (просмотр) и пользователь (CRUD).
- * Аутентификация через Bearer-токен (JWT).
+ * Аутентификация через JWT Access Token и opaque Refresh Token в HttpOnly Cookie.
  *
  * OpenAPI spec version: 1.0.0
  */
 import { UserRole } from '@books/api-contract/models';
-import type {
-  LoginResponse,
-  RegisterResponse,
-} from '@books/api-contract/models';
+import type { AuthSessionResponse } from '@books/api-contract/models';
 
 import { faker } from '@faker-js/faker/locale/ru';
 
 export const getPostAuthRegisterResponseMock = (
-  overrideResponse: Partial<Extract<RegisterResponse, object>> = {}
-): RegisterResponse => ({
+  overrideResponse: Partial<Extract<AuthSessionResponse, object>> = {}
+): AuthSessionResponse => ({
   success: faker.helpers.arrayElement([true] as const),
   data: {
-    token: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    user: {
-      id: faker.string.uuid(),
-      username: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      email: faker.internet.email(),
-      created_at: faker.date.past().toISOString().slice(0, 19) + 'Z',
-    },
-  },
-  ...overrideResponse,
-});
-
-export const getPostAuthLoginResponseMock = (
-  overrideResponse: Partial<Extract<LoginResponse, object>> = {}
-): LoginResponse => ({
-  success: faker.helpers.arrayElement([true] as const),
-  data: {
-    token: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    expires_at: faker.date.past().toISOString().slice(0, 19) + 'Z',
     user: {
       id: faker.string.uuid(),
       username: faker.string.alpha({ length: { min: 10, max: 20 } }),
       email: faker.internet.email(),
       role: faker.helpers.arrayElement(Object.values(UserRole)),
     },
+    access_expires_at: faker.date.past().toISOString().slice(0, 19) + 'Z',
+  },
+  ...overrideResponse,
+});
+
+export const getPostAuthLoginResponseMock = (
+  overrideResponse: Partial<Extract<AuthSessionResponse, object>> = {}
+): AuthSessionResponse => ({
+  success: faker.helpers.arrayElement([true] as const),
+  data: {
+    user: {
+      id: faker.string.uuid(),
+      username: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      email: faker.internet.email(),
+      role: faker.helpers.arrayElement(Object.values(UserRole)),
+    },
+    access_expires_at: faker.date.past().toISOString().slice(0, 19) + 'Z',
+  },
+  ...overrideResponse,
+});
+
+export const getPostAuthRefreshResponseMock = (
+  overrideResponse: Partial<Extract<AuthSessionResponse, object>> = {}
+): AuthSessionResponse => ({
+  success: faker.helpers.arrayElement([true] as const),
+  data: {
+    user: {
+      id: faker.string.uuid(),
+      username: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      email: faker.internet.email(),
+      role: faker.helpers.arrayElement(Object.values(UserRole)),
+    },
+    access_expires_at: faker.date.past().toISOString().slice(0, 19) + 'Z',
+  },
+  ...overrideResponse,
+});
+
+export const getGetAuthSessionResponseMock = (
+  overrideResponse: Partial<Extract<AuthSessionResponse, object>> = {}
+): AuthSessionResponse => ({
+  success: faker.helpers.arrayElement([true] as const),
+  data: {
+    user: {
+      id: faker.string.uuid(),
+      username: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      email: faker.internet.email(),
+      role: faker.helpers.arrayElement(Object.values(UserRole)),
+    },
+    access_expires_at: faker.date.past().toISOString().slice(0, 19) + 'Z',
   },
   ...overrideResponse,
 });

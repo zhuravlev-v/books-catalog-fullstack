@@ -9,13 +9,19 @@ import {
   validateBookCreateMultipart,
   validateBookPatchMultipart,
 } from '../middleware/multipart.ts';
+import { authenticate } from '../../auth/middleware/authenticate.ts';
 
 const router = Router();
 
 router.get('/books', getBooksList);
-router.post('/books', ...validateBookCreateMultipart, createBook);
+router.post('/books', authenticate, ...validateBookCreateMultipart, createBook);
 router.get('/books/:id', getBook);
-router.patch('/books/:id', ...validateBookPatchMultipart, updateBook);
-router.delete('/books/:id', deleteBook);
+router.patch(
+  '/books/:id',
+  authenticate,
+  ...validateBookPatchMultipart,
+  updateBook
+);
+router.delete('/books/:id', authenticate, deleteBook);
 
 export default router;

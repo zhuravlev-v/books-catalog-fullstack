@@ -2,8 +2,8 @@ import { HttpResponse } from 'msw';
 
 import type {
   ApiErrorResponse as ApiError,
+  AuthSessionResponse,
   ErrorItem,
-  RegisterResponse,
 } from '@books/api-contract/models';
 import { parseRegisterRequest } from '@/mocks/http/authentication/register';
 import {
@@ -43,7 +43,7 @@ function conflict(fields: RegistrationConflictField[]): never {
 
 export async function registerResolver({
   request,
-}: RegisterRequestInfo): Promise<RegisterResponse> {
+}: RegisterRequestInfo): Promise<AuthSessionResponse> {
   const parsedRequest = await parseRegisterRequest(request);
 
   if (parsedRequest.errors !== undefined) {

@@ -4,12 +4,13 @@
  * API каталога книг
  * REST API для управления каталогом книг и авторов.
  * Поддерживает роли: гость (просмотр) и пользователь (CRUD).
- * Аутентификация через Bearer-токен (JWT).
+ * Аутентификация через JWT Access Token и opaque Refresh Token в HttpOnly Cookie.
  *
  * OpenAPI spec version: 1.0.0
  */
 import type {
   ApiErrorResponse,
+  AuthSessionResponse,
   AuthorCreateInput,
   AuthorListResponse,
   AuthorPatchInput,
@@ -22,14 +23,12 @@ import type {
   GetBooksParams,
   GetReportsTopAuthorsParams,
   LoginRequest,
-  LoginResponse,
   RegisterRequest,
-  RegisterResponse,
   TopAuthorsResponse,
 } from './models';
 
 export type postAuthRegisterResponse201 = {
-  data: RegisterResponse;
+  data: AuthSessionResponse;
   status: 201;
 };
 
@@ -60,7 +59,7 @@ export const getPostAuthRegisterUrl = () => {
 };
 
 /**
- * Создаёт новый аккаунт пользователя на основе логина, email и пароля.
+ * Создаёт аккаунт, открывает сессию и устанавливает Access и Refresh Cookie.
  * @summary Регистрация нового пользователя
  */
 export const postAuthRegister = async (
@@ -109,7 +108,7 @@ export const postAuthRegister = async (
 };
 
 export type postAuthLoginResponse200 = {
-  data: LoginResponse;
+  data: AuthSessionResponse;
   status: 200;
 };
 
@@ -118,10 +117,17 @@ export type postAuthLoginResponse401 = {
   status: 401;
 };
 
+export type postAuthLoginResponse422 = {
+  data: ApiErrorResponse;
+  status: 422;
+};
+
 export type postAuthLoginResponseSuccess = postAuthLoginResponse200 & {
   headers: Headers;
 };
-export type postAuthLoginResponseError = postAuthLoginResponse401 & {
+export type postAuthLoginResponseError = (
+  postAuthLoginResponse401 | postAuthLoginResponse422
+) & {
   headers: Headers;
 };
 
@@ -133,7 +139,7 @@ export const getPostAuthLoginUrl = () => {
 };
 
 /**
- * Возвращает access-токен для роли `user`.
+ * Открывает новую сессию и устанавливает Access и Refresh Cookie.
  * @summary Авторизация пользователя
  */
 export const postAuthLogin = async (
@@ -179,6 +185,135 @@ export const postAuthLogin = async (
     status: res.status,
     headers: res.headers,
   } as postAuthLoginResponse;
+};
+
+export type postAuthRefreshResponse200 = {
+  data: AuthSessionResponse;
+  status: 200;
+};
+
+export type postAuthRefreshResponse401 = {
+  data: ApiErrorResponse;
+  status: 401;
+};
+
+export type postAuthRefreshResponseSuccess = postAuthRefreshResponse200 & {
+  headers: Headers;
+};
+export type postAuthRefreshResponseError = postAuthRefreshResponse401 & {
+  headers: Headers;
+};
+
+export type postAuthRefreshResponse =
+  postAuthRefreshResponseSuccess | postAuthRefreshResponseError;
+
+export const getPostAuthRefreshUrl = () => {
+  return `/auth/refresh`;
+};
+
+/**
+ * Атомарно ротирует Refresh Token и выдаёт новый Access Token.
+ * @summary Обновление сессии
+ */
+export const postAuthRefresh = async (
+  options?: RequestInit
+): Promise<postAuthRefreshResponse> => {
+  const res = await fetch(getPostAuthRefreshUrl(), {
+    ...options,
+    method: 'POST',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: postAuthRefreshResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as postAuthRefreshResponse;
+};
+
+export type getAuthSessionResponse200 = {
+  data: AuthSessionResponse;
+  status: 200;
+};
+
+export type getAuthSessionResponse401 = {
+  data: ApiErrorResponse;
+  status: 401;
+};
+
+export type getAuthSessionResponseSuccess = getAuthSessionResponse200 & {
+  headers: Headers;
+};
+export type getAuthSessionResponseError = getAuthSessionResponse401 & {
+  headers: Headers;
+};
+
+export type getAuthSessionResponse =
+  getAuthSessionResponseSuccess | getAuthSessionResponseError;
+
+export const getGetAuthSessionUrl = () => {
+  return `/auth/session`;
+};
+
+/**
+ * @summary Текущая сессия
+ */
+export const getAuthSession = async (
+  options?: RequestInit
+): Promise<getAuthSessionResponse> => {
+  const res = await fetch(getGetAuthSessionUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getAuthSessionResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getAuthSessionResponse;
+};
+
+export type postAuthLogoutResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type postAuthLogoutResponseSuccess = postAuthLogoutResponse204 & {
+  headers: Headers;
+};
+export type postAuthLogoutResponse = postAuthLogoutResponseSuccess;
+
+export const getPostAuthLogoutUrl = () => {
+  return `/auth/logout`;
+};
+
+/**
+ * Отзывает текущее семейство Refresh Token и очищает Cookie. Операция идемпотентна.
+ * @summary Завершение текущей сессии
+ */
+export const postAuthLogout = async (
+  options?: RequestInit
+): Promise<postAuthLogoutResponse> => {
+  const res = await fetch(getPostAuthLogoutUrl(), {
+    ...options,
+    method: 'POST',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: postAuthLogoutResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as postAuthLogoutResponse;
 };
 
 export type getBooksResponse200 = {

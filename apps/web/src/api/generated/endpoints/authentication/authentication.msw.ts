@@ -4,15 +4,14 @@
  * API каталога книг
  * REST API для управления каталогом книг и авторов.
  * Поддерживает роли: гость (просмотр) и пользователь (CRUD).
- * Аутентификация через Bearer-токен (JWT).
+ * Аутентификация через JWT Access Token и opaque Refresh Token в HttpOnly Cookie.
  *
  * OpenAPI spec version: 1.0.0
  */
 import type {
+  AuthSessionResponse,
   LoginRequest,
-  LoginResponse,
   RegisterRequest,
-  RegisterResponse,
 } from '@books/api-contract/models';
 
 import { HttpResponse, delay, http } from 'msw';
@@ -23,21 +22,25 @@ import type {
 } from 'msw';
 
 import {
+  getGetAuthSessionResponseMock,
   getPostAuthLoginResponseMock,
+  getPostAuthRefreshResponseMock,
   getPostAuthRegisterResponseMock,
 } from './authentication.faker';
 
 export {
   getPostAuthRegisterResponseMock,
   getPostAuthLoginResponseMock,
+  getPostAuthRefreshResponseMock,
+  getGetAuthSessionResponseMock,
 } from './authentication.faker';
 
 export const getPostAuthRegisterMockHandler = (
   overrideResponse?:
-    | RegisterResponse
+    | AuthSessionResponse
     | ((
         info: Parameters<HttpResponseResolver<PathParams, RegisterRequest>>[0]
-      ) => Promise<RegisterResponse> | RegisterResponse),
+      ) => Promise<AuthSessionResponse> | AuthSessionResponse),
   options?: RequestHandlerOptions
 ) => {
   return http.post<PathParams, RegisterRequest>(
@@ -62,10 +65,10 @@ export const getPostAuthRegisterMockHandler = (
 
 export const getPostAuthLoginMockHandler = (
   overrideResponse?:
-    | LoginResponse
+    | AuthSessionResponse
     | ((
         info: Parameters<HttpResponseResolver<PathParams, LoginRequest>>[0]
-      ) => Promise<LoginResponse> | LoginResponse),
+      ) => Promise<AuthSessionResponse> | AuthSessionResponse),
   options?: RequestHandlerOptions
 ) => {
   return http.post<PathParams, LoginRequest>(
@@ -87,7 +90,82 @@ export const getPostAuthLoginMockHandler = (
     options
   );
 };
+
+export const getPostAuthRefreshMockHandler = (
+  overrideResponse?:
+    | AuthSessionResponse
+    | ((
+        info: Parameters<HttpResponseResolver>[0]
+      ) => Promise<AuthSessionResponse> | AuthSessionResponse),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    '/api/v1/auth/refresh',
+    async (info: Parameters<HttpResponseResolver>[0]) => {
+      await delay(200);
+
+      return HttpResponse.json(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getPostAuthRefreshResponseMock(),
+        { status: 200 }
+      );
+    },
+    options
+  );
+};
+
+export const getGetAuthSessionMockHandler = (
+  overrideResponse?:
+    | AuthSessionResponse
+    | ((
+        info: Parameters<HttpResponseResolver>[0]
+      ) => Promise<AuthSessionResponse> | AuthSessionResponse),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    '/api/v1/auth/session',
+    async (info: Parameters<HttpResponseResolver>[0]) => {
+      await delay(200);
+
+      return HttpResponse.json(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetAuthSessionResponseMock(),
+        { status: 200 }
+      );
+    },
+    options
+  );
+};
+
+export const getPostAuthLogoutMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<HttpResponseResolver>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    '/api/v1/auth/logout',
+    async (info: Parameters<HttpResponseResolver>[0]) => {
+      await delay(200);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 204 });
+    },
+    options
+  );
+};
 export const getAuthenticationMock = () => [
   getPostAuthRegisterMockHandler(),
   getPostAuthLoginMockHandler(),
+  getPostAuthRefreshMockHandler(),
+  getGetAuthSessionMockHandler(),
+  getPostAuthLogoutMockHandler(),
 ];
