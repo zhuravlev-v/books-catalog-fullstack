@@ -5,6 +5,7 @@ import indexRouter from './modules/index.ts';
 import booksRouter from './modules/books/routes/routes.ts';
 import authRouter from './modules/auth/routes/routes.ts';
 import authorsRouter from './modules/authors/routes/routes.ts';
+import reportsRouter from './modules/reports/routes/routes.ts';
 import { errorHandler } from './middleware/error-handler.ts';
 import { env } from './config/env.ts';
 
@@ -20,6 +21,7 @@ app.use(basePathApi, indexRouter);
 app.use(basePathApi, booksRouter);
 app.use(`${basePathApi}/auth`, authRouter);
 app.use(`${basePathApi}/authors`, authorsRouter);
+app.use(`${basePathApi}/reports`, reportsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (_, res) {
